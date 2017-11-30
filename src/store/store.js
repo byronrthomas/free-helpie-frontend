@@ -27,6 +27,9 @@ export function store(server) {
                     .get('/users', payload)
                     .then(resp => commit('setUser', payload))
                     .catch(err => alert(err));
+            },
+            createUser() {
+                
             }
         }
     });
