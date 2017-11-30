@@ -4,12 +4,12 @@
 </template>
 
 <script>
-import AppNotLoggedIn from './components/AppNotLoggedIn.vue'
+import NotLoggedInApp from './notLoggedIn/App.vue'
 import {mapGetters} from 'vuex'
 export default {
   name: 'app',
   components: {
-    'app-not-logged-in': AppNotLoggedIn
+    'app-not-logged-in': NotLoggedInApp
   },
   computed: {
     ...mapGetters(['isLoggedIn'])

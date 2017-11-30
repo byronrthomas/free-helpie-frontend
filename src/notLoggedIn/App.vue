@@ -2,23 +2,27 @@
   <div class="container">
     <app-login-form 
         v-if="currentAction === 'login'" 
-        @createUser="currentAction = 'newUser'"/>
+        @createUser="setAction('newUser')"/>
     <app-create-user-form
         v-if="currentAction === 'newUser'"
-        @login="currentAction = 'login'" />
+        @login="setAction('login')" />
   </div>
 </template>
 
 <script>
 import LoginForm from './LoginForm.vue'
 import CreateUserForm from './CreateUserForm.vue'
+import {mapGetters, mapActions} from 'vuex'
 export default {
-  data () {
-    return { currentAction: 'login' }
+  computed: {
+    ...mapGetters({'currentAction': 'notloggedin/currentAction'})
   },
   components: {
       'app-login-form': LoginForm,
       'app-create-user-form': CreateUserForm
+  },
+  methods: {
+    ...mapActions({'setAction': 'notloggedin/setAction'})
   }
 }
 </script>

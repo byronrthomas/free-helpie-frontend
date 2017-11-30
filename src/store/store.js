@@ -3,8 +3,13 @@ import Vuex from 'vuex';
 
 Vue.use(Vuex);
 
+import NotLoggedInModule from '../notLoggedIn/storeModule'
+
 export function store(server) {
     return new Vuex.Store({
+        modules: {
+            notloggedin: NotLoggedInModule
+        },
         state: {
             userState: null
         },
@@ -29,7 +34,7 @@ export function store(server) {
                     .catch(err => alert(err));
             },
             createUser() {
-                
+
             }
         }
     });
