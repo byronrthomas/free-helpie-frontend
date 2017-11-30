@@ -6,22 +6,30 @@
         <h2>Login</h2>
         <div class="form-group">
           <label for="Email">Email</label>
-          <input type="email" v-model="username" class="form-control">
+          <input type="email" v-model="userDetails.username" class="form-control">
         </div>
         <div class="form-group">
           <label for="Password">Password</label>
-          <input type="password" v-model="password" class="form-control">
+          <input type="password" v-model="userDetails.password" class="form-control">
         </div>
-        <button class="btn btn-primary">Login</button>        
+        <button 
+          class="btn btn-primary" 
+          @click="authUser(userDetails)">
+          Login
+          </button>        
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import {mapActions} from 'vuex'
 export default {
   data () {
-    return { username: '', password: '' }
+    return { userDetails: {username: '', password: ''} }
+  },
+  methods: {
+    ...mapActions(['authUser'])
   }
 }
 </script>

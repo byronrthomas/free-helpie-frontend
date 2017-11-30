@@ -1,13 +1,18 @@
 <template>
-  <app-login-form/>
+  <p v-if="isLoggedIn">You're logged in!</p>
+  <app-login-form v-else/>
 </template>
 
 <script>
 import LoginForm from './components/LoginForm.vue'
+import {mapGetters} from 'vuex'
 export default {
   name: 'app',
   components: {
     'app-login-form': LoginForm
+  },
+  computed: {
+    ...mapGetters(['isLoggedIn'])
   }
 }
 </script>
