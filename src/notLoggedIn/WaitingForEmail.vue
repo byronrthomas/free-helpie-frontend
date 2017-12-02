@@ -11,7 +11,6 @@
         <h3>Thanks for verifying your email {{ this.userName }}</h3>
         <p>Redirecting you to the login page...</p>
       </template>
-      
     </div>
   </div>
 </template>
