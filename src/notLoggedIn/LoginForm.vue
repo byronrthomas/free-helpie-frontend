@@ -13,23 +13,19 @@
       </div>
       <button 
         class="btn btn-primary" 
-        @click="authUser(userDetails)">
+        @click="$emit('authUser', userDetails)">
         Login
         </button>        
       <br><br>
-      <a @click="$emit('createUser')">Create an account</a>
+      <a @click="$emit('gotoNewUser')">Create an account</a>
     </div>
   </div>
 </template>
 
 <script>
-import {mapActions} from 'vuex'
 export default {
   data () {
     return { userDetails: {username: '', password: ''} }
-  },
-  methods: {
-    ...mapActions(['authUser'])
   }
 }
 </script>

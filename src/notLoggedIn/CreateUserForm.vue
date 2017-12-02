@@ -18,11 +18,11 @@
       <p class="problem" v-if="passwordsDontMatch">These passwords don't match</p>
       <button 
         class="btn btn-primary" 
-        @click="createUser(userDetails)">
+        @click="$emit('createUser', userDetails)">
         Create Account
         </button>        
       <br><br>
-      <a @click="$emit('login')">Login as existing user</a>
+      <a @click="$emit('gotoLogin')">Login as existing user</a>
     </div>
   </div>
 </template>
@@ -41,9 +41,6 @@ export default {
       passwordsDontMatch() {
           return this.userDetails.password !== this.passwordAgain;
       }
-  },
-  methods: {
-    ...mapActions(['createUser'])
   }
 }
 </script>

@@ -3,12 +3,12 @@ import Vuex from 'vuex';
 
 Vue.use(Vuex);
 
-import NotLoggedInModule from '../notLoggedIn/storeModule'
+import {notLoggedInStore} from '../notLoggedIn/storeModule'
 
 export function store(server) {
     return new Vuex.Store({
         modules: {
-            notloggedin: NotLoggedInModule
+            notloggedin: notLoggedInStore(server)
         },
         state: {
             userState: null
@@ -18,7 +18,8 @@ export function store(server) {
                 return state.userState;
             },
             userName: state => {
-                return state.userState.userName;
+                return state.userState == null ?
+                    '' : state.userState.userName;
             },
         },
         mutations: {
@@ -33,8 +34,8 @@ export function store(server) {
                     .then(resp => commit('setUser', payload))
                     .catch(err => alert(err));
             },
-            createUser() {
-
+            userVerificationReceived({commit}, payload) {
+                // TODO
             }
         }
     });
