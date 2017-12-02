@@ -8,7 +8,7 @@
         </div>
       </template>
       <template v-else>
-        <h3>Thanks for verifying your email {{ this.userName }}</h3>
+        <h3>Thanks for verifying your email {{ this.username }}</h3>
         <p>Redirecting you to the login page...</p>
       </template>
     </div>
@@ -25,13 +25,11 @@ export default {
   data() {
     return {verificationSucceeded: false};
   },
-  computed: {
-    ... mapGetters(['userName'])
-  },
+  props: ['username'],
   methods: {
     simulateVerificationReceived() {
       if (confirm('TEST: Simulating verification email - have they verified?')) {
-        this.userVerificationReceived(this.userName);
+        this.userVerificationReceived({username: this.username});
         this.verificationSucceeded = true;
         setTimeout(() => this.setAction('login'), 4000);
       }

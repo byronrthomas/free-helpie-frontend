@@ -17,9 +17,10 @@ export function notLoggedInStore (server) {
         commit('setAction', payload);
       },
       createUser({commit}, payload) {
-        // TODO: fill this in with a proper server call
-
-        commit('setAction', 'waitingForEmail')
+        server
+          .post('/users', payload)
+          .then(commit('setAction', 'waitingForEmail'))
+          .catch(err => alert(err))
       }
     }
   }

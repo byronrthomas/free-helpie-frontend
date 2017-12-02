@@ -17,9 +17,9 @@ export function store(server) {
             isLoggedIn: state => {
                 return state.userState;
             },
-            userName: state => {
+            username: state => {
                 return state.userState == null ?
-                    '' : state.userState.userName;
+                    '' : state.userState.username;
             },
         },
         mutations: {
@@ -34,8 +34,12 @@ export function store(server) {
                     .then(resp => commit('setUser', payload))
                     .catch(err => alert(err));
             },
+            // TBH: this would have to be handled server-side
+            // without client app being involved
             userVerificationReceived({commit}, payload) {
-                // TODO
+                server
+                    .post('/userVerification', payload)
+                    .catch(err => alert(err))
             }
         }
     });
