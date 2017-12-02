@@ -1,10 +1,17 @@
 <template>
   <div class="row">
     <div class="col-xs-12">
-      <br><br>
-      <div class="alert alert-info">
-        You need to verify your email address to access the full site. We have sent a verification email to you, please click the link on the email.
-      </div>
+      <template v-if="!verificationSucceeded">
+        <br><br>
+        <div class="alert alert-info">
+          You need to verify your email address to access the full site. We have sent a verification email to you, please click the link on the email.
+        </div>
+      </template>
+      <template v-else>
+        <h3>Thanks for verifying your email {{ this.userName }}</h3>
+        <p>Redirecting you to the login page...</p>
+      </template>
+      
     </div>
   </div>
 </template>
@@ -16,6 +23,9 @@ export default {
   mounted() {
     setTimeout(this.simulateVerificationReceived, 3000);
   },
+  data() {
+    return {verificationSucceeded: false};
+  },
   computed: {
     ... mapGetters(['userName'])
   },
@@ -23,7 +33,8 @@ export default {
     simulateVerificationReceived() {
       if (confirm('TEST: Simulating verification email - have they verified?')) {
         this.userVerificationReceived(this.userName);
-        this.setAction('login');
+        this.verificationSucceeded = true;
+        setTimeout(() => this.setAction('login'), 4000);
       }
     },
     // Deliberately using the store directly here, as in a non-test environment
