@@ -53,6 +53,7 @@ function UserAuthServer () {
     postVerification(reqData, resolve, reject) {
       if (unverifiedUsers[reqData.username]) {
         delete unverifiedUsers[reqData.username];
+        resolve();
       } else {
         reject('Not awaiting verification for this username');
       }
