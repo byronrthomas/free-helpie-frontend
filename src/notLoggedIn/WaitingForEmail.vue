@@ -17,29 +17,29 @@
 
 
 <script>
-import {mapActions, mapGetters} from 'vuex'
+import {mapActions} from 'vuex'
 export default {
-  mounted() {
-    setTimeout(this.simulateVerificationReceived, 3000);
+  mounted () {
+    setTimeout(this.simulateVerificationReceived, 3000)
   },
-  data() {
-    return {verificationSucceeded: false};
+  data () {
+    return {verificationSucceeded: false}
   },
   props: ['username'],
   methods: {
-    simulateVerificationReceived() {
+    simulateVerificationReceived () {
       if (confirm('TEST: Simulating verification email - have they verified?')) {
-        this.userVerificationReceived({username: this.username});
-        this.verificationSucceeded = true;
-        setTimeout(() => this.setAction('login'), 4000);
+        this.userVerificationReceived({username: this.username})
+        this.verificationSucceeded = true
+        setTimeout(() => this.setAction('login'), 4000)
       }
     },
     // Deliberately using the store directly here, as in a non-test environment
     // this component wouldn't use the store so wouldn't need to emit events
-    ... mapActions({
+    ...mapActions({
       'userVerificationReceived': 'userVerificationReceived',
-      'setAction' : 'notloggedin/setAction'})
-  },
+      'setAction': 'notloggedin/setAction'})
+  }
 
 }
 </script>

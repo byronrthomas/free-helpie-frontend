@@ -31,25 +31,25 @@
 
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 export default {
   data () {
-    return { 
+    return {
       userDetails: {username: '', password: ''},
-      passwordAgain: '' 
+      passwordAgain: ''
     }
   },
   computed: {
-    passwordsDontMatch() {
-      return this.userDetails.password !== this.passwordAgain;
+    passwordsDontMatch () {
+      return this.userDetails.password !== this.passwordAgain
     },
-    formDivClass() {
+    formDivClass () {
       return {
         'alert': this.lastServerError,
         'alert-danger': this.lastServerError
       }
     },
-    ...mapGetters(['lastServerError']),
+    ...mapGetters(['lastServerError'])
   }
 }
 </script>

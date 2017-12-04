@@ -31,14 +31,14 @@ export default {
   data () {
     return { userDetails: {username: '', password: ''} }
   },
-  computed : {
-    formDivClass() {
+  computed: {
+    formDivClass () {
       return {
         'alert': this.lastServerError,
         'alert-danger': this.lastServerError
       }
     },
-    ...mapGetters(['lastServerError']),
+    ...mapGetters(['lastServerError'])
   }
 }
 </script>

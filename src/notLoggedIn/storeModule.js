@@ -1,22 +1,22 @@
 export function notLoggedInStore (server) {
   return {
     namespaced: true,
-    state: {currentAction: 'login'},
+    state: { currentAction: 'login' },
     getters: {
-      currentAction(state) {
-        return state.currentAction;
+      currentAction (state) {
+        return state.currentAction
       }
     },
     mutations: {
-      setAction(state, payload) {
-        state.currentAction = payload;
+      setAction (state, payload) {
+        state.currentAction = payload
       }
     },
     actions: {
-      setAction({commit}, payload) {
-        commit('setAction', payload);
+      setAction ({ commit }, payload) {
+        commit('setAction', payload)
       },
-      createUser({commit}, payload) {
+      createUser ({ commit }, payload) {
         server
           .post('/users', payload)
           .then(() => commit('setAction', 'waitingForEmail'))

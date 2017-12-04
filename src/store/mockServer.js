@@ -1,23 +1,23 @@
-function makeReversibleMap() {
+function makeReversibleMap () {
   let map = {}
   let backMap = {}
 
   return {
-    put(key, value) {
-      map[key] = value;
-      backMap[value] = key;
+    put (key, value) {
+      map[key] = value
+      backMap[value] = key
     },
-    getByKey(key) {
-      return map[key];
+    getByKey (key) {
+      return map[key]
     },
-    getByValue(value) {
-      return backMap[value];
+    getByValue (value) {
+      return backMap[value]
     }
   }
 }
 
 function UserAuthServer () {
-  let usersToPassword = {'test@test.com': 'secret'}
+  let usersToPassword = { 'test@test.com': 'secret' }
   let usersToAuth = makeReversibleMap()
   let unverifiedUsers = {}
 
@@ -28,9 +28,8 @@ function UserAuthServer () {
           if (!unverifiedUsers[reqData.username]) {
             usersToAuth.put(reqData.username, Math.random().toString())
             resolve({authData: usersToAuth.getByKey(reqData.username)})
-          }
-          else {
-            reject('You need to verify your email address, please check your email for the verification email.');
+          } else {
+            reject('You need to verify your email address, please check your email for the verification email.')
           }
         } else {
           reject('Password not recognised')
@@ -39,30 +38,30 @@ function UserAuthServer () {
         reject('Username not recognised')
       }
     },
-    postUser(reqData, resolve, reject) {
-      if (typeof(reqData.username) !== 'string' || typeof(reqData.password) !== 'string') {
-        reject('Should provide a username and password');
+    postUser (reqData, resolve, reject) {
+      if (typeof reqData.username !== 'string' || typeof reqData.password !== 'string') {
+        reject('Should provide a username and password')
       } else if (typeof (usersToPassword[reqData.username]) === 'string') {
         reject('This email address has already been registered')
       } else {
-        usersToPassword[reqData.username] = reqData.password;
-        unverifiedUsers[reqData.username] = true;
-        resolve();
+        usersToPassword[reqData.username] = reqData.password
+        unverifiedUsers[reqData.username] = true
+        resolve()
       }
     },
-    postVerification(reqData, resolve, reject) {
+    postVerification (reqData, resolve, reject) {
       if (unverifiedUsers[reqData.username]) {
-        delete unverifiedUsers[reqData.username];
-        resolve();
+        delete unverifiedUsers[reqData.username]
+        resolve()
       } else {
-        reject('Not awaiting verification for this username');
+        reject('Not awaiting verification for this username')
       }
     }
   }
 }
 
 const MOCK_NETWORK_LATENCY = 500
-function wrapAsPromise(func, data) {
+function wrapAsPromise (func, data) {
   return new Promise(
     (resolve, reject) => {
       setTimeout(
@@ -77,7 +76,7 @@ function Server (userAuth) {
       if (resourcePath === '/users') {
         return wrapAsPromise(userAuth.get, data)
       }
-      throw `Unknown route: GET ${resourcePath}`
+      throw new Error(`Unknown route: GET ${resourcePath}`)
     },
     post (resourcePath, data) {
       if (resourcePath === '/users') {
@@ -86,7 +85,7 @@ function Server (userAuth) {
       if (resourcePath === '/userVerification') {
         return wrapAsPromise(userAuth.postVerification, data)
       }
-      throw `Unknown route: POST ${resourcePath}`
+      throw new Error(`Unknown route: POST ${resourcePath}`)
     }
   }
 }

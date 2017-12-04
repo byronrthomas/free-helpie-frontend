@@ -23,18 +23,18 @@ export default {
   computed: {
     ...mapGetters({'currentAction': 'notloggedin/currentAction'})
   },
-  data() {
-    return {usernameForVerification: ''};
+  data () {
+    return {usernameForVerification: ''}
   },
   components: {
-      'app-login-form': LoginForm,
-      'app-create-user-form': CreateUserForm,
-      'app-waiting-for-email': WaitingForEmail
+    'app-login-form': LoginForm,
+    'app-create-user-form': CreateUserForm,
+    'app-waiting-for-email': WaitingForEmail
   },
   methods: {
-    handleCreateUser(userDetails) {
-      this.usernameForVerification = userDetails.username;
-      this.createUser(userDetails);
+    handleCreateUser (userDetails) {
+      this.usernameForVerification = userDetails.username
+      this.createUser(userDetails)
     },
     ...mapActions({
       'setAction': 'notloggedin/setAction',
