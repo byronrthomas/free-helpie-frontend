@@ -46,6 +46,7 @@ export function store (server) {
       // TBH: this would have to be handled server-side
       // without client app being involved
       userVerificationReceived ({commit}, payload) {
+        commit('setLastServerError', '')
         server
           .post('/userVerification', payload)
           .catch(err => alert(err))
