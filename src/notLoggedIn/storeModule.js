@@ -20,7 +20,7 @@ export function notLoggedInStore (server) {
         server
           .post('/users', payload)
           .then(() => commit('setAction', 'waitingForEmail'))
-          .catch(err => alert(err))
+          .catch(err => commit('setLastServerError', err, { root: true }))
       }
     }
   }
