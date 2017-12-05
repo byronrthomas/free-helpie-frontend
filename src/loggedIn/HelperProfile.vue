@@ -1,12 +1,12 @@
 <template>
   <div>
     <div class="row">
-      <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset 3">
+      <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
         <h4 style="text-align: center">{{ createOrUpdate }} your profile</h4>
       </div>
     </div>
     <div class="row">
-      <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset 3">
+      <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
         <h2 style="text-align: center">Personal Info</h2>
         <br>
         <div class="form-group">
@@ -20,7 +20,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset 3">
+      <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
         <h2 style="text-align: center">Location</h2>
         <br>
         <div class="form-group">
@@ -47,7 +47,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset 3">
+      <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
         <h2 style="text-align: center">Experience &amp; skills</h2>
         <br>
         <div class="form-group">
@@ -67,7 +67,7 @@
       </div>
     </div>  
     <div class="row">
-      <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset 3">
+      <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
         <h2 style="text-align: center">Time available</h2>
         <br>
         <div class="form-group">
@@ -125,7 +125,7 @@
       </div>
     </div>        
     <div class="row">
-      <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset 3">
+      <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
         <br>
         <div class="form-group">
           <label for="name">
@@ -135,7 +135,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset 3">
+      <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
         <p v-if="lastServerError">{{ lastServerError }}</p>    
         <button 
           class="btn btn-primary" 
