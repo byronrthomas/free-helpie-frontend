@@ -1,12 +1,14 @@
 <template>
   <div>
     <template v-for="(item, index) in alreadySelected">
-      <div class="list-item" :key="index">{{ item }}</div>
-      <button type="button" class="close" aria-label="Close" :key="index" @click="deleteRow(index)">
-        <span aria-hidden="true">&times;</span>
-      </button>
+      <div class="list-item" :key="index">
+        {{ item }}
+        <button type="button" class="close" aria-label="Close" :key="index" @click="deleteRow(index)">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
     </template>
-    <select :value="newSelection" @input="newSelectionChanged">
+    <select :value="newSelection" @input="newSelectionChanged($event.target.value)">
       <option disabled value=""></option>
       <option v-for="possibleOption in possibleOptions" :key="possibleOption">
         {{ possibleOption }}
@@ -60,6 +62,7 @@ export default {
     },
     newSelectionChanged(newValue) {
       this.newSelection = newValue
+      console.log(this.value)
       this.$emit('input', this.value)
     }
   }
