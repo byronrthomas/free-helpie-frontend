@@ -8,7 +8,7 @@
         </button>
       </div>
     </template>
-    <select :value="newSelection" @input="newSelectionChanged($event.target.value)">
+    <select :value="newSelection" @input="newSelectionChanged($event.target.value)" class="form-control">
       <option disabled value=""></option>
       <option v-for="possibleOption in possibleOptions" :key="possibleOption">
         {{ possibleOption }}

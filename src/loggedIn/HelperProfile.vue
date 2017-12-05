@@ -29,13 +29,15 @@
               <input
                       type="checkbox"
                       id="locationHome"
-                      value="LocationHome"> From your home
+                      value="LocationHome"
+                      v-model="helperLocationTypes"> From your home
           </label>
           <label for="locationAway">
               <input
                       type="checkbox"
                       id="locationAway"
-                      value="LocationAway"> On location
+                      value="LocationAway"
+                      v-model="helperLocationTypes"> On location
           </label>
         </div>
         <div class="form-group">
@@ -95,25 +97,29 @@
               <input
                       type="checkbox"
                       id="weekday"
-                      value="TimeslotWeekday"> Weekday
+                      value="TimeslotWeekday"
+                      v-model="helperTimings.slots"> Weekday
           </label>
           <label for="weekend">
               <input
                       type="checkbox"
                       id="weekend"
-                      value="TimeslotWeekend"> Weekend
+                      value="TimeslotWeekend"
+                      v-model="helperTimings.slots"> Weekend
           </label>
           <label for="evening">
               <input
                       type="checkbox"
                       id="evening"
-                      value="TimeslotEvening"> Evening
+                      value="TimeslotEvening"
+                      v-model="helperTimings.slots"> Evening
           </label>
           <label for="daytime">
               <input
                       type="checkbox"
                       id="daytime"
-                      value="TimeslotDaytime"> Daytime
+                      value="TimeslotDaytime"
+                      v-model="helperTimings.slots"> Daytime
           </label>
         </div>       
       </div>
@@ -157,11 +163,12 @@ function makeEmptyFormData() {
     helperCategories: [],
     helperSkills: [],
     helperDescription: '',
+    helperLocationTypes: [],
     helperTimings: {
       regularAmount: {
         unit: '1hr', 
         frequency: 'Week'},
-      availableSlots: []
+      slots: []
     },
     helperAgreedToTsAndCs: false
   }
@@ -176,6 +183,7 @@ export default {
         createOrUpdate: 'Update',
         personalInfo: this.initialFormValue.personalInfo,
         helperLocations: this.initialFormValue.helperLocations,
+        helperLocationTypes: this.initialFormValue.helperLocationTypes,
         helperCategories: this.initialFormValue.helperCategories,
         helperSkills: this.initialFormValue.helperSkills,
         helperDescription: this.initialFormValue.helperDescription,
