@@ -2,7 +2,7 @@
   <div>
     <div class="row">
       <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset 3">
-        <h4>{{ createOrUpdate }} your profile</h4>
+        <h4 style="text-align: center">{{ createOrUpdate }} your profile</h4>
       </div>
     </div>
     <div class="row">
@@ -40,10 +40,94 @@
         </div>
         <div class="form-group">
           <label>Where can you help?</label>
-          <multi-select-fixed-options v-model="availableLocations" :possibleOptions="possibleLocations"/>
+          <multi-select-fixed-options v-model="helperLocations" :possibleOptions="possibleLocations"/>
         </div>
       </div>
-    </div>    
+    </div>
+    <div class="row">
+      <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset 3">
+        <h2 style="text-align: center">Experience &amp; skills</h2>
+        <br>
+        <div class="form-group">
+          <label>What can you help with?</label>
+          <multi-select-fixed-options v-model="helperCategories" :possibleOptions="possibleCategories"/>
+        </div>
+        <div class="form-group">
+          <label>What skills can you offer?</label>
+          <multi-select-fixed-options v-model="helperSkills" :possibleOptions="possibleSkills"/>
+        </div>
+        <div class="form-group">
+          <label>Please tell us a bit about yourself:</label><br>
+          <textarea v-model="helperDescription" :placeholder="descriptionSuggestion"
+          rows="5"
+          class="form-control"/>
+        </div>        
+      </div>
+    </div>  
+    <div class="row">
+      <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset 3">
+        <h2 style="text-align: center">Time available</h2>
+        <br>
+        <div class="form-group">
+          <label>How many hours can you put in?</label>
+          <select 
+            id="timeAmount" 
+            v-model="helperTimings.regularAmount.unit">
+              <option>1hr</option>
+              <option>2hr</option>
+              <option>3hr</option>
+              <option>4hr</option>
+              <option>1day</option>
+              <option>2days</option>
+              <option>3days</option>
+          </select>
+          <span>per</span>
+          <select 
+            id="timeFrequency" 
+            v-model="helperTimings.regularAmount.frequency">
+              <option>Week</option>
+              <option>Month</option>
+          </select>          
+        </div>
+        <div class="form-group">
+          <label>When are you available?</label>
+          <label for="weekday">
+              <input
+                      type="checkbox"
+                      id="weekday"
+                      value="TimeslotWeekday"> Weekday
+          </label>
+          <label for="weekend">
+              <input
+                      type="checkbox"
+                      id="weekend"
+                      value="TimeslotWeekend"> Weekend
+          </label>
+          <label for="evening">
+              <input
+                      type="checkbox"
+                      id="evening"
+                      value="TimeslotEvening"> Evening
+          </label>
+          <label for="daytime">
+              <input
+                      type="checkbox"
+                      id="daytime"
+                      value="TimeslotDaytime"> Daytime
+          </label>
+        </div>       
+      </div>
+    </div>        
+    <div class="row">
+      <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset 3">
+        <br>
+        <div class="form-group">
+          <label for="name">
+          <input type="checkbox" id="tsAndCs" v-model="helperAgreedToTsAndCs" > I agree to the terms &amp; conditions
+          </label>
+        </div>
+      </div>
+    </div>
     <div class="row">
       <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset 3">
         <p v-if="lastServerError">{{ lastServerError }}</p>    
@@ -60,24 +144,62 @@
 
 <script>
 import {mapGetters} from 'vuex'
+import MultiselectFixedOptions from '../sharedComponents/MultiSelectFixedOptions.vue'
+
+function makeEmptyFormData() {
+  return {
+    createOrUpdate: 'Create',
+    personalInfo: {
+      name: '',
+      photo: null
+    },
+    helperLocations: [],
+    helperCategories: [],
+    helperSkills: [],
+    helperDescription: '',
+    helperTimings: {
+      regularAmount: {
+        unit: '1hr', 
+        frequency: 'Week'},
+      availableSlots: []
+    },
+    helperAgreedToTsAndCs: false
+  }
+}
+
+
+
 export default {
   data () {
-    let possibleLocations = [
-      'Central London',
-      'North London',
-      'North-West London',
-      'North-East London',
-      'South London',
-      'South-West London',
-      'South-East London',
-    ]
-    return { 
-      userDetails: {username: '', password: ''},
-      availableLocations: [] 
-      }
+    if (this.initialFormValue) {
+      return {
+        createOrUpdate: 'Update',
+        personalInfo: this.initialFormValue.personalInfo,
+        helperLocations: this.initialFormValue.helperLocations,
+        helperCategories: this.initialFormValue.helperCategories,
+        helperSkills: this.initialFormValue.helperSkills,
+        helperDescription: this.initialFormValue.helperDescription,
+        helperTimings: this.initialFormValue.helperTimings,
+        helperAgreedToTsAndCs: this.initialFormValue.helperAgreedToTsAndCs}
+    } else {
+      return makeEmptyFormData()
+    }
   },
+  props: ['possibleLocations',
+          'initialFormValue',
+          'possibleCategories',
+          'possibleSkills',
+          'descriptionSuggestion'],
   computed: {
     ...mapGetters(['lastServerError'])
+  },
+  components: {
+    'multi-select-fixed-options': MultiselectFixedOptions
+  },
+  methods: {
+    submitForm() {
+      console.log(this.$data)
+    }
   }
 }
 </script>
