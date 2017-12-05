@@ -78,40 +78,48 @@
       </div>
       <div class="form-group">
         <label>When are you available?</label>
-        <label for="weekday">
-            <input
-                    type="checkbox"
-                    id="weekday"
-                    value="TimeslotWeekday"
-                    v-model="helperTimings.slots"> Weekday
-        </label>
-        <label for="weekend">
-            <input
-                    type="checkbox"
-                    id="weekend"
-                    value="TimeslotWeekend"
-                    v-model="helperTimings.slots"> Weekend
-        </label>
-        <label for="evening">
-            <input
-                    type="checkbox"
-                    id="evening"
-                    value="TimeslotEvening"
-                    v-model="helperTimings.slots"> Evening
-        </label>
-        <label for="daytime">
-            <input
-                    type="checkbox"
-                    id="daytime"
-                    value="TimeslotDaytime"
-                    v-model="helperTimings.slots"> Daytime
-        </label>
+        <div class="checkbox-inline">
+          <label>
+              <input
+                      type="checkbox"
+                      id="weekday"
+                      value="TimeslotWeekday"
+                      v-model="helperTimings.slots"> Weekday
+          </label>
+        </div>
+        <div class="checkbox-inline">
+          <label>
+              <input
+                      type="checkbox"
+                      id="weekend"
+                      value="TimeslotWeekend"
+                      v-model="helperTimings.slots"> Weekend
+          </label>
+        </div>
+        <div class="checkbox-inline">
+          <label>
+              <input
+                      type="checkbox"
+                      id="evening"
+                      value="TimeslotEvening"
+                      v-model="helperTimings.slots"> Evening
+          </label>
+        </div>
+        <div class="checkbox-inline">
+          <label>
+              <input
+                      type="checkbox"
+                      id="daytime"
+                      value="TimeslotDaytime"
+                      v-model="helperTimings.slots"> Daytime
+          </label>
+        </div>
       </div>       
     </form-segment>
     <div class="row">
-      <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
+      <div class="col-xs-12 col-sm-8 col-sm-offset-2">
         <br>
-        <div class="form-group">
+        <div class="checkbox">
           <label for="name">
           <input type="checkbox" id="tsAndCs" v-model="helperAgreedToTsAndCs" > I agree to the terms &amp; conditions
           </label>
@@ -119,7 +127,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
+      <div class="col-xs-12 col-sm-8 col-sm-offset-2">
         <p v-if="lastServerError">{{ lastServerError }}</p>    
         <button 
           class="btn btn-primary" 
