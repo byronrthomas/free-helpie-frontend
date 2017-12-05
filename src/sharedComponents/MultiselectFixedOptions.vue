@@ -65,7 +65,6 @@ export default {
     },
     newSelectionChanged(newValue) {
       this.newSelection = newValue
-      console.log(this.value)
       this.$emit('input', this.value)
     }
   }

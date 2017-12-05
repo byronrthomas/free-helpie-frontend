@@ -8,7 +8,11 @@
         </div>
         <div class="floatable-bordered floatable-bordered-bottom">
           <br>
-        <slot></slot>
+          <div class="row">
+            <div class="col-xs-10 col-xs-offset-1">
+              <slot></slot>
+            </div>
+          </div>
         </div>
         <br>
       </div>
@@ -28,7 +32,6 @@ export default {
       border-width: 1px 1px 0px 1px; 
       border-color: #ddd; 
       border-style: solid;
-      padding: 20px
   }
   .floatable-bordered.floatable-bordered-bottom {
       border-width: 1px

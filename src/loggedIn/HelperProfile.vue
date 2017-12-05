@@ -110,23 +110,28 @@
     </form-segment>
     <div class="row">
       <div class="col-xs-12 col-sm-8 col-sm-offset-2">
-        <br>
-        <div class="checkbox">
-          <label for="name">
-          <input type="checkbox" id="tsAndCs" v-model="helperAgreedToTsAndCs" > I agree to the terms &amp; conditions
-          </label>
+        <div class="row">
+          <div class="col-xs-10 col-xs-offset-1">
+            <div class="checkbox">
+              <label for="name">
+              <input type="checkbox" id="tsAndCs" v-model="helperAgreedToTsAndCs" > I agree to the terms &amp; conditions
+              </label>
+            </div>
+            <p v-if="lastServerError">{{ lastServerError }}</p>    
+            <button 
+              class="btn btn-primary" 
+              style="width:100%; text-align:center"
+              @click="submitForm">
+              {{ createOrUpdate }}
+              </button>        
+            <br><br>
+          </div>
         </div>
       </div>
     </div>
     <div class="row">
       <div class="col-xs-12 col-sm-8 col-sm-offset-2">
-        <p v-if="lastServerError">{{ lastServerError }}</p>    
-        <button 
-          class="btn btn-primary" 
-          @click="submitForm">
-          {{ createOrUpdate }}
-          </button>        
-        <br><br>
+        
       </div>
     </div>
   </div>
