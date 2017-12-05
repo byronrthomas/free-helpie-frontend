@@ -2,13 +2,15 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import {notLoggedInStore} from '../notLoggedIn/storeModule'
+import {loggedInStore} from '../loggedIn/storeModule'
 
 Vue.use(Vuex)
 
 export function store (server) {
   return new Vuex.Store({
     modules: {
-      notloggedin: notLoggedInStore(server)
+      notloggedin: notLoggedInStore(server),
+      loggedin: loggedInStore(server)
     },
     state: {
       userState: null,

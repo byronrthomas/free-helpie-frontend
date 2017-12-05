@@ -197,6 +197,9 @@ export default {
   methods: {
     submitForm () {
       console.log(this.$data)
+      const dataToPost = this.$data
+      delete dataToPost.createOrUpdate
+      this.$store.dispatch('loggedin/updateUserProfile', this.$data)
     }
   }
 }
