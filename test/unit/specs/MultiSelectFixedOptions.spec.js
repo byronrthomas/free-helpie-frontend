@@ -21,6 +21,24 @@ describe('MultiSelectFixedOptions.vue', () => {
     expect(vm.value).toEqual([])
   })
 
+  describe('if an initial value is provided', () => {
+    let vm
+    beforeEach(() => {
+      vm = createComponentGivenOptions(NON_EMPTY_ARBITRARY_LIST)
+      vm.value = [NON_EMPTY_ARBITRARY_LIST[2], NON_EMPTY_ARBITRARY_LIST[0]]
+    })
+
+    it('should be possible to add to it', () => {
+      vm.newSelectionChanged(NON_EMPTY_ARBITRARY_LIST[1])
+      expect(vm.value).toEqual([NON_EMPTY_ARBITRARY_LIST[2], NON_EMPTY_ARBITRARY_LIST[0], NON_EMPTY_ARBITRARY_LIST[1]])
+    })
+
+    it('should not be possible to add to it without selecting a new value', () => {
+      vm.addRow()
+      expect(vm.value).toEqual([NON_EMPTY_ARBITRARY_LIST[2], NON_EMPTY_ARBITRARY_LIST[0]])
+    })
+  })
+
   it('should put a non-empty new selection into the value', () => {
     const vm = createComponentGivenOptions(NON_EMPTY_ARBITRARY_LIST)
     vm.newSelectionChanged('cheese')

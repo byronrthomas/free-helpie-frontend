@@ -28,27 +28,35 @@ export default {
   },
   props: ['possibleOptions'],
   computed: {
-    value() {
-      return this.newSelection 
-        ? Array.concat(this.alreadySelected, [this.newSelection])
-        : this.alreadySelected
+    value: {
+      get () {
+        return this.newSelection 
+          ? Array.concat(this.alreadySelected, [this.newSelection])
+          : this.alreadySelected
+      },
+      set (newValue) {
+        this.alreadySelected = newValue
+        this.newSelection = ''
+      }
     }
   },
   methods: {
     addRow() {
       if (!this.newSelection) {
         alert("Cannot add another selection if nothing currently selected")
+      } else {
+        this.alreadySelected.push(this.newSelection)
+        this.newSelection = ''
+        this.$emit('input', this.value)
       }
-      this.alreadySelected.push(this.newSelection)
-      this.newSelection = ''
-      this.$emit('input', this.value)
     },
     deleteRow(index) {
       if (this.alreadySelected.length <= index || index < 0) {
         alert("Invalid row to delete")
+      } else {
+        this.alreadySelected.splice(index, 1)
+        this.$emit('input', this.value)
       }
-      this.alreadySelected.splice(index, 1)
-      this.$emit('input', this.value)
     },
     newSelectionChanged(newValue) {
       this.newSelection = newValue
