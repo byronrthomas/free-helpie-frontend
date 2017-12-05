@@ -16,16 +16,16 @@
         </div>
     </form-segment>
     <form-segment header-text="Location">
+      <label>Where are you available?</label>
       <div class="form-group">
-        <label>Where are you available?</label>
-        <label for="locationHome">
+        <label class="checkbox-inline">
             <input
                     type="checkbox"
                     id="locationHome"
                     value="LocationHome"
                     v-model="helperLocationTypes"> From your home
         </label>
-        <label for="locationAway">
+        <label class="checkbox-inline">
             <input
                     type="checkbox"
                     id="locationAway"
@@ -55,8 +55,8 @@
         </div>        
     </form-segment>
     <form-segment header-text="Time available">
+      <label>How many hours can you put in?</label>
       <div class="form-group">
-        <label>How many hours can you put in?</label>
         <select 
           id="timeAmount" 
           v-model="helperTimings.regularAmount.unit">
@@ -77,43 +77,35 @@
         </select>          
       </div>
       <div class="form-group">
-        <label>When are you available?</label>
-        <div class="checkbox-inline">
-          <label>
-              <input
-                      type="checkbox"
-                      id="weekday"
-                      value="TimeslotWeekday"
-                      v-model="helperTimings.slots"> Weekday
-          </label>
-        </div>
-        <div class="checkbox-inline">
-          <label>
-              <input
-                      type="checkbox"
-                      id="weekend"
-                      value="TimeslotWeekend"
-                      v-model="helperTimings.slots"> Weekend
-          </label>
-        </div>
-        <div class="checkbox-inline">
-          <label>
-              <input
-                      type="checkbox"
-                      id="evening"
-                      value="TimeslotEvening"
-                      v-model="helperTimings.slots"> Evening
-          </label>
-        </div>
-        <div class="checkbox-inline">
-          <label>
-              <input
-                      type="checkbox"
-                      id="daytime"
-                      value="TimeslotDaytime"
-                      v-model="helperTimings.slots"> Daytime
-          </label>
-        </div>
+        <label class="checkbox">When are you available?</label>
+        <label class="checkbox-inline">
+            <input
+                    type="checkbox"
+                    id="weekday"
+                    value="TimeslotWeekday"
+                    v-model="helperTimings.slots"> Weekday
+        </label>
+        <label  class="checkbox-inline">
+            <input
+                    type="checkbox"
+                    id="weekend"
+                    value="TimeslotWeekend"
+                    v-model="helperTimings.slots"> Weekend
+        </label>
+        <label  class="checkbox-inline">
+            <input
+                    type="checkbox"
+                    id="evening"
+                    value="TimeslotEvening"
+                    v-model="helperTimings.slots"> Evening
+        </label>
+        <label class="checkbox-inline">
+            <input
+                    type="checkbox"
+                    id="daytime"
+                    value="TimeslotDaytime"
+                    v-model="helperTimings.slots"> Daytime
+        </label>
       </div>       
     </form-segment>
     <div class="row">
