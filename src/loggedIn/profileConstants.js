@@ -5,7 +5,7 @@ export const LOCATIONS = [
   'North-East London',
   'South London',
   'South-West London',
-  'South-East London',
+  'South-East London'
 ]
 
 export const CATEGORIES = [

@@ -142,7 +142,7 @@ import {mapGetters} from 'vuex'
 import MultiselectFixedOptions from '../sharedComponents/MultiSelectFixedOptions.vue'
 import FormSegment from '../sharedComponents/FormSegment.vue'
 
-function makeEmptyFormData() {
+function makeEmptyFormData () {
   return {
     createOrUpdate: 'Create',
     personalInfo: {
@@ -156,15 +156,13 @@ function makeEmptyFormData() {
     helperLocationTypes: [],
     helperTimings: {
       regularAmount: {
-        unit: '1hr', 
+        unit: '1hr',
         frequency: 'Week'},
       slots: []
     },
     helperAgreedToTsAndCs: false
   }
 }
-
-
 
 export default {
   data () {
@@ -183,11 +181,12 @@ export default {
       return makeEmptyFormData()
     }
   },
-  props: ['possibleLocations',
-          'initialFormValue',
-          'possibleCategories',
-          'possibleSkills',
-          'descriptionSuggestion'],
+  props: [
+    'possibleLocations',
+    'initialFormValue',
+    'possibleCategories',
+    'possibleSkills',
+    'descriptionSuggestion'],
   computed: {
     ...mapGetters(['lastServerError'])
   },
@@ -196,7 +195,7 @@ export default {
     'form-segment': FormSegment
   },
   methods: {
-    submitForm() {
+    submitForm () {
       console.log(this.$data)
     }
   }

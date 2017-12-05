@@ -13,13 +13,13 @@ import HelperProfile from './HelperProfile.vue'
 import { LOCATIONS, SKILLS, CATEGORIES, PROFILE_TEXT_SUGGESTION } from './profileConstants'
 // import {mapGetters, mapActions} from 'vuex'
 export default {
-  data() {
+  data () {
     return {
       possibleLocations: LOCATIONS,
       possibleSkills: SKILLS,
       possibleCategories: CATEGORIES,
       profileTextSuggestion: PROFILE_TEXT_SUGGESTION
-      }
+    }
   },
   // computed: {
   //   ...mapGetters({'currentAction': 'notloggedin/currentAction'})
@@ -28,8 +28,8 @@ export default {
   //   return {usernameForVerification: ''}
   // },
   components: {
-    'app-helper-profile-form': HelperProfile,
-  },
+    'app-helper-profile-form': HelperProfile
+  }
   // methods: {
   //   handleCreateUser (userDetails) {
   //     this.usernameForVerification = userDetails.username

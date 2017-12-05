@@ -35,7 +35,7 @@ export default {
   computed: {
     value: {
       get () {
-        return this.newSelection 
+        return this.newSelection
           ? Array.concat(this.alreadySelected, [this.newSelection])
           : this.alreadySelected
       },
@@ -46,24 +46,24 @@ export default {
     }
   },
   methods: {
-    addRow() {
+    addRow () {
       if (!this.newSelection) {
-        alert("Cannot add another selection if nothing currently selected")
+        alert('Cannot add another selection if nothing currently selected')
       } else {
         this.alreadySelected.push(this.newSelection)
         this.newSelection = ''
         this.$emit('input', this.value)
       }
     },
-    deleteRow(index) {
+    deleteRow (index) {
       if (this.alreadySelected.length <= index || index < 0) {
-        alert("Invalid row to delete")
+        alert('Invalid row to delete')
       } else {
         this.alreadySelected.splice(index, 1)
         this.$emit('input', this.value)
       }
     },
-    newSelectionChanged(newValue) {
+    newSelectionChanged (newValue) {
       this.newSelection = newValue
       this.$emit('input', this.value)
     }
