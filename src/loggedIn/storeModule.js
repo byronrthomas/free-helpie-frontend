@@ -1,5 +1,6 @@
 function userProfileIsComplete (profile) {
-  return profile.personalInfo
+  return profile 
+    && profile.personalInfo
     && profile.helperLocations
     && profile.helperLocationTypes
     && profile.helperSkills
@@ -23,11 +24,24 @@ const EMPTY_USER_PROFILE = {
 
 function getPageGivenState(state) {
   if (!state.initialised) {
-    throw new Error("Cannot do anything with uninitialised state!")
+    return 'initialising'
   } else {
     return userProfileIsComplete(state.userProfile)
-      ? 'home'
+      ? ''
       : 'profile'
+  }
+}
+
+function extractUserData (resp) {
+  let users = [];
+  for (let key in resp.data) {
+    const user = {profile: resp.data[key], userId: key}
+    users.push(user)
+  }
+  if (users.length === 0) {
+    return EMPTY_USER_PROFILE
+  } else {
+    return users[0]
   }
 }
 
@@ -38,11 +52,15 @@ export function loggedInStore (server) {
     state: { 
       initialised: false,
       userProfile: null,
-      currentPage: 'initialising'
+      userId: null,
+      currentPage: 'home'
     },
     getters: {
       currentPage (state) {
-        return state.currentPage
+        const derivedPage = getPageGivenState(state) 
+        return derivedPage 
+          ? derivedPage 
+          : state.currentPage
       }
     },
     mutations: {
@@ -51,38 +69,36 @@ export function loggedInStore (server) {
       },
       setProfile (state, profileData) {
         state.userProfile = profileData
-        state.currentPage = getPageGivenState(state)
+      },
+      setUserId (state, userId) {
+        state.userId = userId
       },
       setInitialised(state) {
         state.initialised = true
       }
     },
     actions: {
-      initialise ({ commit }, payload) {
-        // Just simulate this for now
-        setTimeout(() => {
-          commit('setInitialised')
-          commit('setProfile', EMPTY_USER_PROFILE)
-        },
-        1000)
+      initialise ({ commit, rootGetters }) {
+        commit('setLastServerError', '', { root: true })
+        server.get('/users?token=' + rootGetters.authToken)
+          .then(resp => {
+            console.log(resp)
+            const {userId, profile} = extractUserData(resp) 
+            commit('setProfile', profile)
+            commit('setUserId', userId)
+            commit('setInitialised')
+          }).catch(err => commit('setLastServerError', err.message, { root: true }))
       },
       setPage ({ commit }, payload) {
         commit('setPage', payload)
       },
-      updateUserProfile({ commit }, userProfileData) {
+      updateUserProfile({ commit, dispatch, rootGetters }, userProfileData) {
         commit('setLastServerError', '', { root: true })
         // Just simulate this one for now
-        setTimeout(() => {
-          commit('setProfile', userProfileData)
-        }, 2000)
+        server.post('/users?token=' + rootGetters.authToken, userProfileData)
+          .then(() => dispatch('initialise'))
+          .catch(err => commit('setLastServerError', err.message, { root: true }))
       }
-      // createUser ({ commit }, payload) {
-      //   commit('setLastServerError', '', { root: true })
-      //   server
-      //     .post('/users', payload)
-      //     .then(() => commit('setAction', 'waitingForEmail'))
-      //     .catch(err => commit('setLastServerError', err, { root: true }))
-      // }
     }
   }
 }

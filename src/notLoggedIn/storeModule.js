@@ -19,7 +19,7 @@ export function notLoggedInStore (server) {
       createUser ({ commit }, payload) {
         commit('setLastServerError', '', { root: true })
         server
-          .post('/users', payload)
+          .post('/accounts', payload)
           .then(() => commit('setAction', 'waitingForEmail'))
           .catch(err => commit('setLastServerError', err, { root: true }))
       }

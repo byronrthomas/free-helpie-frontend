@@ -18,7 +18,7 @@ export function store (server) {
     },
     getters: {
       isLoggedIn: state => {
-        return state.userState
+        return state.userState != null
       },
       username: state => {
         return state.userState == null
@@ -27,6 +27,11 @@ export function store (server) {
       },
       lastServerError: state => {
         return state.lastServerError
+      },
+      authToken: state => {
+        return state.userState == null
+          ? ''
+          : state.userState.authToken
       }
     },
     mutations: {
@@ -41,8 +46,8 @@ export function store (server) {
       authUser ({commit}, payload) {
         commit('setLastServerError', '')
         server
-          .get('/users', payload)
-          .then(resp => commit('setUser', payload))
+          .get('/accounts', payload)
+          .then(resp => commit('setUser', {authToken: resp.authData, username: payload.username}))
           .catch(err => commit('setLastServerError', err))
       },
       // TBH: this would have to be handled server-side
@@ -50,7 +55,7 @@ export function store (server) {
       userVerificationReceived ({commit}, payload) {
         commit('setLastServerError', '')
         server
-          .post('/userVerification', payload)
+          .post('/accountVerification', payload)
           .catch(err => alert(err))
       }
     }
