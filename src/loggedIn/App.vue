@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container"  style="background-color: #fffafa">
     <app-helper-profile-form 
       v-if="currentPage === 'profile'"
       :possible-locations="possibleLocations"
@@ -7,12 +7,13 @@
       :possible-categories="possibleCategories"
       :description-suggestion="profileTextSuggestion"/>
     <p v-if="currentPage === 'initialising'">Initialising...</p>
-    <p v-if="currentPage === 'home'">You're home boy!!</p>
+    <app-home-page v-if="currentPage === 'home'"/>
   </div>
 </template>
 
 <script>
 import HelperProfile from './HelperProfile.vue'
+import HomePage from './HomePage.vue'
 import { LOCATIONS, SKILLS, CATEGORIES, PROFILE_TEXT_SUGGESTION } from './profileConstants'
 import {mapGetters, mapActions} from 'vuex'
 export default {
@@ -28,7 +29,8 @@ export default {
     ...mapGetters({'currentPage': 'loggedin/currentPage'})
   },
   components: {
-    'app-helper-profile-form': HelperProfile
+    'app-helper-profile-form': HelperProfile,
+    'app-home-page': HomePage
   },
   created() {
     this.$store.dispatch('loggedin/initialise')
