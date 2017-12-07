@@ -20,6 +20,11 @@ export default {
         return `<strong>Mailbox (${this.unreadEmailCount})</strong>` 
       }
     }
+  },
+  methods: {
+    alert(msg) {
+      alert(msg)
+    }
   }
 }
 </script>
