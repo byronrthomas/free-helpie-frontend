@@ -2,14 +2,31 @@
   <div>
     <div class="row">
       <div class="col-xs-6 col-xs-offset-6">
-        <button class="btn btn-primary" @click="currentFilter = 'Unfiltered'">Unfiltered</button>
-        <button class="btn btn-primary" @click="currentFilter = 'MySkills'">My skills</button>
-        <button class="btn btn-primary" @click="currentFilter = 'MyLocation'">My location</button>
+        <button 
+          class="btn btn-primary" 
+          @click="currentFilter = 'Unfiltered'">
+          Unfiltered
+        </button>
+        <button 
+          class="btn btn-primary"
+          @click="currentFilter = 'MySkills'">
+          My skills
+        </button>
+        <button 
+          class="btn btn-primary" 
+          @click="currentFilter = 'MyLocation'">
+          My location
+        </button>
       </div>
     </div>
     <div class="row">
       <div class="col-xs-12">
-        <ad-summary-item v-for="post in filteredPosts" :ad="post" :key="post.id"/>
+        <ad-summary-item 
+          v-for="post in filteredPosts" 
+          :ad="post" 
+          :key="post.id"
+          @viewPost="$emit('viewPost', post)"
+          @savePost="$emit('savePost', post)" />
       </div>
     </div>
   </div>

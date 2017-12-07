@@ -1,9 +1,9 @@
 <template>
   <div>
-    <button class="btn btn-primary">Latest posts</button>
-    <button class="btn btn-primary" v-html="mailboxHtml"></button>
-    <button class="btn btn-primary">Your posts</button>
-    <button class="btn btn-primary">Saved posts</button>
+    <button class="btn btn-primary" @click="$emit('gotoLatestAds')">Latest posts</button>
+    <button class="btn btn-primary" v-html="mailboxHtml" @click="alert('Not yet implemented, would view mailbox')"></button>
+    <button class="btn btn-primary" @click="alert('Not yet implemented, would view posts created by user')">Your posts</button>
+    <button class="btn btn-primary" @click="alert('Not yet implemented, would view posts saved (favourited) by user')">Saved posts</button>
   </div>
 </template>
 

@@ -23,7 +23,7 @@ A small amount of time once a week or once a month should be fine. We can do it 
   },
   {
     id: 3,
-    postedBy: 'John Doe', 
+    postedBy: 'Jana Swiss', 
     title: 'Please could somebody local walk my dog', 
     categories: ['Pets'], 
     skills: [],
