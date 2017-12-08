@@ -11,7 +11,7 @@ function wrapAsPromise (func, data) {
     })
 }
 
-function Server (userAuth, userData) {
+function Server (userAuth, userData, posts) {
   return {
     get (resourcePath, data) {
       if (resourcePath === '/accounts') {
@@ -19,6 +19,9 @@ function Server (userAuth, userData) {
       } 
       if (resourcePath.startsWith('/users?token=')) {
         return wrapAsPromise(userData.get, resourcePath.substring('/users?token='.length))
+      }
+      if (resourcePath === '/posts') {
+        return wrapAsPromise(posts.get, data)
       }
       throw new Error(`Unknown route: GET ${resourcePath}`)
     },

@@ -68,6 +68,9 @@ export function UserAuthServer () {
     },
     syncPutAuthUsers(token, value) {
       authToUsers[token] = value
+    },
+    syncGetUserCanSeeFullPosts(token, value) {
+      return typeof usersToAuth.getByValue(token) != 'undefined'
     }
   }
 }
