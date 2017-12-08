@@ -11,6 +11,12 @@
         </button>
         <button 
           class="btn" 
+          @click="toggleInterestsFilter"
+          :class="{'btn-primary': filteringByInterests}">
+          My interests
+        </button>
+        <button 
+          class="btn" 
           @click="toggleLocationsFilter"
           :class="{'btn-primary': filteringByLocations}">
           My location
