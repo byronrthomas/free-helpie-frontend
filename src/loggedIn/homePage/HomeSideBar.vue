@@ -17,12 +17,12 @@ export default {
       if (this.unreadEmailCount === 0) {
         return 'Mailbox'
       } else {
-        return `<strong>Mailbox (${this.unreadEmailCount})</strong>` 
+        return `<strong>Mailbox (${this.unreadEmailCount})</strong>`
       }
     }
   },
   methods: {
-    alert(msg) {
+    alert (msg) {
       alert(msg)
     }
   }

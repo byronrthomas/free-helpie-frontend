@@ -42,7 +42,7 @@ import { mapGetters } from 'vuex'
 import AdSummaryItem from './AdSummaryItem.vue'
 
 export default {
-  data() {
+  data () {
     return {
       // TODO: all of these should come from central state
       // need to set up some test user profile data first
@@ -51,13 +51,11 @@ export default {
       userInterests: ['Smoking pot']}
   },
   computed: {
-    ...mapGetters({ 
+    ...mapGetters({
       filteringBySkills: 'loggedin/posts/isFilteredBySkills',
       filteringByLocations: 'loggedin/posts/isFilteredByLocations',
       filteringByInterests: 'loggedin/posts/isFilteredByInterests',
-      posts: 'loggedin/posts/getPosts'
-      }
-    )
+      posts: 'loggedin/posts/getPosts'})
   },
   methods: {
     toggleSkillsFilter () {

@@ -1,7 +1,7 @@
 export function postsStore (server) {
   return {
     namespaced: true,
-    state: { 
+    state: {
       posts: [],
       filter: {
         postedByFilter: [],
@@ -36,11 +36,11 @@ export function postsStore (server) {
       },
       setSkillsFilter (state, skills) {
         state.filter.skillsFilter = skills
-      },      
+      },
       setLocationsFilter (state, locations) {
         state.filter.locationsFilter = locations
       },
-      setPosts(state, posts) {
+      setPosts (state, posts) {
         state.posts = posts
       }
     },
@@ -50,7 +50,7 @@ export function postsStore (server) {
       //   server.get('/users?token=' + rootGetters.authToken)
       //     .then(resp => {
       //       console.log(resp)
-      //       const {userId, profile} = extractUserData(resp) 
+      //       const {userId, profile} = extractUserData(resp)
       //       commit('setProfile', profile)
       //       commit('setUserId', userId)
       //       commit('setInitialised')
@@ -67,12 +67,12 @@ export function postsStore (server) {
       setSkillsFilter ({ commit, dispatch }, skills) {
         commit('setSkillsFilter', skills)
         dispatch('refresh')
-      },      
+      },
       setLocationsFilter ({ commit, dispatch }, locations) {
         commit('setLocationsFilter', locations)
         dispatch('refresh')
       },
-      refresh({ commit, dispatch, rootGetters, getters }) {
+      refresh ({ commit, dispatch, rootGetters, getters }) {
         commit('setLastServerError', '', { root: true })
         const filter = getters.getFilter
         const req = {authToken: rootGetters.authToken, ...filter}

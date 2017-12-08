@@ -28,7 +28,7 @@ export default {
     'ad-detail-page': AdDetailPage
   },
   methods: {
-    viewPost(post) {
+    viewPost (post) {
       this.focusArea = 'adDetail'
       this.currentAd = post
     }

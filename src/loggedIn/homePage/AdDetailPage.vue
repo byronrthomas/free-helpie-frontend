@@ -18,10 +18,10 @@
 
 <script>
 // This probably exists, just can't find it right now
-function stringDotFormat(joiner, strings) {
+function stringDotFormat (joiner, strings) {
   return strings.length === 1
-        ? strings[0] 
-        : strings.reduce( (acc, nxt) => acc + joiner + nxt, '')
+        ? strings[0]
+        : strings.reduce((acc, nxt) => acc + joiner + nxt, '')
 }
 
 const REMOTE_LOCATION = 'REMOTE'
@@ -32,21 +32,21 @@ export default {
     formattedSkills () {
       return stringDotFormat(', ', this.ad.skills)
     },
-    formattedInterests() {
+    formattedInterests () {
       return stringDotFormat(', ', this.ad.interests)
     },
-    formattedLocation() {
+    formattedLocation () {
       if (this.ad.location) {
         const remoteSuffix = this.ad.remote ? ' / ' + REMOTE_LOCATION : ''
         return this.ad.location + remoteSuffix
       }
       return REMOTE_LOCATION
     },
-    ableToEdit() {
+    ableToEdit () {
       return this.ad.postedBy === 'Jana Swiss'
     },
-    toggleSaveText() {
-      return this.ad.postedBy === 'John Doe' ? 'Unfavourite' : 'Save' 
+    toggleSaveText () {
+      return this.ad.postedBy === 'John Doe' ? 'Unfavourite' : 'Save'
     }
   }
 }

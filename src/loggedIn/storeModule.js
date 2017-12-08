@@ -1,14 +1,16 @@
+import { postsStore } from './homePage/postsStore'
+
 function userProfileIsComplete (profile) {
-  return profile 
-    && profile.personalInfo
-    && profile.helperLocations
-    && profile.helperLocationTypes
-    && profile.helperSkills
-    && profile.helperInterests
-    && profile.helperTimings
-    && profile.helperDescription
-    && profile.helperAgreedToTsAndCs
-} 
+  return profile &&
+    profile.personalInfo &&
+    profile.helperLocations &&
+    profile.helperLocationTypes &&
+    profile.helperSkills &&
+    profile.helperInterests &&
+    profile.helperTimings &&
+    profile.helperDescription &&
+    profile.helperAgreedToTsAndCs
+}
 
 // Within page, state is further split by resource types (REST endpoint paths)
 const EMPTY_USER_PROFILE = {
@@ -22,7 +24,7 @@ const EMPTY_USER_PROFILE = {
   helperAgreedToTsAndCs: false
 }
 
-function getPageGivenState(state) {
+function getPageGivenState (state) {
   if (!state.initialised) {
     return 'initialising'
   } else {
@@ -33,7 +35,7 @@ function getPageGivenState(state) {
 }
 
 function extractUserData (resp) {
-  let users = [];
+  let users = []
   for (let key in resp.data) {
     const user = {profile: resp.data[key], userId: key}
     users.push(user)
@@ -45,13 +47,11 @@ function extractUserData (resp) {
   }
 }
 
-import {postsStore} from './homePage/postsStore'
-
 export function loggedInStore (server) {
   return {
     namespaced: true,
-    // State is split down by page 
-    state: { 
+    // State is split down by page
+    state: {
       initialised: false,
       userProfile: null,
       userId: null,
@@ -59,10 +59,8 @@ export function loggedInStore (server) {
     },
     getters: {
       currentPage (state) {
-        const derivedPage = getPageGivenState(state) 
-        return derivedPage 
-          ? derivedPage 
-          : state.currentPage
+        const derivedPage = getPageGivenState(state)
+        return derivedPage || state.currentPage
       }
     },
     mutations: {
@@ -75,7 +73,7 @@ export function loggedInStore (server) {
       setUserId (state, userId) {
         state.userId = userId
       },
-      setInitialised(state) {
+      setInitialised (state) {
         state.initialised = true
       }
     },
@@ -85,7 +83,7 @@ export function loggedInStore (server) {
         server.get('/users?token=' + rootGetters.authToken)
           .then(resp => {
             console.log(resp)
-            const {userId, profile} = extractUserData(resp) 
+            const {userId, profile} = extractUserData(resp)
             commit('setProfile', profile)
             commit('setUserId', userId)
             commit('setInitialised')
@@ -94,7 +92,7 @@ export function loggedInStore (server) {
       setPage ({ commit }, payload) {
         commit('setPage', payload)
       },
-      updateUserProfile({ commit, dispatch, rootGetters }, userProfileData) {
+      updateUserProfile ({ commit, dispatch, rootGetters }, userProfileData) {
         commit('setLastServerError', '', { root: true })
         // Just simulate this one for now
         server.post('/users?token=' + rootGetters.authToken, userProfileData)

@@ -27,8 +27,8 @@ export default {
   computed: {
     formattedSkills () {
       return this.ad.skills.length === 1
-        ? this.ad.skills[0] 
-        : this.ad.skills.reduce( (acc, nxt) => acc + ", " + nxt, '')
+        ? this.ad.skills[0]
+        : this.ad.skills.reduce((acc, nxt) => acc + ', ' + nxt, '')
     },
     saveOrUnsave () {
       return this.isSaved ? 'Unsave' : 'Save'
@@ -38,8 +38,8 @@ export default {
     }
   },
   methods: {
-    alertNotImplemented() {
-      alert("Don't know where this link would go to yet? User profile?")
+    alertNotImplemented () {
+      alert('Don\'t know where this link would go to yet? User profile?')
     }
   }
 }
@@ -48,8 +48,8 @@ export default {
 <style>
   .ad-summary-container {
       background-color: white;
-      border-width: 1px 1px 1px 1px; 
-      border-color: #ddd; 
+      border-width: 1px 1px 1px 1px;
+      border-color: #ddd;
       border-style: solid;
       padding: 10px;
       margin-bottom: 10px;

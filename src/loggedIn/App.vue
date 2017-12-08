@@ -27,7 +27,7 @@
 import HelperProfile from './HelperProfile.vue'
 import HomePage from './HomePage.vue'
 import { LOCATIONS, SKILLS, CATEGORIES, PROFILE_TEXT_SUGGESTION } from './profileConstants'
-import {mapGetters, mapActions} from 'vuex'
+import { mapGetters } from 'vuex'
 export default {
   data () {
     return {
@@ -44,19 +44,9 @@ export default {
     'app-helper-profile-form': HelperProfile,
     'app-home-page': HomePage
   },
-  created() {
+  created () {
     this.$store.dispatch('loggedin/initialise')
   }
-  // methods: {
-  //   handleCreateUser (userDetails) {
-  //     this.usernameForVerification = userDetails.username
-  //     this.createUser(userDetails)
-  //   },
-  //   ...mapActions({
-  //     'setAction': 'notloggedin/setAction',
-  //     'createUser': 'notloggedin/createUser',
-  //     'authUser': 'authUser'})
-  // }
 }
 </script>
 

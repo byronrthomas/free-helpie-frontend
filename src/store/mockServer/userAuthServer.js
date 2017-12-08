@@ -58,7 +58,7 @@ export function UserAuthServer () {
         reject('Not awaiting verification for this username')
       }
     },
-    syncGetAuthUsers(token) {
+    syncGetAuthUsers (token) {
       if (authToUsers[token]) {
         // TODO: add a check that this is a valid token!
         return authToUsers[token]
@@ -66,11 +66,11 @@ export function UserAuthServer () {
         return []
       }
     },
-    syncPutAuthUsers(token, value) {
+    syncPutAuthUsers (token, value) {
       authToUsers[token] = value
     },
-    syncGetUserCanSeeFullPosts(token, value) {
-      return typeof usersToAuth.getByValue(token) != 'undefined'
+    syncGetUserCanSeeFullPosts (token, value) {
+      return typeof usersToAuth.getByValue(token) !== 'undefined'
     }
   }
 }

@@ -1,6 +1,6 @@
 import { UserAuthServer } from './mockServer/userAuthServer'
 import { UserDataServer } from './mockServer/userDataServer'
-import { PostsServer } from './mockServer/postsServer';
+import { PostsServer } from './mockServer/postsServer'
 
 const MOCK_NETWORK_LATENCY = 500
 function wrapAsPromise (func, data) {
@@ -17,7 +17,7 @@ function Server (userAuth, userData, posts) {
     get (resourcePath, data) {
       if (resourcePath === '/accounts') {
         return wrapAsPromise(userAuth.get, data)
-      } 
+      }
       if (resourcePath.startsWith('/users?token=')) {
         return wrapAsPromise(userData.get, resourcePath.substring('/users?token='.length))
       }
@@ -35,7 +35,7 @@ function Server (userAuth, userData, posts) {
       }
       if (resourcePath.startsWith('/users?token=')) {
         return wrapAsPromise(
-          userData.put, 
+          userData.put,
           {token: resourcePath.substring('/users?token='.length), data: data})
       }
       throw new Error(`Unknown route: POST ${resourcePath}`)

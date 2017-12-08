@@ -1,22 +1,22 @@
 import {INITIAL_POSTS} from './initialPosts'
 
-function makeFilterComponent(filterList, prevFilter, filterApplication) {
+function makeFilterComponent (filterList, prevFilter, filterApplication) {
   if (filterList && filterList.length > 0) {
-    return post => 
+    return post =>
       prevFilter(post) && filterApplication(filterList, post)
   }
   return prevFilter
 }
 
-function intersectsWith(list1, list2) {
+function intersectsWith (list1, list2) {
   return list1.some(elem1 => list2.includes(elem1))
 }
 
-function makeFilter(reqData) {
-  let filter = (post => true)
+function makeFilter (reqData) {
+  let filter = post => true
   filter = makeFilterComponent(
-    reqData.postedByFilter, 
-    filter, 
+    reqData.postedByFilter,
+    filter,
     (postedBys, post) => postedBys.includes(post.postedBy))
   filter = makeFilterComponent(
     reqData.interestsFilter,
@@ -33,7 +33,7 @@ function makeFilter(reqData) {
   return filter
 }
 
-export function PostsServer(userAuth) {
+export function PostsServer (userAuth) {
   const posts = Array.from(INITIAL_POSTS)
 
   return {
@@ -41,12 +41,12 @@ export function PostsServer(userAuth) {
       console.log('GET posts with request:')
       console.log(reqData)
       if (!reqData.authToken || !userAuth.syncGetUserCanSeeFullPosts(reqData.authToken)) {
-        reject("Error: you must be authenticated to view posts")
+        reject('Error: you must be authenticated to view posts')
       } else {
-        console.log("Unfiltered results =")
+        console.log('Unfiltered results =')
         console.log(posts)
         const result = posts.filter(makeFilter(reqData))
-        console.log("Filtered results = ")
+        console.log('Filtered results = ')
         console.log(result)
         resolve({data: result})
       }
