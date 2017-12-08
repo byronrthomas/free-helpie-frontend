@@ -1,5 +1,6 @@
 import { UserAuthServer } from './mockServer/userAuthServer'
 import { UserDataServer } from './mockServer/userDataServer'
+import { PostsServer } from './mockServer/postsServer';
 
 const MOCK_NETWORK_LATENCY = 500
 function wrapAsPromise (func, data) {
@@ -43,4 +44,4 @@ function Server (userAuth, userData, posts) {
 }
 
 const auther = new UserAuthServer()
-export const mockServer = new Server(auther, new UserDataServer(auther))
+export const mockServer = new Server(auther, new UserDataServer(auther), new PostsServer(auther))

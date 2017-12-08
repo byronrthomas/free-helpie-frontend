@@ -9,7 +9,7 @@ function makeFilterComponent(filterList, prevFilter, filterApplication) {
 }
 
 function intersectsWith(list1, list2) {
-  list1.some(elem1 => list2.includes(elem1))
+  return list1.some(elem1 => list2.includes(elem1))
 }
 
 function makeFilter(reqData) {
@@ -29,7 +29,7 @@ function makeFilter(reqData) {
   filter = makeFilterComponent(
     reqData.locationsFilter,
     filter,
-    (locations, post) => post.remote || intersectsWith(locations, post.locations))
+    (locations, post) => { return post.remote || intersectsWith(locations, post.locations) })
   return filter
 }
 
@@ -38,10 +38,17 @@ export function PostsServer(userAuth) {
 
   return {
     get (reqData, resolve, reject) {
+      console.log('GET posts with request:')
+      console.log(reqData)
       if (!reqData.authToken || !userAuth.syncGetUserCanSeeFullPosts(reqData.authToken)) {
         reject("Error: you must be authenticated to view posts")
       } else {
-        resolve({data: posts.filter(makeFilter(reqData))})
+        console.log("Unfiltered results =")
+        console.log(posts)
+        const result = posts.filter(makeFilter(reqData))
+        console.log("Filtered results = ")
+        console.log(result)
+        resolve({data: result})
       }
     }
   }

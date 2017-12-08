@@ -45,6 +45,8 @@ function extractUserData (resp) {
   }
 }
 
+import {postsStore} from './homePage/postsStore'
+
 export function loggedInStore (server) {
   return {
     namespaced: true,
@@ -99,6 +101,9 @@ export function loggedInStore (server) {
           .then(() => dispatch('initialise'))
           .catch(err => commit('setLastServerError', err.message, { root: true }))
       }
+    },
+    modules: {
+      posts: postsStore(server)
     }
   }
 }

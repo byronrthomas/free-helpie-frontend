@@ -5,14 +5,14 @@
         <span>Filter results</span>
         <button 
           class="btn"
-          @click="filteringBySkills = !filteringBySkills"
+          @click="toggleSkillsFilter"
           :class="{'btn-primary': filteringBySkills}">
           My skills
         </button>
         <button 
           class="btn" 
-          @click="filteringByLocation = !filteringByLocation"
-          :class="{'btn-primary': filteringByLocation}">
+          @click="toggleLocationsFilter"
+          :class="{'btn-primary': filteringByLocations}">
           My location
         </button>
       </div>
@@ -20,7 +20,7 @@
     <div class="row">
       <div class="col-xs-12">
         <ad-summary-item 
-          v-for="post in filteredPosts" 
+          v-for="post in posts" 
           :ad="post" 
           :key="post.id"
           :is-saved="post.postedBy === 'John Doe'"
@@ -32,31 +32,45 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import AdSummaryItem from './AdSummaryItem.vue'
 
 export default {
   data() {
     return {
-      filteringBySkills: false,
-      filteringByLocation: false,
-      posts: []}
+      // TODO: all of these should come from central state
+      // need to set up some test user profile data first
+      userSkills: ['Executive coaching'],
+      userLocations: ['North-west London'],
+      userInterests: ['Smoking pot']}
   },
   computed: {
-    filteredPosts() {
-      console.log("Attempting to filter result")
-      let result = this.posts
-      result = this.filteringBySkills
-        ? result.filter(post => post.skills.includes('Executive coaching'))
-        : result
-      result = this.filteringByLocation
-        ? result.filter(post => post.remote || post.location === 'North-west London')
-        : result
-      console.log("Filtered to:")
-      console.log(result)
-      return result;
+    ...mapGetters({ 
+      filteringBySkills: 'loggedin/posts/isFilteredBySkills',
+      filteringByLocations: 'loggedin/posts/isFilteredByLocations',
+      filteringByInterests: 'loggedin/posts/isFilteredByInterests',
+      posts: 'loggedin/posts/getPosts'
+      }
+    )
+  },
+  methods: {
+    toggleSkillsFilter () {
+      const newSkillsFilter = this.filteringBySkills
+        ? []
+        : this.userSkills
+      this.$store.dispatch('loggedin/posts/setSkillsFilter', newSkillsFilter)
     },
-    skillsFilterActive() {
-      return this.currentFilter === "MySkills" || this.currentFilter === "Both"
+    toggleLocationsFilter () {
+      const newLocationsFilter = this.filteringByLocations
+        ? []
+        : this.userLocations
+      this.$store.dispatch('loggedin/posts/setLocationsFilter', newLocationsFilter)
+    },
+    toggleInterestsFilter () {
+      const newInterestsFilter = this.filteringByInterests
+        ? []
+        : this.userInterests
+      this.$store.dispatch('loggedin/posts/setInterestsFilter', newInterestsFilter)
     }
   },
   components: {
