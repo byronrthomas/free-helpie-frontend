@@ -77,6 +77,9 @@ export default {
       this.$store.dispatch('loggedin/posts/setInterestsFilter', newInterestsFilter)
     }
   },
+  created () {
+    this.$store.dispatch('loggedin/posts/refresh')
+  },
   components: {
     'ad-summary-item': AdSummaryItem
   }
