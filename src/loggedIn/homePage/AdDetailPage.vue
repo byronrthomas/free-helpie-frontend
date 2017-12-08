@@ -9,7 +9,7 @@
     <br>
     <p><strong>Location:</strong> {{ formattedLocation }}</p>
     <br>
-    <p>{{ formattedSkills }} {{ formattedCategories }}</p>
+    <p>{{ formattedSkills }} {{ formattedInterests }}</p>
     <br>
     <h5>Description</h5>
     <div> {{ ad.description }}</div>
@@ -32,8 +32,8 @@ export default {
     formattedSkills () {
       return stringDotFormat(', ', this.ad.skills)
     },
-    formattedCategories() {
-      return stringDotFormat(', ', this.ad.categories)
+    formattedInterests() {
+      return stringDotFormat(', ', this.ad.interests)
     },
     formattedLocation() {
       if (this.ad.location) {

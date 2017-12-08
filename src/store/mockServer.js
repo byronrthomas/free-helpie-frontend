@@ -1,5 +1,5 @@
-import UserAuthServer from './mockServer/userAuthServer'
-import UserDataServer from './mockServer/userDataServer'
+import { UserAuthServer } from './mockServer/userAuthServer'
+import { UserDataServer } from './mockServer/userDataServer'
 
 const MOCK_NETWORK_LATENCY = 500
 function wrapAsPromise (func, data) {

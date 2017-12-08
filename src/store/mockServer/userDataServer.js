@@ -1,4 +1,4 @@
-function UserDataServer(userAuth) {
+export function UserDataServer(userAuth) {
   const userData = {}
   let nextId = 0
   return {

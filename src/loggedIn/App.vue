@@ -16,7 +16,7 @@
       v-if="currentPage === 'profile'"
       :possible-locations="possibleLocations"
       :possible-skills="possibleSkills"
-      :possible-categories="possibleCategories"
+      :possible-interests="possibleInterests"
       :description-suggestion="profileTextSuggestion"/>
     <p v-if="currentPage === 'initialising'">Initialising...</p>
     <app-home-page v-if="currentPage === 'home'"/>
@@ -33,7 +33,7 @@ export default {
     return {
       possibleLocations: LOCATIONS,
       possibleSkills: SKILLS,
-      possibleCategories: CATEGORIES,
+      possibleInterests: CATEGORIES,
       profileTextSuggestion: PROFILE_TEXT_SUGGESTION
     }
   },

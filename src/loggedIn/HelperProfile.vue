@@ -41,7 +41,7 @@
     <form-segment header-text="Experience &amp; skills">
         <div class="form-group">
           <label>What can you help with?</label>
-          <multi-select-fixed-options v-model="helperCategories" :possibleOptions="possibleCategories"/>
+          <multi-select-fixed-options v-model="helperInterests" :possibleOptions="possibleInterests"/>
         </div>
         <div class="form-group">
           <label>What skills can you offer?</label>
@@ -150,7 +150,7 @@ function makeEmptyFormData () {
       photo: null
     },
     helperLocations: [],
-    helperCategories: [],
+    helperInterests: [],
     helperSkills: [],
     helperDescription: '',
     helperLocationTypes: [],
@@ -172,7 +172,7 @@ export default {
         personalInfo: this.initialFormValue.personalInfo,
         helperLocations: this.initialFormValue.helperLocations,
         helperLocationTypes: this.initialFormValue.helperLocationTypes,
-        helperCategories: this.initialFormValue.helperCategories,
+        helperInterests: this.initialFormValue.helperInterests,
         helperSkills: this.initialFormValue.helperSkills,
         helperDescription: this.initialFormValue.helperDescription,
         helperTimings: this.initialFormValue.helperTimings,
@@ -184,7 +184,7 @@ export default {
   props: [
     'possibleLocations',
     'initialFormValue',
-    'possibleCategories',
+    'possibleInterests',
     'possibleSkills',
     'descriptionSuggestion'],
   computed: {

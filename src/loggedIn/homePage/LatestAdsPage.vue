@@ -32,7 +32,6 @@
 </template>
 
 <script>
-import { INITIAL_POSTS } from './initialPosts' 
 import AdSummaryItem from './AdSummaryItem.vue'
 
 export default {
@@ -40,7 +39,7 @@ export default {
     return {
       filteringBySkills: false,
       filteringByLocation: false,
-      posts: INITIAL_POSTS}
+      posts: []}
   },
   computed: {
     filteredPosts() {

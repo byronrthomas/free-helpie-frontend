@@ -4,7 +4,7 @@ function userProfileIsComplete (profile) {
     && profile.helperLocations
     && profile.helperLocationTypes
     && profile.helperSkills
-    && profile.helperCategories
+    && profile.helperInterests
     && profile.helperTimings
     && profile.helperDescription
     && profile.helperAgreedToTsAndCs
@@ -16,7 +16,7 @@ const EMPTY_USER_PROFILE = {
   helperLocations: [],
   helperLocationTypes: [],
   helperSkills: [],
-  helperCategories: [],
+  helperInterests: [],
   helperDescription: null,
   helperTimings: null,
   helperAgreedToTsAndCs: false
