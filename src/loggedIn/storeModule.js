@@ -55,12 +55,16 @@ export function loggedInStore (server) {
       initialised: false,
       userProfile: null,
       userId: null,
-      currentPage: 'home'
+      currentPage: 'home',
+      favouritePostIds: []
     },
     getters: {
       currentPage (state) {
         const derivedPage = getPageGivenState(state)
         return derivedPage || state.currentPage
+      },
+      favouritePostIds (state) {
+        return state.favouritePostIds
       }
     },
     mutations: {
@@ -75,6 +79,16 @@ export function loggedInStore (server) {
       },
       setInitialised (state) {
         state.initialised = true
+      },
+      favouritePost (state, post) {
+        if (!state.favouritePostIds.includes(post.id)) {
+          state.favouritePostIds.push(post.id)
+        }
+      },
+      unfavouritePost (state, post) {
+        if (state.favouritePostIds.includes(post.id)) {
+          state.favouritePostIds = state.favouritePostIds.filter(x => x !== post.id)
+        }
       }
     },
     actions: {
@@ -98,6 +112,12 @@ export function loggedInStore (server) {
         server.post('/users?token=' + rootGetters.authToken, userProfileData)
           .then(() => dispatch('initialise'))
           .catch(err => commit('setLastServerError', err.message, { root: true }))
+      },
+      favouritePost ({ commit }, post) {
+        commit('favouritePost', post)
+      },
+      unfavouritePost ({ commit }, post) {
+        commit('unfavouritePost', post)
       }
     },
     modules: {

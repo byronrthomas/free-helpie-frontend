@@ -26,12 +26,12 @@
     <div class="row">
       <div class="col-xs-12">
         <ad-summary-item 
-          v-for="post in posts" 
-          :ad="post" 
-          :key="post.id"
-          :is-saved="post.postedBy === 'John Doe'"
-          @viewPost="$emit('viewPost', post)"
-          @savePost="$emit('savePost', post)" />
+          v-for="post in decoratedPosts" 
+          :ad="post.content" 
+          :key="post.content.id"
+          :is-saved="post.isSaved"
+          @viewPost="$emit('viewPost', post.content)"
+          @savePost="$emit('updateFavouritePosts', post.content, !post.isSaved)" />
       </div>
     </div>
   </div>
@@ -51,6 +51,11 @@ export default {
       userInterests: ['Smoking pot']}
   },
   computed: {
+    decoratedPosts () {
+      const query = this.$store.getters['loggedin/favouritePostIds']
+      return this.posts.map(
+        post => { return {isSaved: query.includes(post.id), content: post} })
+    },
     ...mapGetters({
       filteringBySkills: 'loggedin/posts/isFilteredBySkills',
       filteringByLocations: 'loggedin/posts/isFilteredByLocations',

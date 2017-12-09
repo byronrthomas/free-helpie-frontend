@@ -5,7 +5,10 @@
         <home-side-bar :unread-email-count="2" @gotoLatestAds="focusArea = 'latestAds'"/>
       </div>
       <div class="col-xs-10">
-        <latest-ads-page v-if="focusArea === 'latestAds'" @viewPost="viewPost"/>
+        <latest-ads-page 
+          v-if="focusArea === 'latestAds'" 
+          @viewPost="viewPost"
+          @updateFavouritePosts="updateFavouritePosts"/>
         <ad-detail-page v-else-if="focusArea === 'adDetail'" :ad="currentAd"/>
         <p v-else>You're home, but I don't know what to do!</p>
       </div>
@@ -31,6 +34,10 @@ export default {
     viewPost (post) {
       this.focusArea = 'adDetail'
       this.currentAd = post
+    },
+    updateFavouritePosts (post, shouldFavourite) {
+      const action = shouldFavourite ? 'favouritePost' : 'unfavouritePost'
+      this.$store.dispatch('loggedin/' + action, post)
     }
   }
 }
