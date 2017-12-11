@@ -45,17 +45,6 @@ export function postsStore (server) {
       }
     },
     actions: {
-      // initialise ({ commit, rootGetters }) {
-      //   commit('setLastServerError', '', { root: true })
-      //   server.get('/users?token=' + rootGetters.authToken)
-      //     .then(resp => {
-      //       console.log(resp)
-      //       const {userId, profile} = extractUserData(resp)
-      //       commit('setProfile', profile)
-      //       commit('setUserId', userId)
-      //       commit('setInitialised')
-      //     }).catch(err => commit('setLastServerError', err.message, { root: true }))
-      // },
       setPostedByFilter ({ commit, dispatch }, users) {
         commit('setPostedByFilter', users)
         dispatch('refresh')

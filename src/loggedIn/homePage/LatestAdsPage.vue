@@ -45,10 +45,10 @@ export default {
   },
   computed: {
     ...mapGetters({
-      filteringBySkills: 'loggedin/posts/isFilteredBySkills',
-      filteringByLocations: 'loggedin/posts/isFilteredByLocations',
-      filteringByInterests: 'loggedin/posts/isFilteredByInterests',
-      posts: 'loggedin/posts/getPosts',
+      filteringBySkills: 'loggedin/latestposts/isFilteredBySkills',
+      filteringByLocations: 'loggedin/latestposts/isFilteredByLocations',
+      filteringByInterests: 'loggedin/latestposts/isFilteredByInterests',
+      posts: 'loggedin/latestposts/getPosts',
       favouritePostIds: 'loggedin/favouritePostIds'})
   },
   methods: {
@@ -56,26 +56,26 @@ export default {
       const newSkillsFilter = this.filteringBySkills
         ? []
         : this.userSkills
-      this.$store.dispatch('loggedin/posts/setSkillsFilter', newSkillsFilter)
+      this.$store.dispatch('loggedin/latestposts/setSkillsFilter', newSkillsFilter)
     },
     toggleLocationsFilter () {
       const newLocationsFilter = this.filteringByLocations
         ? []
         : this.userLocations
-      this.$store.dispatch('loggedin/posts/setLocationsFilter', newLocationsFilter)
+      this.$store.dispatch('loggedin/latestposts/setLocationsFilter', newLocationsFilter)
     },
     toggleInterestsFilter () {
       const newInterestsFilter = this.filteringByInterests
         ? []
         : this.userInterests
-      this.$store.dispatch('loggedin/posts/setInterestsFilter', newInterestsFilter)
+      this.$store.dispatch('loggedin/latestposts/setInterestsFilter', newInterestsFilter)
     },
     updateFavouritePosts (post, shouldBeFavourited) {
       this.$emit('updateFavouritePosts', post, shouldBeFavourited)
     }
   },
   created () {
-    this.$store.dispatch('loggedin/posts/refresh')
+    this.$store.dispatch('loggedin/latestposts/refresh')
   },
   components: {
     'ad-summaries-container': AdSummariesContainer

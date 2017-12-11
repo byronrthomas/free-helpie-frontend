@@ -121,7 +121,7 @@ export function loggedInStore (server) {
       }
     },
     modules: {
-      posts: postsStore(server)
+      latestposts: postsStore(server)
     }
   }
 }
