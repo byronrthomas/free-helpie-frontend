@@ -13,8 +13,8 @@
       <div class="col-xs-2">{{ ad.location }}</div>
       <div class="col-xs-1">
         <button class="btn btn-default save-button" @click="$emit('savePost')">
-          <img src='../../assets/starInactive.png' alt="Unsave" :hidden="isSaved"  style="width=14px;height=14px" width="36px" height="36px">
-          <img src='../../assets/starActive.png' alt="Save" style="width=14px;height=14px" :hidden="!isSaved"  width="36px" height="36px">
+          <img src='../../../assets/starInactive.png' alt="Unsave" :hidden="isSaved"  style="width=14px;height=14px" width="36px" height="36px">
+          <img src='../../../assets/starActive.png' alt="Save" style="width=14px;height=14px" :hidden="!isSaved"  width="36px" height="36px">
         </button>
       </div>
     </div>
