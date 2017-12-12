@@ -18,12 +18,13 @@
 
 <script>
 import { mapGetters } from 'vuex'
+
 export default {
   computed: {
     ...mapGetters({'userProfileIsComplete': 'loggedin/userProfileIsComplete'})
   },
   watch: {
-    userProfileIsComplete(val) {
+    userProfileIsComplete (val) {
       if (!val) {
         this.$router.push({name: 'profile'})
       } else {
@@ -32,7 +33,12 @@ export default {
     }
   },
   created () {
-    this.$store.dispatch('loggedin/initialise')
+    if (!this.$store.getters.isLoggedIn) {
+      console.log("Redirecting to not logged in page as not yet auth'd")
+      this.$router.push({name: 'notLoggedIn'})
+    } else {
+      this.$store.dispatch('loggedin/initialise')
+    }
   }
 }
 </script>
