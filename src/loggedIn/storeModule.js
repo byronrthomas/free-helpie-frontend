@@ -38,6 +38,12 @@ function extractUserData (resp) {
   }
 }
 
+function reformatPostResp (resp) {
+  const postsObject = {}
+  postsObject[resp.data.id] = resp.data
+  return postsObject
+}
+
 export function loggedInStore (server) {
   return {
     namespaced: true,
@@ -50,7 +56,8 @@ export function loggedInStore (server) {
       possibleLocations: LOCATIONS,
       possibleSkills: SKILLS,
       possibleInterests: CATEGORIES,
-      profileTextSuggestion: PROFILE_TEXT_SUGGESTION
+      profileTextSuggestion: PROFILE_TEXT_SUGGESTION,
+      postDetails: {}
     },
     getters: {
       userProfileIsComplete (state) {
@@ -70,6 +77,9 @@ export function loggedInStore (server) {
       },
       profileTextSuggestion (state) {
         return state.profileTextSuggestion
+      },
+      postDetails (state) {
+        return state.postDetails
       }
     },
     mutations: {
@@ -91,6 +101,9 @@ export function loggedInStore (server) {
         if (state.favouritePostIds.includes(post.id)) {
           state.favouritePostIds = state.favouritePostIds.filter(x => x !== post.id)
         }
+      },
+      setPostDetails (state, postData) {
+        state.postDetails = postData
       }
     },
     actions: {
@@ -117,6 +130,12 @@ export function loggedInStore (server) {
       },
       unfavouritePost ({ commit }, post) {
         commit('unfavouritePost', post)
+      },
+      getPost ({ commit, rootGetters }, postId) {
+        commit('setLastServerError', '', {root: true})
+        server.get('/posts/' + postId, {authToken: rootGetters.authToken})
+          .then(resp => commit('setPostDetails', reformatPostResp(resp)))
+          .catch(err => commit('setLastServerError', err.message, { root: true }))
       }
     },
     modules: {

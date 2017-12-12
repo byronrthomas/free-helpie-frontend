@@ -41,7 +41,7 @@ export function PostsServer (userAuth) {
       console.log('GET posts with request:')
       console.log(reqData)
       if (!reqData.authToken || !userAuth.syncGetUserCanSeeFullPosts(reqData.authToken)) {
-        reject('Error: you must be authenticated to view posts')
+        reject(new Error('Error: you must be authenticated to view posts'))
       } else {
         console.log('Unfiltered results =')
         console.log(posts)
@@ -49,6 +49,23 @@ export function PostsServer (userAuth) {
         console.log('Filtered results = ')
         console.log(result)
         resolve({data: result})
+      }
+    },
+    getSingle (reqData, resolve, reject) {
+      console.log('GET single post with request:')
+      console.log(reqData)
+      if (!reqData.authToken || !userAuth.syncGetUserCanSeeFullPosts(reqData.authToken)) {
+        reject(new Error('Error: you must be authenticated to view posts'))
+      } else {
+        const postId = parseInt(reqData.postId)
+        const result = posts.filter(post => post.id === postId)
+        console.log('filtered results = ')
+        console.log(result)
+        if (result.length === 1) {
+          resolve({data: result[0]})
+        } else {
+          reject(new Error('Could not find single post with ID ' + postId))
+        }
       }
     }
   }

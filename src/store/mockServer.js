@@ -21,6 +21,10 @@ function Server (userAuth, userData, posts) {
       if (resourcePath.startsWith('/users?token=')) {
         return wrapAsPromise(userData.get, resourcePath.substring('/users?token='.length))
       }
+      if (resourcePath.startsWith('/posts/')) {
+        const postId = resourcePath.substring('/posts/'.length)
+        return wrapAsPromise(posts.getSingle, {postId: postId, ...data})
+      }
       if (resourcePath === '/posts') {
         return wrapAsPromise(posts.get, data)
       }

@@ -30,20 +30,20 @@ export function UserAuthServer () {
             usersToAuth.put(reqData.username, Math.random().toString())
             resolve({authData: usersToAuth.getByKey(reqData.username)})
           } else {
-            reject('You need to verify your email address, please check your email for the verification email.')
+            reject(new Error('You need to verify your email address, please check your email for the verification email.'))
           }
         } else {
-          reject('Password not recognised')
+          reject(new Error('Password not recognised'))
         }
       } else {
-        reject('Username not recognised')
+        reject(new Error('Username not recognised'))
       }
     },
     postUser (reqData, resolve, reject) {
       if (typeof reqData.username !== 'string' || typeof reqData.password !== 'string') {
-        reject('Should provide a username and password')
+        reject(new Error('Should provide a username and password'))
       } else if (typeof (usersToPassword[reqData.username]) === 'string') {
-        reject('This email address has already been registered')
+        reject(new Error('This email address has already been registered'))
       } else {
         usersToPassword[reqData.username] = reqData.password
         unverifiedUsers[reqData.username] = true
@@ -55,7 +55,7 @@ export function UserAuthServer () {
         delete unverifiedUsers[reqData.username]
         resolve()
       } else {
-        reject('Not awaiting verification for this username')
+        reject(new Error('Not awaiting verification for this username'))
       }
     },
     syncGetAuthUsers (token) {
