@@ -1,5 +1,5 @@
 <template>
-    <ad-summaries-container 
+    <post-summaries-container 
       :posts="posts" 
       :favourite-post-ids="favouritePostIds"
       @viewPost="$emit('viewPost', $event)"
@@ -27,12 +27,12 @@
         </button>
       </div>
     </div>
-    </ad-summaries-container>
+    </post-summaries-container>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import AdSummariesContainer from './shared/AdSummariesContainer.vue'
+import PostSummariesContainer from './shared/PostSummariesContainer.vue'
 
 export default {
   data () {
@@ -78,7 +78,7 @@ export default {
     this.$store.dispatch('loggedin/latestposts/refresh')
   },
   components: {
-    'ad-summaries-container': AdSummariesContainer
+    'post-summaries-container': PostSummariesContainer
   }
 }
 </script>

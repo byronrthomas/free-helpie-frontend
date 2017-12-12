@@ -1,11 +1,11 @@
 <template>
-  <div class="ad-summary-container">
+  <div class="post-summary-container">
     <slot/>
     <div class="row">
       <div class="col-xs-12">
-        <ad-summary-item 
+        <post-summary-item 
           v-for="post in posts" 
-          :ad="post" 
+          :post="post" 
           :key="post.id"
           :is-saved="isSaved(post)"
           @viewPost="$emit('viewPost', post)"
@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import AdSummaryItem from './AdSummaryItem.vue'
+import PostSummaryItem from './PostSummaryItem.vue'
 
 export default {
   props: {
@@ -29,13 +29,13 @@ export default {
     }
   },
   components: {
-    'ad-summary-item': AdSummaryItem
+    'post-summary-item': PostSummaryItem
   }
 }
 </script>
 
 <style>
-  .ad-summary-container {
+  .post-summary-container {
     border-style: solid;
     border-width: 1px 1px 1px 1px; 
     border-color: #ddd; 

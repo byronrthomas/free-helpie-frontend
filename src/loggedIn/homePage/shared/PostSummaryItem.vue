@@ -1,16 +1,16 @@
 <template>
-  <div class="ad-summary-container">
+  <div class="post-summary-container">
     <div class="row" style="margin-right: 0px">
       <div class="col-xs-3">
-        <a href="unknown" @click.prevent="alertNotImplemented">{{ ad.postedBy }}</a>
+        <a href="unknown" @click.prevent="alertNotImplemented">{{ post.postedBy }}</a>
       </div>
       <div class="col-xs-3">
         <a href="unknown" @click.prevent="$emit('viewPost')">
-          {{ ad.title }}
+          {{ post.title }}
         </a>
       </div>
       <div class="col-xs-3">{{ formattedSkills }}</div>
-      <div class="col-xs-2">{{ ad.location }}</div>
+      <div class="col-xs-2">{{ post.location }}</div>
       <div class="col-xs-1">
         <button class="btn btn-default save-button" @click="$emit('savePost')">
           <img src='../../../assets/starInactive.png' alt="Unsave" :hidden="isSaved"  style="width=14px;height=14px" width="36px" height="36px">
@@ -23,12 +23,12 @@
 
 <script>
 export default {
-  props: ['ad', 'isSaved'],
+  props: ['post', 'isSaved'],
   computed: {
     formattedSkills () {
-      return this.ad.skills.length === 1
-        ? this.ad.skills[0]
-        : this.ad.skills.reduce((acc, nxt) => acc + ', ' + nxt, '')
+      return this.post.skills.length === 1
+        ? this.post.skills[0]
+        : this.post.skills.reduce((acc, nxt) => acc + ', ' + nxt, '')
     },
     saveOrUnsave () {
       return this.isSaved ? 'Unsave' : 'Save'
@@ -46,7 +46,7 @@ export default {
 </script>
 
 <style>
-  .ad-summary-container {
+  .post-summary-container {
       background-color: white;
       border-width: 1px 1px 1px 1px;
       border-color: #ddd;

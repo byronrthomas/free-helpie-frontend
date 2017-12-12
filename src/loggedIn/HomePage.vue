@@ -13,8 +13,6 @@
 
 <script>
 import HomeSideBar from './homePage/HomeSideBar.vue'
-import LatestAdsPage from './homePage/LatestAdsPage.vue'
-import AdDetailPage from './homePage/AdDetailPage.vue'
 
 export default {
   data () {
@@ -22,8 +20,6 @@ export default {
   },
   components: {
     'home-side-bar': HomeSideBar,
-    'latest-ads-page': LatestAdsPage,
-    'ad-detail-page': AdDetailPage
   },
   methods: {
     viewPost (post) {
