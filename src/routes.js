@@ -5,6 +5,6 @@ import LoggedInApp from './loggedIn/App.vue'
 import NotLoggedInApp from './notLoggedIn/App.vue'
 
 export const routes = [
+  {path: '/app', component: LoggedInApp, name: "loggedIn", children: LOGGED_IN_ROUTES},
   {path: '/', component: NotLoggedInApp, name: "notLoggedIn"},
-  {path: '/app', component: LoggedInApp, name: "loggedIn"/*, children: LOGGED_IN_ROUTES*/},
 ]

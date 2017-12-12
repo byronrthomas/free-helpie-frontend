@@ -181,14 +181,14 @@ export default {
       return makeEmptyFormData()
     }
   },
-  props: [
-    'possibleLocations',
-    'initialFormValue',
-    'possibleInterests',
-    'possibleSkills',
-    'descriptionSuggestion'],
   computed: {
-    ...mapGetters(['lastServerError'])
+    ...mapGetters({
+      'lastServerError': 'lastServerError',
+      'possibleLocations': 'loggedin/possibleLocations',
+      'initialFormValue': 'loggedin/initialFormValue',
+      'possibleInterests': 'loggedin/possibleInterests',
+      'possibleSkills': 'loggedin/possibleSkills',
+      'descriptionSuggestion': 'loggedin/profileTextSuggestion'})
   },
   components: {
     'multi-select-fixed-options': MultiselectFixedOptions,

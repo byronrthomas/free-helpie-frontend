@@ -33,7 +33,10 @@ export default {
     updateFavouritePosts (post, shouldFavourite) {
       const action = shouldFavourite ? 'favouritePost' : 'unfavouritePost'
       this.$store.dispatch('loggedin/' + action, post)
-    }
+    },
+  },
+  created () {
+    this.$router.push({name: 'latestPosts'})
   }
 }
 </script>

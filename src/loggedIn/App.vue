@@ -12,37 +12,24 @@
         </div>
       </div>
     </div>
-    <app-helper-profile-form 
-      v-if="currentPage === 'profile'"
-      :possible-locations="possibleLocations"
-      :possible-skills="possibleSkills"
-      :possible-interests="possibleInterests"
-      :description-suggestion="profileTextSuggestion"/>
-    <p v-if="currentPage === 'initialising'">Initialising...</p>
-    <app-home-page v-if="currentPage === 'home'"/>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import HelperProfile from './HelperProfile.vue'
-import HomePage from './HomePage.vue'
-import { LOCATIONS, SKILLS, CATEGORIES, PROFILE_TEXT_SUGGESTION } from './profileConstants'
 import { mapGetters } from 'vuex'
 export default {
-  data () {
-    return {
-      possibleLocations: LOCATIONS,
-      possibleSkills: SKILLS,
-      possibleInterests: CATEGORIES,
-      profileTextSuggestion: PROFILE_TEXT_SUGGESTION
-    }
-  },
   computed: {
-    ...mapGetters({'currentPage': 'loggedin/currentPage'})
+    ...mapGetters({'userProfileIsComplete': 'loggedin/userProfileIsComplete'})
   },
-  components: {
-    'app-helper-profile-form': HelperProfile,
-    'app-home-page': HomePage
+  watch: {
+    userProfileIsComplete(val) {
+      if (!val) {
+        this.$router.push({name: 'profile'})
+      } else {
+        this.$router.push({name: 'home'})
+      }
+    }
   },
   created () {
     this.$store.dispatch('loggedin/initialise')

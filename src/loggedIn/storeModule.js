@@ -1,4 +1,5 @@
 import { postsStore } from './homePage/postsStore'
+import { LOCATIONS, SKILLS, CATEGORIES, PROFILE_TEXT_SUGGESTION } from './profileConstants'
 
 function userProfileIsComplete (profile) {
   return profile &&
@@ -55,22 +56,33 @@ export function loggedInStore (server) {
       initialised: false,
       userProfile: null,
       userId: null,
-      currentPage: 'home',
-      favouritePostIds: []
+      favouritePostIds: [],
+      possibleLocations: LOCATIONS,
+      possibleSkills: SKILLS,
+      possibleInterests: CATEGORIES,
+      profileTextSuggestion: PROFILE_TEXT_SUGGESTION
     },
     getters: {
-      currentPage (state) {
-        const derivedPage = getPageGivenState(state)
-        return derivedPage || state.currentPage
+      userProfileIsComplete(state) {
+        return state.initialised && userProfileIsComplete(state.userProfile)
       },
       favouritePostIds (state) {
         return state.favouritePostIds
+      },
+      possibleLocations (state) {
+        return state.possibleLocations
+      },
+      possibleSkills (state) {
+        return state.possibleSkills
+      },
+      possibleInterests (state) {
+        return state.possibleInterests
+      },
+      profileTextSuggestion (state) {
+        return state.profileTextSuggestion
       }
     },
     mutations: {
-      setPage (state, newPage) {
-        state.currentPage = newPage
-      },
       setProfile (state, profileData) {
         state.userProfile = profileData
       },
@@ -102,9 +114,6 @@ export function loggedInStore (server) {
             commit('setUserId', userId)
             commit('setInitialised')
           }).catch(err => commit('setLastServerError', err.message, { root: true }))
-      },
-      setPage ({ commit }, payload) {
-        commit('setPage', payload)
       },
       updateUserProfile ({ commit, dispatch, rootGetters }, userProfileData) {
         commit('setLastServerError', '', { root: true })
