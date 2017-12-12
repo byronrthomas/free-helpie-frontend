@@ -34,6 +34,9 @@ export default {
   },
   created () {
     if (!this.$store.getters.isLoggedIn) {
+      // NOTE: this could potentially be implemented as a beforeEnterRoute
+      // method - however, I found this tricky as I wasn't sure what to return
+      // from the callback of next() - returning a Location didn't seem to work
       console.log("Redirecting to not logged in page as not yet auth'd")
       this.$router.push({name: 'notLoggedIn'})
     } else {
