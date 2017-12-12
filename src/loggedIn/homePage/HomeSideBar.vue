@@ -1,9 +1,9 @@
 <template>
   <div>
-    <button class="btn btn-default sidebar-button" @click="$emit('gotoLatestAds')">Latest posts</button>
-    <button class="btn btn-default sidebar-button" v-html="mailboxHtml" @click="alert('Not yet implemented, would view mailbox')"></button>
-    <button class="btn btn-default sidebar-button" @click="alert('Not yet implemented, would view posts created by user')">Your posts</button>
-    <button class="btn btn-default sidebar-button" @click="alert('Not yet implemented, would view posts saved (favourited) by user')">Saved posts</button>
+    <router-link tag="button" class="btn btn-default sidebar-button" :to="{name: 'latestPosts'}">Latest posts</router-link>
+    <router-link tag="button" class="btn btn-default sidebar-button" :to="{name: 'mailbox'}" v-html="mailboxHtml"></router-link>
+    <router-link tag="button" class="btn btn-default sidebar-button" :to="{name: 'yourPosts'}">Your posts</router-link>
+    <router-link tag="button" class="btn btn-default sidebar-button" :to="{name: 'savedPosts'}">Saved Posts</router-link>
   </div>
 </template>
 
