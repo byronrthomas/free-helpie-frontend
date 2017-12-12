@@ -8,7 +8,7 @@
           :post="post" 
           :key="post.id"
           :is-saved="isSaved(post)"
-          @viewPost="$emit('viewPost', post)"
+          @viewPost="viewPost(post)"
           @savePost="$emit('updateFavouritePosts', post, !isSaved(post))" />
       </div>
     </div>
@@ -26,6 +26,9 @@ export default {
   methods: {
     isSaved (post) {
       return this.favouritePostIds.includes(post.id)
+    },
+    viewPost (post) {
+      this.$router.push({name: 'postDetail', params: {postId: post.id}})
     }
   },
   components: {
