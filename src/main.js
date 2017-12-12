@@ -4,13 +4,23 @@ import Vue from 'vue'
 import App from './App'
 import {store} from './store/store'
 import {mockServer} from './store/mockServer'
+import {routes} from './routes'
+import VueRouter from 'vue-router'
 
 Vue.config.productionTip = false
+
+Vue.use(VueRouter)
+let router = new VueRouter(
+  { routes,
+    mode: 'history'
+  }
+)
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   store: store(mockServer),
   template: '<App/>',
+  router: router,
   components: { App }
 })

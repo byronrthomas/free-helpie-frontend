@@ -1,20 +1,22 @@
 <template>
-  <app-logged-in v-if="isLoggedIn"/>
-  <app-not-logged-in v-else/>
+  <div>
+  <router-view></router-view>
+  </div>
 </template>
 
 <script>
-import NotLoggedInApp from './notLoggedIn/App.vue'
-import LoggedInApp from './loggedIn/App.vue'
 import {mapGetters} from 'vuex'
 export default {
   name: 'app',
-  components: {
-    'app-not-logged-in': NotLoggedInApp,
-    'app-logged-in': LoggedInApp
-  },
   computed: {
     ...mapGetters(['isLoggedIn'])
+  },
+  watch: {
+    isLoggedIn(val) {
+      if (val) {
+        this.$router.push({name: 'loggedIn'})
+      }
+    }
   }
 }
 </script>

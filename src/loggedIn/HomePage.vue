@@ -5,12 +5,7 @@
         <home-side-bar :unread-email-count="2" @gotoLatestAds="focusArea = 'latestAds'"/>
       </div>
       <div class="col-xs-10">
-        <latest-ads-page 
-          v-if="focusArea === 'latestAds'" 
-          @viewPost="viewPost"
-          @updateFavouritePosts="updateFavouritePosts"/>
-        <ad-detail-page v-else-if="focusArea === 'adDetail'" :ad="currentAd"/>
-        <p v-else>You're home, but I don't know what to do!</p>
+        <router-view></router-view>
       </div>
     </div>
   </div>
