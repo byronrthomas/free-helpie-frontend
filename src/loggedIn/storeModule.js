@@ -25,16 +25,6 @@ const EMPTY_USER_PROFILE = {
   helperAgreedToTsAndCs: false
 }
 
-function getPageGivenState (state) {
-  if (!state.initialised) {
-    return 'initialising'
-  } else {
-    return userProfileIsComplete(state.userProfile)
-      ? ''
-      : 'profile'
-  }
-}
-
 function extractUserData (resp) {
   let users = []
   for (let key in resp.data) {
@@ -63,7 +53,7 @@ export function loggedInStore (server) {
       profileTextSuggestion: PROFILE_TEXT_SUGGESTION
     },
     getters: {
-      userProfileIsComplete(state) {
+      userProfileIsComplete (state) {
         return state.initialised && userProfileIsComplete(state.userProfile)
       },
       favouritePostIds (state) {

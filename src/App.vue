@@ -10,7 +10,7 @@ export default {
     ...mapGetters(['isLoggedIn'])
   },
   watch: {
-    isLoggedIn(val) {
+    isLoggedIn (val) {
       if (val) {
         this.$router.push({name: 'loggedIn'})
       }

@@ -19,7 +19,7 @@ export default {
     return { focusArea: 'latestAds', currentAd: null }
   },
   components: {
-    'home-side-bar': HomeSideBar,
+    'home-side-bar': HomeSideBar
   },
   methods: {
     viewPost (post) {
@@ -29,7 +29,7 @@ export default {
     updateFavouritePosts (post, shouldFavourite) {
       const action = shouldFavourite ? 'favouritePost' : 'unfavouritePost'
       this.$store.dispatch('loggedin/' + action, post)
-    },
+    }
   },
   created () {
     this.$router.push({name: 'latestPosts'})
