@@ -71,7 +71,8 @@ export default {
       this.$store.dispatch('loggedin/latestposts/setInterestsFilter', newInterestsFilter)
     },
     updateFavouritePosts (post, shouldBeFavourited) {
-      this.$emit('updateFavouritePosts', post, shouldBeFavourited)
+      const storeAction = shouldBeFavourited ? 'favouritePost' : 'unfavouritePost'
+      this.$store.dispatch('loggedin/' + storeAction, post)
     }
   },
   created () {
