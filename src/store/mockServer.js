@@ -1,6 +1,7 @@
 import { UserAuthServer } from './mockServer/userAuthServer'
 import { UserDataServer } from './mockServer/userDataServer'
 import { PostsServer } from './mockServer/postsServer'
+import { UserFavouritesServer } from './mockServer/userFavouritesServer'
 
 const MOCK_NETWORK_LATENCY = 500
 function wrapAsPromise (func, data) {
@@ -12,7 +13,8 @@ function wrapAsPromise (func, data) {
     })
 }
 
-function Server (userAuth, userData, posts) {
+const USER_PATH_REG_EXP = RegExp(/^\/users\/(\d+)\/favourites$/)
+function Server (userAuth, userData, posts, userFavourites) {
   return {
     get (resourcePath, data) {
       if (resourcePath === '/accounts') {
@@ -28,6 +30,10 @@ function Server (userAuth, userData, posts) {
       if (resourcePath === '/posts') {
         return wrapAsPromise(posts.get, data)
       }
+      const matchToUsersPath = resourcePath.match(USER_PATH_REG_EXP)
+      if (matchToUsersPath != null) {
+        return wrapAsPromise(userFavourites.get, {userId: matchToUsersPath[1], ...data})
+      }
       throw new Error(`Unknown route: GET ${resourcePath}`)
     },
     post (resourcePath, data) {
@@ -39,8 +45,12 @@ function Server (userAuth, userData, posts) {
       }
       if (resourcePath.startsWith('/users?token=')) {
         return wrapAsPromise(
-          userData.put,
+          userData.post,
           {token: resourcePath.substring('/users?token='.length), data: data})
+      }
+      const matchToUsersPath = resourcePath.match(USER_PATH_REG_EXP)
+      if (matchToUsersPath != null) {
+        return wrapAsPromise(userFavourites.post, {userId: matchToUsersPath[1], ...data})
       }
       throw new Error(`Unknown route: POST ${resourcePath}`)
     }
@@ -48,4 +58,8 @@ function Server (userAuth, userData, posts) {
 }
 
 const auther = new UserAuthServer()
-export const mockServer = new Server(auther, new UserDataServer(auther), new PostsServer(auther))
+export const mockServer = new Server(
+  auther,
+  new UserDataServer(auther),
+  new PostsServer(auther),
+  new UserFavouritesServer(auther))

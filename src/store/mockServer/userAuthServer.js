@@ -59,10 +59,16 @@ export function UserAuthServer () {
       }
     },
     syncGetAuthUsers (token) {
+      console.debug('Asking for token ' + token)
+      console.debug('current auths = ')
+      console.debug(authToUsers)
       if (authToUsers[token]) {
         // TODO: add a check that this is a valid token!
+        console.debug('Found users for token = ')
+        console.debug(authToUsers[token])
         return authToUsers[token]
       } else {
+        console.debug('No auth found for token')
         return []
       }
     },

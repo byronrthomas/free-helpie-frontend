@@ -92,22 +92,26 @@ export function loggedInStore (server) {
       setInitialised (state) {
         state.initialised = true
       },
-      favouritePost (state, post) {
-        if (!state.favouritePostIds.includes(post.id)) {
-          state.favouritePostIds.push(post.id)
-        }
-      },
-      unfavouritePost (state, post) {
-        if (state.favouritePostIds.includes(post.id)) {
-          state.favouritePostIds = state.favouritePostIds.filter(x => x !== post.id)
-        }
+      setFavouritePosts (state, favourites) {
+        state.favouritePostIds = favourites
       },
       setPostDetails (state, postData) {
         state.postDetails = postData
       }
     },
     actions: {
-      initialise ({ commit, rootGetters }) {
+      getUserFavourites ({ commit, rootGetters }, userId) {
+        if (!userId) return
+
+        commit('setLastServerError', '', { root: true })
+        server.get(`/users/${userId}/favourites`, {authToken: rootGetters.authToken})
+          .then(resp => {
+            console.log(resp)
+            commit('setFavouritePosts', resp.data)
+          })
+          .catch(err => commit('setLastServerError', err.message, { root: true }))
+      },
+      initialise ({ commit, getters, rootGetters, dispatch }) {
         commit('setLastServerError', '', { root: true })
         server.get('/users?token=' + rootGetters.authToken)
           .then(resp => {
@@ -115,8 +119,10 @@ export function loggedInStore (server) {
             const {userId, profile} = extractUserData(resp)
             commit('setProfile', profile)
             commit('setUserId', userId)
-            commit('setInitialised')
-          }).catch(err => commit('setLastServerError', err.message, { root: true }))
+            dispatch('getUserFavourites', userId)
+          })
+          .then(() => commit('setInitialised'))
+          .catch(err => commit('setLastServerError', err.message, { root: true }))
       },
       updateUserProfile ({ commit, dispatch, rootGetters }, userProfileData) {
         commit('setLastServerError', '', { root: true })
@@ -125,11 +131,29 @@ export function loggedInStore (server) {
           .then(() => dispatch('initialise'))
           .catch(err => commit('setLastServerError', err.message, { root: true }))
       },
-      favouritePost ({ commit }, post) {
-        commit('favouritePost', post)
+      updateFavourites ({ dispatch, commit, rootGetters, state }, newFavourites) {
+        commit('setLastServerError', '', { root: true })
+        const userId = state.userId
+        const postData = {
+          authToken: rootGetters.authToken,
+          data: newFavourites
+        }
+        server.post(`/users/${userId}/favourites`, postData)
+          .then(() => { console.log('Success'); dispatch('getUserFavourites', userId) })
+          .catch(err => commit('setLastServerError', err.message, { root: true }))
       },
-      unfavouritePost ({ commit }, post) {
-        commit('unfavouritePost', post)
+      favouritePost ({ state, dispatch }, post) {
+        if (!state.favouritePostIds.includes(post.id)) {
+          const newFavourites = [...state.favouritePostIds]
+          newFavourites.push(post.id)
+          dispatch('updateFavourites', newFavourites)
+        }
+      },
+      unfavouritePost ({ state, dispatch }, post) {
+        if (state.favouritePostIds.includes(post.id)) {
+          const newFavourites = state.favouritePostIds.filter(x => x !== post.id)
+          dispatch('updateFavourites', newFavourites)
+        }
       },
       getPost ({ commit, rootGetters }, postId) {
         commit('setLastServerError', '', {root: true})

@@ -22,7 +22,7 @@ export function UserDataServer (userAuth) {
         console.log('GET userdata: No data present for user - returning empty')
       }
     },
-    put (reqData, resolve, reject) {
+    post (reqData, resolve, reject) {
       const users = userAuth.syncGetAuthUsers(reqData.token)
       console.log('PUT userdata: Getting users authorised by token ' + reqData.token)
       let userId
