@@ -45,7 +45,7 @@ export function postsStore (server) {
         state.filter.locationsFilter = locations
       },
       setPostIdsFilter (state, postIds) {
-        state.postIdsFilter = postIds
+        state.filter.postIdsFilter = postIds
       },
       setPosts (state, posts) {
         state.posts = posts
@@ -72,9 +72,9 @@ export function postsStore (server) {
         commit('setPostIdsFilter', postIds)
         dispatch('refresh')
       },
-      refresh ({ commit, dispatch, rootGetters, getters }) {
+      refresh ({ commit, dispatch, rootGetters, state }) {
         commit('setLastServerError', '', { root: true })
-        const filter = getters.getFilter
+        const filter = state.filter
         const req = {authToken: rootGetters.authToken, ...filter}
         server.get('/posts', req)
           .then(resp => commit('setPosts', resp.data))
