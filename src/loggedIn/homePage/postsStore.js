@@ -7,7 +7,8 @@ export function postsStore (server) {
         postedByFilter: [],
         interestsFilter: [],
         skillsFilter: [],
-        locationsFilter: []
+        locationsFilter: [],
+        postIdsFilter: []
       }
     },
     getters: {
@@ -25,6 +26,9 @@ export function postsStore (server) {
       },
       isFilteredByLocations (state) {
         return state.filter.locationsFilter.length > 0
+      },
+      isFilteredByPostIds (state) {
+        return state.filter.postIdsFilter.length > 0
       }
     },
     mutations: {
@@ -39,6 +43,9 @@ export function postsStore (server) {
       },
       setLocationsFilter (state, locations) {
         state.filter.locationsFilter = locations
+      },
+      setPostIdsFilter (state, postIds) {
+        state.postIdsFilter = postIds
       },
       setPosts (state, posts) {
         state.posts = posts
@@ -59,6 +66,10 @@ export function postsStore (server) {
       },
       setLocationsFilter ({ commit, dispatch }, locations) {
         commit('setLocationsFilter', locations)
+        dispatch('refresh')
+      },
+      setPostIdsFilter ({ commit, dispatch }, postIds) {
+        commit('setPostIdsFilter', postIds)
         dispatch('refresh')
       },
       refresh ({ commit, dispatch, rootGetters, getters }) {
