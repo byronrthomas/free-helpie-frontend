@@ -1,13 +1,20 @@
 function makeFilterComponent (filterList, prevFilter, filterApplication) {
-  if (filterList && filterList.length > 0) {
-    return post =>
-      prevFilter(post) && filterApplication(filterList, post)
+  if (filterList) {
+    return post => prevFilter(post) && filterApplication(filterList, post)
   }
   return prevFilter
 }
 
 function intersectsWith (list1, list2) {
   return list1.some(elem1 => list2.includes(elem1))
+}
+
+function makeLocationFilterComponent(reqData) {
+  if (reqData.filterOutRemoteLocations) {
+    return (locations, post) => intersectsWith(locations, post.locations)
+  } else {
+    return (locations, post) => post.remote || intersectsWith(locations, post.locations)
+  }
 }
 
 function makeFilter (reqData) {
@@ -31,7 +38,7 @@ function makeFilter (reqData) {
   filter = makeFilterComponent(
     reqData.locationsFilter,
     filter,
-    (locations, post) => { return post.remote || intersectsWith(locations, post.locations) })
+    makeLocationFilterComponent(reqData))
   return filter
 }
 
@@ -45,11 +52,11 @@ export function PostsServer (userAuth) {
       if (!reqData.authToken || !userAuth.syncGetUserCanSeeFullPosts(reqData.authToken)) {
         reject(new Error('Error: you must be authenticated to view posts'))
       } else {
-        console.log('Unfiltered results =')
-        console.log(posts)
+        //console.log('Unfiltered results =')
+        //console.log(posts)
         const result = posts.filter(makeFilter(reqData))
-        console.log('Filtered results = ')
-        console.log(result)
+        //console.log('Filtered results = ')
+        //console.log(result)
         resolve({data: result})
       }
     },

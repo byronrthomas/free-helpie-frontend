@@ -18,8 +18,8 @@ const dummyAuther = {
   }
 }
 
-function makeReq(post) {
-  return {authToken: AUTH_TOKEN, data: post}
+function makeReq(remainingReq) {
+  return {authToken: AUTH_TOKEN, ...remainingReq}
 }
 
 const TEST_POST_DATA = INITIAL_POSTS[0]
@@ -50,14 +50,14 @@ describe ('PostsServer', () => {
     const onTest = new PostsServer(dummyAuther)
     console.log(onTest)
     
-    shouldRunSuccessfully(onTest.post, makeReq(TEST_POST_DATA))
+    shouldRunSuccessfully(onTest.post, makeReq({data: TEST_POST_DATA}))
   }),
   describe('after some posts', () => {
     const postsToPost = INITIAL_POSTS
     let onTest
     beforeEach(() => {
       onTest = new PostsServer(dummyAuther)
-      runAll(onTest.post, postsToPost.map(makeReq))
+      runAll(onTest.post, postsToPost.map(post => makeReq({data: post})))
     })
 
     it('should be possible to fetch them back with unfiltered get', () => {
@@ -65,13 +65,15 @@ describe ('PostsServer', () => {
     })
 
     const checkNoResults = res => expect(res.data).toHaveLength(0)
-    it('should give no results if any of the non-location filters are empty lists', () => {
+    describe('should give no results if an empty list is supplied as ', () => {
       const filtersToCheck = ['postIdsFilter', 'postedByFilter', 'interestsFilter', 'skillsFilter']
       for (const filterField of filtersToCheck) {
-        const reqData = {}
-        reqData[filterField] = []
-        console.log('Checking filter field = ' + filterField)
-        shouldRunSuccessfully(onTest.get, makeReq(reqData), checkNoResults)
+        it(`the ${filterField} filter`, () => {
+          const reqData = {}
+          reqData[filterField] = []
+          console.log('Checking filter field = ' + filterField)
+          shouldRunSuccessfully(onTest.get, makeReq(reqData), checkNoResults)
+        })
       }
     })
 
@@ -80,10 +82,10 @@ describe ('PostsServer', () => {
       shouldRunSuccessfully(onTest.get, makeReq(reqData), checkNoResults)
     })
 
-    it('should be possible to filter to a non-empty result using any of the filter fields', () => {
+    describe('should be possible to filter to a non-empty result using', () => {
       const expectedResult = TEST_POST_DATA
       const filtersAndFields = {
-        'postIdsFilter' : [expectedResult.id],
+        'postIdsFilter' : [0], // NOTE: this is a bit rubbish - have to assume we're going to get ID 0, should refactor
         'postedByFilter' : [expectedResult.postedBy],
         'interestsFilter' : [expectedResult.interests[0]],
         'skillsFilter' : [expectedResult.skills[0]],
@@ -91,11 +93,13 @@ describe ('PostsServer', () => {
       }
       const containsExpectedResult = 
         res => expect(res.data.map(removeId))
-          .toEqual(expect.arrayContaining(expectedResult))
+          .toEqual(expect.arrayContaining([expectedResult]))
       for (const filterKey in filtersAndFields) {
-        const reqData = {}
-        reqData[filterKey] = filtersAndFields[filterKey]
-        shouldRunSuccessfully(onTest.get, makeReq(reqData), containsExpectedResult)
+        it(` the ${filterKey} filter`, () => {
+          const reqData = {}
+          reqData[filterKey] = filtersAndFields[filterKey]
+          shouldRunSuccessfully(onTest.get, makeReq(reqData), containsExpectedResult)
+        })
       }
     })
 
