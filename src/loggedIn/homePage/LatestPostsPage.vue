@@ -53,20 +53,20 @@ export default {
   },
   methods: {
     toggleSkillsFilter () {
-      const newSkillsFilter = this.filteringBySkills
-        ? []
+      const newSkillsFilter = this.filteringBySkills 
+        ? null 
         : this.userSkills
       this.$store.dispatch('loggedin/latestposts/setSkillsFilter', newSkillsFilter)
     },
     toggleLocationsFilter () {
       const newLocationsFilter = this.filteringByLocations
-        ? []
+        ? null
         : this.userLocations
       this.$store.dispatch('loggedin/latestposts/setLocationsFilter', newLocationsFilter)
     },
     toggleInterestsFilter () {
       const newInterestsFilter = this.filteringByInterests
-        ? []
+        ? null
         : this.userInterests
       this.$store.dispatch('loggedin/latestposts/setInterestsFilter', newInterestsFilter)
     },

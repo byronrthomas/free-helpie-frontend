@@ -9,7 +9,7 @@ function intersectsWith (list1, list2) {
   return list1.some(elem1 => list2.includes(elem1))
 }
 
-function makeLocationFilterComponent(reqData) {
+function makeLocationFilterComponent (reqData) {
   if (reqData.filterOutRemoteLocations) {
     return (locations, post) => intersectsWith(locations, post.locations)
   } else {
@@ -45,18 +45,18 @@ function makeFilter (reqData) {
 export function PostsServer (userAuth) {
   const posts = []
 
-  return {
+  const srv = {
     get (reqData, resolve, reject) {
       console.log('GET posts with request:')
       console.log(reqData)
       if (!reqData.authToken || !userAuth.syncGetUserCanSeeFullPosts(reqData.authToken)) {
         reject(new Error('Error: you must be authenticated to view posts'))
       } else {
-        //console.log('Unfiltered results =')
-        //console.log(posts)
+        // console.log('Unfiltered results =')
+        // console.log(posts)
         const result = posts.filter(makeFilter(reqData))
-        //console.log('Filtered results = ')
-        //console.log(result)
+        // console.log('Filtered results = ')
+        // console.log(result)
         resolve({data: result})
       }
     },
@@ -77,14 +77,7 @@ export function PostsServer (userAuth) {
         }
       }
     },
-    post (reqData, resolve, reject) {
-      console.log('POST post with request:')
-      console.log(reqData)
-
-      if (!reqData.authToken || !userAuth.syncGetUserCanPost(reqData.authToken)) {
-        reject(new Error('Error: you must be authenticated to view posts'))
-        return
-      }
+    postWithoutAuth (reqData, resolve, reject) {
       if (!reqData.hasOwnProperty('data')) {
         reject(new Error('Cannot post - empty data'))
         return
@@ -98,6 +91,17 @@ export function PostsServer (userAuth) {
       posts.push(newPost)
       console.log('Posting post succeeded')
       resolve()
+    },
+    post (reqData, resolve, reject) {
+      console.log('POST post with request:')
+      console.log(reqData)
+
+      if (!reqData.authToken || !userAuth.syncGetUserCanPost(reqData.authToken)) {
+        reject(new Error('Error: you must be authenticated to view posts'))
+        return
+      }
+      srv.postWithoutAuth(reqData, resolve, reject)
     }
   }
+  return srv
 }

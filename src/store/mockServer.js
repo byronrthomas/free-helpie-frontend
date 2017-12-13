@@ -2,6 +2,8 @@ import { UserAuthServer } from './mockServer/userAuthServer'
 import { UserDataServer } from './mockServer/userDataServer'
 import { PostsServer } from './mockServer/postsServer'
 import { UserFavouritesServer } from './mockServer/userFavouritesServer'
+import { INITIAL_POSTS } from './mockServer/initialPosts'
+import { runAll } from './mockServer/callbackTools'
 
 const MOCK_NETWORK_LATENCY = 500
 function wrapAsPromise (func, data) {
@@ -57,9 +59,15 @@ function Server (userAuth, userData, posts, userFavourites) {
   }
 }
 
-const auther = new UserAuthServer()
-export const mockServer = new Server(
-  auther,
-  new UserDataServer(auther),
-  new PostsServer(auther),
-  new UserFavouritesServer(auther))
+function makeServer () {
+  const auther = new UserAuthServer()
+  const postsServer = new PostsServer(auther)
+  runAll(postsServer.postWithoutAuth, INITIAL_POSTS.map(post => { return { data: post } }))
+  return new Server(
+    auther,
+    new UserDataServer(auther),
+    postsServer,
+    new UserFavouritesServer(auther))
+}
+
+export const mockServer = makeServer()

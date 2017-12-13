@@ -1,51 +1,61 @@
+function updateFiltering (state, fieldName, newCriteria) {
+  const newFilter = {...state.filter}
+  if (newCriteria === null) {
+    delete newFilter[fieldName]
+  } else {
+    newFilter[fieldName] = newCriteria
+  }
+  state.filter = newFilter
+}
+
 export function postsStore (server) {
   return {
     namespaced: true,
     state: {
       posts: [],
       filter: {
-        postedByFilter: [],
-        interestsFilter: [],
-        skillsFilter: [],
-        locationsFilter: [],
-        postIdsFilter: []
       }
     },
     getters: {
       getPosts (state) {
         return state.posts
       },
-      getFilter (state) {
-        return state.filter
-      },
       isFilteredByInterests (state) {
-        return state.filter.interestsFilter.length > 0
+        return Boolean(state.filter.interestsFilter)
       },
       isFilteredBySkills (state) {
-        return state.filter.skillsFilter.length > 0
+        console.log('current state for isFilteredBySkills')
+        console.log(state)
+        return Boolean(state.filter.skillsFilter)
       },
       isFilteredByLocations (state) {
-        return state.filter.locationsFilter.length > 0
+        return Boolean(state.filter.locationsFilter)
       },
       isFilteredByPostIds (state) {
-        return state.filter.postIdsFilter.length > 0
+        return Boolean(state.filter.postIdsFilter)
       }
     },
     mutations: {
       setPostedByFilter (state, users) {
-        state.filter.postedByFilter = users
+        updateFiltering(state, 'postedByFilter', users)
       },
       setInterestsFilter (state, interests) {
-        state.filter.interestsFilter = interests
+        updateFiltering(state, 'interestsFilter', interests)
       },
       setSkillsFilter (state, skills) {
-        state.filter.skillsFilter = skills
+        console.log('updating state: ')
+        console.log(state)
+        console.log('with skills: ')
+        console.log(skills)
+        updateFiltering(state, 'skillsFilter', skills)
+        console.log('state is now: ')
+        console.log(state)
       },
       setLocationsFilter (state, locations) {
-        state.filter.locationsFilter = locations
+        updateFiltering(state, 'locationsFilter', locations)
       },
       setPostIdsFilter (state, postIds) {
-        state.filter.postIdsFilter = postIds
+        updateFiltering(state, 'postIdsFilter', postIds)
       },
       setPosts (state, posts) {
         state.posts = posts
