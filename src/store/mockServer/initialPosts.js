@@ -1,6 +1,5 @@
 export const INITIAL_POSTS = [
   {
-    id: 1,
     postedBy: 'John Doe',
     title: 'Help around Garden',
     interests: ['House'],
@@ -10,7 +9,6 @@ export const INITIAL_POSTS = [
     description: 'I just need a few hours a week help around the garden whilst my hip operation heals'
   },
   {
-    id: 2,
     postedBy: 'Wendy Small',
     title: 'Please help me get into Executive Coaching',
     interests: ['Work', 'Mentoring'],
@@ -22,7 +20,6 @@ I am a graduate in History and have been an archivist until now but am looking t
 A small amount of time once a week or once a month should be fine. We can do it over Skype or in person.`
   },
   {
-    id: 3,
     postedBy: 'Jana Swiss',
     title: 'Please could somebody local walk my dog',
     interests: ['Pets'],

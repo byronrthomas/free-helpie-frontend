@@ -1,5 +1,3 @@
-import {INITIAL_POSTS} from './initialPosts'
-
 function makeFilterComponent (filterList, prevFilter, filterApplication) {
   if (filterList && filterList.length > 0) {
     return post =>
@@ -38,7 +36,7 @@ function makeFilter (reqData) {
 }
 
 export function PostsServer (userAuth) {
-  const posts = Array.from(INITIAL_POSTS)
+  const posts = []
 
   return {
     get (reqData, resolve, reject) {
@@ -71,6 +69,28 @@ export function PostsServer (userAuth) {
           reject(new Error('Could not find single post with ID ' + postId))
         }
       }
+    },
+    post (reqData, resolve, reject) {
+      console.log('POST post with request:')
+      console.log(reqData)
+
+      if (!reqData.authToken || !userAuth.syncGetUserCanPost(reqData.authToken)) {
+        reject(new Error('Error: you must be authenticated to view posts'))
+        return
+      }
+      if (!reqData.hasOwnProperty('data')) {
+        reject(new Error('Cannot post - empty data'))
+        return
+      }
+      let newPost = {...reqData.data}
+      if (newPost.hasOwnProperty('id')) {
+        reject(new Error('Error: cannot post something that already has an ID - this is server-assigned'))
+        return
+      }
+      newPost.id = posts.length
+      posts.push(newPost)
+      console.log('Posting post succeeded')
+      resolve()
     }
   }
 }

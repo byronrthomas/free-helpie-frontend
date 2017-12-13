@@ -77,6 +77,9 @@ export function UserAuthServer () {
     },
     syncGetUserCanSeeFullPosts (token, value) {
       return typeof usersToAuth.getByValue(token) !== 'undefined'
+    },
+    syncGetUserCanPost (token) {
+      return typeof usersToAuth.getByValue(token) !== 'undefined'
     }
   }
 }
