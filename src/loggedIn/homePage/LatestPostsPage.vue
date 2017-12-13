@@ -53,8 +53,8 @@ export default {
   },
   methods: {
     toggleSkillsFilter () {
-      const newSkillsFilter = this.filteringBySkills 
-        ? null 
+      const newSkillsFilter = this.filteringBySkills
+        ? null
         : this.userSkills
       this.$store.dispatch('loggedin/latestposts/setSkillsFilter', newSkillsFilter)
     },

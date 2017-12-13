@@ -28,6 +28,9 @@ export default {
       this.$store.dispatch('loggedin/savedposts/setPostIdsFilter', newPostIds)
     }
   },
+  created () {
+    this.$store.dispatch('loggedin/savedposts/setPostIdsFilter', this.favouritePostIds)
+  },
   components: {
     'post-summaries-container': PostSummariesContainer
   }

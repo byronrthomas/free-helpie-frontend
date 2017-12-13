@@ -24,8 +24,6 @@ export function postsStore (server) {
         return Boolean(state.filter.interestsFilter)
       },
       isFilteredBySkills (state) {
-        console.log('current state for isFilteredBySkills')
-        console.log(state)
         return Boolean(state.filter.skillsFilter)
       },
       isFilteredByLocations (state) {
@@ -43,13 +41,7 @@ export function postsStore (server) {
         updateFiltering(state, 'interestsFilter', interests)
       },
       setSkillsFilter (state, skills) {
-        console.log('updating state: ')
-        console.log(state)
-        console.log('with skills: ')
-        console.log(skills)
         updateFiltering(state, 'skillsFilter', skills)
-        console.log('state is now: ')
-        console.log(state)
       },
       setLocationsFilter (state, locations) {
         updateFiltering(state, 'locationsFilter', locations)
