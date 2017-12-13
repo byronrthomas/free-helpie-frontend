@@ -163,7 +163,12 @@ export function loggedInStore (server) {
       }
     },
     modules: {
-      latestposts: postsStore(server)
+      // Using the same implementation as the functionality is the same:
+      // GET and cache filtered posts from the server, but using two
+      // separate objects so that they're both in memory to avoid latency
+      // when navigating back to previously viewed page
+      latestposts: postsStore(server),
+      savedposts: postsStore(server)
     }
   }
 }

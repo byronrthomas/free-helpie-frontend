@@ -15,6 +15,10 @@ function intersectsWith (list1, list2) {
 function makeFilter (reqData) {
   let filter = post => true
   filter = makeFilterComponent(
+    reqData.postIdsFilter,
+    filter,
+    (postIds, post) => postIds.includes(post.id))
+  filter = makeFilterComponent(
     reqData.postedByFilter,
     filter,
     (postedBys, post) => postedBys.includes(post.postedBy))
