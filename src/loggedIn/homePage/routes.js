@@ -4,6 +4,7 @@ import SavedPostsPage from './SavedPostsPage.vue'
 import MailboxPage from './MailboxPage.vue'
 import MailDetailPage from './MailDetailPage.vue'
 import YourPostsPage from './YourPostsPage.vue'
+import EditPostPage from './EditPostPage.vue'
 
 export const HOME_COMPONENT_ROUTES = [
   {path: 'latestPosts', component: LatestPostsPage, name: 'latestPosts'},
@@ -11,5 +12,7 @@ export const HOME_COMPONENT_ROUTES = [
   {path: 'savedPosts', component: SavedPostsPage, name: 'savedPosts'},
   {path: 'yourPosts', component: YourPostsPage, name: 'yourPosts'},
   {path: 'mailbox', component: MailboxPage, name: 'mailbox'},
-  {path: 'mailDetail/:mailId', component: MailDetailPage, name: 'mailDetail', props: true}
+  {path: 'mailDetail/:mailId', component: MailDetailPage, name: 'mailDetail', props: true},
+  {path: 'createPost', component: EditPostPage, name: 'createPost'},
+  {path: 'editPost/:postId', component: EditPostPage, name: 'editPost', props: true}
 ]

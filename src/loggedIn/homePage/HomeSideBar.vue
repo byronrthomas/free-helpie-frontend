@@ -2,6 +2,7 @@
   <div>
     <router-link tag="button" class="btn btn-default sidebar-button" :to="{name: 'latestPosts'}">Latest posts</router-link>
     <router-link tag="button" class="btn btn-default sidebar-button" :to="{name: 'mailbox'}" v-html="mailboxHtml"></router-link>
+    <router-link tag="button" class="btn btn-default sidebar-button" :to="{name: 'createPost'}">Get help!</router-link>    
     <router-link tag="button" class="btn btn-default sidebar-button" :to="{name: 'yourPosts'}">Your posts</router-link>
     <router-link tag="button" class="btn btn-default sidebar-button" :to="{name: 'savedPosts'}">Saved Posts</router-link>
   </div>
