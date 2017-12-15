@@ -1,5 +1,6 @@
 import { postsStore } from './homePage/postsStore'
-import { LOCATIONS, SKILLS, CATEGORIES, PROFILE_TEXT_SUGGESTION } from './profileConstants'
+import { singlePostStore } from './homePage/singlePostStore'
+import { LOCATIONS, SKILLS, INTERESTS, PROFILE_TEXT_SUGGESTION } from './profileConstants'
 
 function userProfileIsComplete (profile) {
   return profile &&
@@ -38,12 +39,6 @@ function extractUserData (resp) {
   }
 }
 
-function reformatPostResp (resp) {
-  const postsObject = {}
-  postsObject[resp.data.id] = resp.data
-  return postsObject
-}
-
 export function loggedInStore (server) {
   return {
     namespaced: true,
@@ -55,9 +50,8 @@ export function loggedInStore (server) {
       favouritePostIds: [],
       possibleLocations: LOCATIONS,
       possibleSkills: SKILLS,
-      possibleInterests: CATEGORIES,
-      profileTextSuggestion: PROFILE_TEXT_SUGGESTION,
-      postDetails: {}
+      possibleInterests: INTERESTS,
+      profileTextSuggestion: PROFILE_TEXT_SUGGESTION
     },
     getters: {
       userProfileIsComplete (state) {
@@ -77,9 +71,6 @@ export function loggedInStore (server) {
       },
       profileTextSuggestion (state) {
         return state.profileTextSuggestion
-      },
-      postDetails (state) {
-        return state.postDetails
       }
     },
     mutations: {
@@ -94,9 +85,6 @@ export function loggedInStore (server) {
       },
       setFavouritePosts (state, favourites) {
         state.favouritePostIds = favourites
-      },
-      setPostDetails (state, postData) {
-        state.postDetails = postData
       }
     },
     actions: {
@@ -154,12 +142,6 @@ export function loggedInStore (server) {
           const newFavourites = state.favouritePostIds.filter(x => x !== post.id)
           dispatch('updateFavourites', newFavourites)
         }
-      },
-      getPost ({ commit, rootGetters }, postId) {
-        commit('setLastServerError', '', {root: true})
-        server.get('/posts/' + postId, {authToken: rootGetters.authToken})
-          .then(resp => commit('setPostDetails', reformatPostResp(resp)))
-          .catch(err => commit('setLastServerError', err.message, { root: true }))
       }
     },
     modules: {
@@ -168,7 +150,10 @@ export function loggedInStore (server) {
       // separate objects so that they're both in memory to avoid latency
       // when navigating back to previously viewed page
       latestposts: postsStore(server),
-      savedposts: postsStore(server)
+      savedposts: postsStore(server),
+      // Ditto for these
+      postdetails: singlePostStore(server),
+      editpost: singlePostStore(server)
     }
   }
 }

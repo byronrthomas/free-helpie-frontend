@@ -8,7 +8,7 @@ export const LOCATIONS = [
   'South-East London'
 ]
 
-export const CATEGORIES = [
+export const INTERESTS = [
   'House',
   'Car',
   'Pets',

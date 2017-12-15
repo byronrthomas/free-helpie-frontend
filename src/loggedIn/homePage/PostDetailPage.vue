@@ -32,8 +32,8 @@ export default {
   props: ['postId'],
   computed: {
     post () {
-      if (this.storedPost[this.postId]) {
-        return this.storedPost[this.postId]
+      if (this.storedPost) {
+        return this.storedPost
       } else {
         return {
           title: '',
@@ -67,10 +67,10 @@ export default {
     toggleSaveText () {
       return this.post.postedBy === 'John Doe' ? 'Unfavourite' : 'Save'
     },
-    ...mapGetters({'storedPost': 'loggedin/postDetails'})
+    ...mapGetters({'storedPost': 'loggedin/postdetails/post'})
   },
   created () {
-    this.$store.dispatch('loggedin/getPost', this.postId)
+    this.$store.dispatch('loggedin/postdetails/getPost', this.postId)
   }
 }
 </script>
