@@ -16,11 +16,11 @@ const CHECKED_DATA_ITEMS = [
     ]},
   {propName: 'regularTimeMissing',
   fixes: [
-    { name: 'both amount and frequency are non-empty', data: {timings: {regularAmount: {unit: 'Something', frequency: 'per something'}, timeslots: []}}},
+    { name: 'both amount and frequency are non-empty', data: {timings: {regularAmount: {unit: 'Something', frequency: 'per something'}, slots: []}}},
   ]},
   {propName: 'timeslotsMissing',
   fixes: [
-    { name: 'some timeslots are selected', data: {timings: {timeslots: ['Weekdays'], regularAmount: {unit: '', frequency: ''}}}}
+    { name: 'some timeslots are selected', data: {timings: {slots: ['Weekdays'], regularAmount: {unit: '', frequency: ''}}}}
   ]},
   {propName: 'titleMissing',
   fixes: [
@@ -41,7 +41,7 @@ const EMPTY_POST =
     locations: [],
     remote: false,
     description: '',
-    timings: {regularAmount: {unit: '', frequency: ''}, timeslots: []}
+    timings: {regularAmount: {unit: '', frequency: ''}, slots: []}
   }
 
 const VALID_POST =
@@ -53,7 +53,7 @@ const VALID_POST =
     locations: ['Location'],
     remote: false,
     description: 'Help me',
-    timings: {regularAmount: {unit: '1h', frequency: 'Week'}, timeslots: ['Evenings']}    
+    timings: {regularAmount: {unit: '1h', frequency: 'Week'}, slots: ['Evenings']}    
   }
 const getComponent = post => mount(PostEditForm, {propsData: {post}}).vm
 

@@ -5,12 +5,13 @@ import LoggedInApp from './loggedIn/App.vue'
 import NotLoggedInApp from './notLoggedIn/App.vue'
 import DummyApp from './DummyApp.vue'
 
-const routes = [
+const myRoutes = [
   {path: '/app', component: LoggedInApp, name: 'loggedIn', children: LOGGED_IN_ROUTES},
   {path: '/', component: NotLoggedInApp, name: 'notLoggedIn'},
   {path: '*', redirect: '/'}]
 
-
 if (process.env.NODE_ENV === 'development') {
-  routes.unshift({path: '/dummy', component: DummyApp})
+  myRoutes.unshift({path: '/dummy', component: DummyApp})
 }
+
+export const routes = myRoutes

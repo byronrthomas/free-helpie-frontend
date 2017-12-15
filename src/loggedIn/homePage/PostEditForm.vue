@@ -2,13 +2,19 @@
   <div style="background-color: #fffafa">
     <div class="row">
       <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
-        <h4 style="color:rgb(235, 113, 180); text-align: center">{{ createOrUpdate }} this.post</h4>
+        <h4 style="color:rgb(235, 113, 180); text-align: center">{{ createOrUpdate }} post</h4>
       </div>
     </div>
     <form-segment header-text="What do you need">
+        <div :class="alertClass" role="alert" v-if="titleMissing">
+          <p>Give your post a title that will help them understand the outline of what you need</p>
+        </div>
         <div class="form-group">
           <label for="title">Title</label>
           <input type="text" id="title" v-model="post.title" class="form-control">
+        </div>
+        <div :class="alertClass" role="alert" v-if="descriptionMissing">
+          <p>Be descriptive about the details of what you need</p>
         </div>
         <div class="form-group">
           <label>Give some more details</label><br>
@@ -80,10 +86,10 @@
         </select>          
       </div>
       <div class="form-group">
-        <div :class="alertClass" role="alert" v-if="timeslotsMissing">
-          <p>Please fill this out - helpers need to know what timeslots you need them</p>
+        <div :class="alertClass" role="alert" v-if="slotsMissing">
+          <p>Please fill this out - helpers need to know what slots you need them</p>
         </div>
-        <label class="checkbox">What timeslots can people help with?</label>
+        <label class="checkbox">What slots can people help with?</label>
         <label class="checkbox-inline">
             <input
                     type="checkbox"
@@ -118,10 +124,14 @@
       <div class="col-xs-12 col-sm-8 col-sm-offset-2">
         <div class="row">
           <div class="col-xs-10 col-xs-offset-1">
+            <div :class="alertClass" role="alert" v-if="!formContentsValid">
+              <p>There are still some missing items, described above, you need to fill these out before you can submit</p>
+            </div>
             <p v-if="lastServerError">{{ lastServerError }}</p>    
             <button 
               class="btn btn-primary" 
               style="width:100%; text-align:center"
+              :disabled="!formContentsValid"
               @click="submitForm">
               {{ createOrUpdate }}
               </button>        
@@ -136,6 +146,13 @@
 <script>
 import MultiselectFixedOptions from '../../sharedComponents/MultiSelectFixedOptions.vue'
 import FormSegment from '../../sharedComponents/FormSegment.vue'
+
+const POST_DESCRIPTION_OUTLINE = `Give the details about what you need, things to think about:
+- Telling us a bit about the background of why you need help
+- Give plenty of detail about the activity
+- Dig down into details of any specialist skills / experience needed
+- Tell us what kind of person you would like to help out
+- Be nice!`
 
 export default {
   props: {
@@ -152,17 +169,42 @@ export default {
           value.timings.regularAmount &&
           (typeof value.timings.regularAmount.unit === 'string') &&
           (typeof value.timings.regularAmount.frequency === 'string') &&
-          Array.isArray(value.timings.timeslots)
-      }
+          Array.isArray(value.timings.slots)
+      },
+      required: true
     },
-    'createOrUpdate': Boolean
+    'createOrUpdate': {
+      type: String,
+      validator (value) {
+        return ['Create', 'Update'].includes(value)
+      },
+      required: true
+    },
+    'lastServerError': {
+      type: String,
+      default: ''
+    },
+    'possibleSkills': {
+      type: Array,
+      required: true
+    },
+    'possibleLocations': {
+      type: Array,
+      required: true
+    },
+    'possibleInterests': {
+      type: Array,
+      required: true
+    }
   },
   data () {
     return {
       alertClass: {
         'alert': true,
-        'alert-danger': true
-      }
+        'alert-danger': true,
+        'strong': true
+      },
+      descriptionSuggestion: POST_DESCRIPTION_OUTLINE
     }
   },
   computed: {
@@ -175,8 +217,8 @@ export default {
     regularTimeMissing () {
       return !this.post.timings.regularAmount.unit || !this.post.timings.regularAmount.frequency
     },
-    timeslotsMissing () {
-      return this.post.timings.timeslots.length === 0
+    slotsMissing () {
+      return this.post.timings.slots.length === 0
     },
     titleMissing () {
       return !this.post.title
@@ -185,12 +227,15 @@ export default {
       return !this.post.description
     },
     formContentsValid () {
-      return !(this.skillsAndInterestsMissing || 
+      return !(this.skillsAndInterestsMissing ||
         this.locationsMissing ||
         this.regularTimeMissing ||
-        this.timeslotsMissing ||
-        this.titleMissing || 
+        this.slotsMissing ||
+        this.titleMissing ||
         this.descriptionMissing)
+    },
+    buttonText () {
+      return this.createOrUpdate === 'Create' ? 'Post' : 'Save changes'
     }
   },
   components: {
