@@ -131,6 +131,7 @@
             <button 
               class="btn btn-primary" 
               style="width:100%; text-align:center"
+              id="submitButton"
               :disabled="!formContentsValid"
               @click="submitForm">
               {{ createOrUpdate }}

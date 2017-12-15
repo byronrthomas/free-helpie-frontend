@@ -123,5 +123,13 @@ describe('post edit form', () => {
     }
     expect(onTest.element).toMatchSnapshot()   
   })
+
+  it('emits a postEditSubmitted event when the submit button is clicked', () => {
+    const onTest = mount(PostEditForm, makeMountArg(VALID_POST))
+    onTest.find('#submitButton').trigger('click')
+    expect(onTest.emitted().submitForm).toBeTruthy()
+    expect(onTest.emitted().submitForm.length).toBe(1)
+    expect(onTest.emitted().submitForm[0]).toEqual([VALID_POST])
+  })
 })
 
