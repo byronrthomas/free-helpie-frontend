@@ -47,16 +47,12 @@ export function PostsServer (userAuth) {
 
   const srv = {
     get (reqData, resolve, reject) {
-      console.log('GET posts with request:')
-      console.log(reqData)
+      // console.log('GET posts with request:')
+      // console.log(reqData)
       if (!reqData.authToken || !userAuth.syncGetUserCanSeeFullPosts(reqData.authToken)) {
         reject(new Error('Error: you must be authenticated to view posts'))
       } else {
-        // console.log('Unfiltered results =')
-        // console.log(posts)
         const result = posts.filter(makeFilter(reqData))
-        // console.log('Filtered results = ')
-        // console.log(result)
         resolve({data: result})
       }
     },
@@ -93,8 +89,8 @@ export function PostsServer (userAuth) {
       resolve()
     },
     post (reqData, resolve, reject) {
-      console.log('POST post with request:')
-      console.log(reqData)
+      // console.log('POST post with request:')
+      // console.log(reqData)
 
       if (!reqData.authToken || !userAuth.syncGetUserCanPost(reqData.authToken)) {
         reject(new Error('Error: you must be authenticated to view posts'))

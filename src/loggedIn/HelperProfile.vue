@@ -129,11 +129,6 @@
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-xs-12 col-sm-8 col-sm-offset-2">
-        
-      </div>
-    </div>
   </div>
 </template>
 
