@@ -57,7 +57,7 @@ const VALID_POST =
   }
 function makeMountArg(post) {
   const props = {
-    post: post,
+    initialPostData: post,
     createOrUpdate: 'Create',
     possibleSkills: [],
     possibleInterests: [],

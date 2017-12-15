@@ -155,9 +155,17 @@ const POST_DESCRIPTION_OUTLINE = `Give the details about what you need, things t
 - Tell us what kind of person you would like to help out
 - Be nice!`
 
+function clonePost (input) {
+  const result = {...input}
+  result.locations = [...input.locations]
+  result.skills = [...input.skills]
+  result.interests = [...input.interests]
+  return result
+}
+
 export default {
   props: {
-    'post': {
+    'initialPostData': {
       validator (value) {
         return Array.isArray(value.skills) &&
           Array.isArray(value.interests) &&
@@ -205,7 +213,8 @@ export default {
         'alert-danger': true,
         'strong': true
       },
-      descriptionSuggestion: POST_DESCRIPTION_OUTLINE
+      descriptionSuggestion: POST_DESCRIPTION_OUTLINE,
+      post: clonePost(this.initialPostData)
     }
   },
   computed: {

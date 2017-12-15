@@ -40,7 +40,9 @@ export default {
           : this.alreadySelected
       },
       set (newValue) {
-        this.alreadySelected = newValue
+        console.log('Setting multi-select with')
+        console.log(newValue)
+        this.alreadySelected = [...newValue]
         this.newSelection = ''
       }
     }

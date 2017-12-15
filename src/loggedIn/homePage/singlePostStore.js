@@ -1,3 +1,5 @@
+const makeSpecificPostRoute = postId => `/posts/${postId}`
+
 export function singlePostStore (server) {
   return {
     namespaced: true,
@@ -25,8 +27,18 @@ export function singlePostStore (server) {
       getPost ({ commit, rootGetters }, postId) {
         commit('setPostId', postId)
         commit('setLastServerError', '', {root: true})
-        server.get('/posts/' + postId, {authToken: rootGetters.authToken})
+        server.get(makeSpecificPostRoute(postId), {authToken: rootGetters.authToken})
           .then(resp => commit('setPost', resp.data))
+          .catch(err => commit('setLastServerError', err.message, { root: true }))
+      },
+      createPost ({commit, rootGetters}, newPost) {
+        commit('setLastServerError', '', {root: true})
+        server.post('/posts', {authToken: rootGetters.authToken, data: newPost})
+          .catch(err => commit('setLastServerError', err.message, { root: true }))
+      },
+      updatePost ({commit, rootGetters, state}, updatedPost) {
+        commit('setLastServerError', '', {root: true})
+        server.post(makeSpecificPostRoute(state.postId), {authToken: rootGetters.authToken, data: updatedPost})
           .catch(err => commit('setLastServerError', err.message, { root: true }))
       }
     }

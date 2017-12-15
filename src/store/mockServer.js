@@ -50,6 +50,9 @@ function Server (userAuth, userData, posts, userFavourites) {
           userData.post,
           {token: resourcePath.substring('/users?token='.length), data: data})
       }
+      if (resourcePath === '/posts') {
+        return wrapAsPromise(posts.post, data)
+      }
       const matchToUsersPath = resourcePath.match(USER_PATH_REG_EXP)
       if (matchToUsersPath != null) {
         return wrapAsPromise(userFavourites.post, {userId: matchToUsersPath[1], ...data})

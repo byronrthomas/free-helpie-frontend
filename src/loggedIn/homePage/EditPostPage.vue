@@ -1,11 +1,12 @@
 <template>
   <post-edit-form 
     v-if="isInitialised"
-    :post="post"
+    :initial-post-data="post"
     :create-or-update="createOrUpdate"
     :possible-interests="possibleInterests"
     :possible-locations="possibleLocations"
-    :possible-skills="possibleSkills"/>
+    :possible-skills="possibleSkills"
+    @submitForm="handleSubmit"/>
   <p v-else>Initialising...</p>
 </template>
 
@@ -49,7 +50,7 @@ export default {
     createOrUpdate () {
       return this.inCreateMode
         ? 'Create'
-        : 'Update' + this.postId
+        : 'Update'
     },
     isInitialised () {
       return this.inCreateMode || Boolean(this.storedPost)
@@ -63,6 +64,14 @@ export default {
   },
   components: {
     'post-edit-form': PostEditForm
+  },
+  methods: {
+    handleSubmit (post) {
+      const action = this.inCreateMode
+        ? 'createPost'
+        : 'updatePost'
+      this.$store.dispatch('loggedin/editpost/' + action, post)
+    }
   },
   created () {
     if (!this.inCreateMode) {
