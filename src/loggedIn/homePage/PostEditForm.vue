@@ -86,7 +86,7 @@
         </select>          
       </div>
       <div class="form-group">
-        <div :class="alertClass" role="alert" v-if="slotsMissing">
+        <div :class="alertClass" role="alert" v-if="timeslotsMissing">
           <p>Please fill this out - helpers need to know what slots you need them</p>
         </div>
         <label class="checkbox">What slots can people help with?</label>
@@ -217,7 +217,7 @@ export default {
     regularTimeMissing () {
       return !this.post.timings.regularAmount.unit || !this.post.timings.regularAmount.frequency
     },
-    slotsMissing () {
+    timeslotsMissing () {
       return this.post.timings.slots.length === 0
     },
     titleMissing () {
@@ -230,7 +230,7 @@ export default {
       return !(this.skillsAndInterestsMissing ||
         this.locationsMissing ||
         this.regularTimeMissing ||
-        this.slotsMissing ||
+        this.timeslotsMissing ||
         this.titleMissing ||
         this.descriptionMissing)
     },

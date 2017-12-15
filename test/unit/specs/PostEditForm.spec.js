@@ -55,7 +55,18 @@ const VALID_POST =
     description: 'Help me',
     timings: {regularAmount: {unit: '1h', frequency: 'Week'}, slots: ['Evenings']}    
   }
-const getComponent = post => mount(PostEditForm, {propsData: {post}}).vm
+function makeMountArg(post) {
+  const props = {
+    post: post,
+    createOrUpdate: 'Create',
+    possibleSkills: [],
+    possibleInterests: [],
+    possibleLocations: []
+  }
+  return {propsData: props}
+}
+
+const getComponent = post => mount(PostEditForm, makeMountArg(post)).vm
 
 describe('post edit form', () => {
   for (const check of CHECKED_DATA_ITEMS) {
@@ -93,6 +104,24 @@ describe('post edit form', () => {
       }
     }
     expect(onTest.formContentsValid).toBeTruthy()
+  })
+
+  it('has the expected HTML when all checks are triggered (i.e. all data is missing)', () => {
+    const onTest = mount(PostEditForm, makeMountArg(EMPTY_POST))
+    for (const check of CHECKED_DATA_ITEMS) {
+      if (!onTest.vm[check.propName]) {
+        throw new Error(`Precondition failed, property ${check.propName} is false, should all be true`)
+      }
+    }
+    expect(onTest.element).toMatchSnapshot()   
+  })
+
+  it('has the expected HTML when all checks are inactive (i.e. all data is present)', () => {
+    const onTest = mount(PostEditForm, makeMountArg(VALID_POST))
+    if (!onTest.vm.formContentsValid) {
+      throw new Error(`Precondition failed formContentsValid is false should be true`)
+    }
+    expect(onTest.element).toMatchSnapshot()   
   })
 })
 
