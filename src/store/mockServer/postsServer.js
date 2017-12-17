@@ -89,15 +89,12 @@ export function PostsServer (userAuth) {
       if (!reqData.authToken || !userAuth.syncGetUserCanSeeFullPosts(reqData.authToken)) {
         reject(new Error('Error: you must be authenticated to view posts'))
       } else {
-        const postId = parseInt(reqData.postId)
-        const result = posts.filter(post => post.id === postId)
-        console.log('filtered results = ')
-        console.log(result)
-        if (result.length === 1) {
-          resolve({data: result[0]})
-        } else {
-          reject(new Error('Could not find single post with ID ' + postId))
+        if (!posts.hasOwnProperty(reqData.postId)) {
+          reject(new Error('Unknown postID: ' + reqData.postId))
+          return
         }
+        const result = posts[reqData.postId]
+        resolve({data: result})
       }
     },
     postWithoutAuth (reqData, resolve, reject) {
