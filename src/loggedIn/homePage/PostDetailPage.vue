@@ -62,12 +62,13 @@ export default {
       return REMOTE_LOCATION
     },
     ableToEdit () {
-      return this.post.postedBy === 'Jana Swiss'
+      // TODO: this should really be based on asking userAuth (is userXXX allowed to edit postYYY)
+      return this.post.postedBy === this.username
     },
     toggleSaveText () {
       return this.post.postedBy === 'John Doe' ? 'Unfavourite' : 'Save'
     },
-    ...mapGetters({'storedPost': 'loggedin/postdetails/post'})
+    ...mapGetters({'storedPost': 'loggedin/postdetails/post', 'username': 'username'})
   },
   created () {
     this.$store.dispatch('loggedin/postdetails/getPost', this.postId)
