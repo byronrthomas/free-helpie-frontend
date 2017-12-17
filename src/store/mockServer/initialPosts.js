@@ -12,7 +12,7 @@ export const INITIAL_POSTS = [
         unit: '2hr',
         frequency: 'Week'
       },
-      slots: ['Weekends']
+      slots: ['Weekend']
     }
   },
   {
@@ -30,7 +30,7 @@ A small amount of time once a week or once a month should be fine. We can do it 
         unit: '4hr',
         frequency: 'Month'
       },
-      slots: ['Evenings']
+      slots: ['Evening']
     }
   },
   {
@@ -46,7 +46,7 @@ A small amount of time once a week or once a month should be fine. We can do it 
         unit: '2hr',
         frequency: 'Week'
       },
-      slots: ['Daytimes', 'Weekdays']
+      slots: ['Daytime', 'Weekday']
     }
   }
 ]

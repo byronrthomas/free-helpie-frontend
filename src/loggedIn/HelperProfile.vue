@@ -82,28 +82,28 @@
             <input
                     type="checkbox"
                     id="weekday"
-                    value="TimeslotWeekday"
+                    value="Weekday"
                     v-model="helperTimings.slots"> Weekday
         </label>
         <label  class="checkbox-inline">
             <input
                     type="checkbox"
                     id="weekend"
-                    value="TimeslotWeekend"
+                    value="Weekend"
                     v-model="helperTimings.slots"> Weekend
         </label>
         <label  class="checkbox-inline">
             <input
                     type="checkbox"
                     id="evening"
-                    value="TimeslotEvening"
+                    value="Evening"
                     v-model="helperTimings.slots"> Evening
         </label>
         <label class="checkbox-inline">
             <input
                     type="checkbox"
                     id="daytime"
-                    value="TimeslotDaytime"
+                    value="Daytime"
                     v-model="helperTimings.slots"> Daytime
         </label>
       </div>       
