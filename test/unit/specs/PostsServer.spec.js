@@ -24,10 +24,14 @@ function makeReq(remainingReq) {
 
 const TEST_POST_DATA = INITIAL_POSTS[0]
 
-function removeId(post) {
-  let post2 = {...post}
-  delete post2.id
-  return post2
+function extractPostData(postsData) {
+  const posts = []
+  for (const key in postsData) {
+    if (postsData.hasOwnProperty(key)) {
+      posts.push(postsData[key]);
+    }
+  }
+  return posts
 }
 
 function shouldRunSuccessfully(method, data, checkResult) {
@@ -41,8 +45,8 @@ function shouldRunSuccessfully(method, data, checkResult) {
   expect(hasSucceeded).toBeTruthy()
 }
 
-function checkEqualTo(expectedResults) {
-  return res => expect(res.data.map(removeId)).toEqual(expectedResults)
+function checkPostsEqualTo(expectedResults) {
+  return res => expect(extractPostData(res.data)).toEqual(expectedResults)
 } 
 
 describe ('PostsServer', () => {
@@ -61,10 +65,10 @@ describe ('PostsServer', () => {
     })
 
     it('should be possible to fetch them back with unfiltered get', () => {
-      shouldRunSuccessfully(onTest.get, makeReq({}), checkEqualTo(postsToPost))
+      shouldRunSuccessfully(onTest.get, makeReq({}), checkPostsEqualTo(postsToPost))
     })
 
-    const checkNoResults = res => expect(res.data).toHaveLength(0)
+    const checkNoResults = res => expect(extractPostData(res.data)).toHaveLength(0)
     describe('should give no results if an empty list is supplied as ', () => {
       const filtersToCheck = ['postIdsFilter', 'postedByFilter', 'interestsFilter', 'skillsFilter']
       for (const filterField of filtersToCheck) {
@@ -92,7 +96,7 @@ describe ('PostsServer', () => {
         'locationsFilter': [expectedResult.locations[0]]
       }
       const containsExpectedResult = 
-        res => expect(res.data.map(removeId))
+        res => expect(extractPostData(res.data))
           .toEqual(expect.arrayContaining([expectedResult]))
       for (const filterKey in filtersAndFields) {
         it(` the ${filterKey} filter`, () => {
@@ -109,7 +113,7 @@ describe ('PostsServer', () => {
         throw new Error("Can't run test without having something to filter to")
       }
       const reqData = {locationsFilter: []}
-      shouldRunSuccessfully(onTest.get, makeReq(reqData), checkEqualTo(expectedResult))
+      shouldRunSuccessfully(onTest.get, makeReq(reqData), checkPostsEqualTo(expectedResult))
     })
   })
 })

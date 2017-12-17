@@ -20,10 +20,6 @@ function makeLocationFilterComponent (reqData) {
 function makeFilter (reqData) {
   let filter = post => true
   filter = makeFilterComponent(
-    reqData.postIdsFilter,
-    filter,
-    (postIds, post) => postIds.includes(post.id))
-  filter = makeFilterComponent(
     reqData.postedByFilter,
     filter,
     (postedBys, post) => postedBys.includes(post.postedBy))
@@ -42,8 +38,35 @@ function makeFilter (reqData) {
   return filter
 }
 
+function filterObj(obj, valueFilter) {
+  const res = {}
+  for (const key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      const element = obj[key];
+      if (valueFilter(element)) {
+        res[key] = element
+      }
+    }
+  }
+  return res
+}
+
+function filterObjWithKeys(obj, valueFilter, keys) {
+  const res = {}
+  for (const key of keys) {
+    if (obj.hasOwnProperty(key)) {
+      const element = obj[key];
+      if (valueFilter(element)) {
+        res[key] = element
+      }
+    }
+  }
+  return res
+}
+
 export function PostsServer (userAuth) {
-  const posts = []
+  const posts = {}
+  let newPostId = 0
 
   const srv = {
     get (reqData, resolve, reject) {
@@ -52,7 +75,11 @@ export function PostsServer (userAuth) {
       if (!reqData.authToken || !userAuth.syncGetUserCanSeeFullPosts(reqData.authToken)) {
         reject(new Error('Error: you must be authenticated to view posts'))
       } else {
-        const result = posts.filter(makeFilter(reqData))
+        const criteriaFilter = makeFilter(reqData)
+        const result = 
+          reqData.postIdsFilter
+          ? filterObjWithKeys(posts, criteriaFilter, reqData.postIdsFilter)
+          : filterObj(posts, makeFilter(reqData))
         resolve({data: result})
       }
     },
@@ -83,8 +110,7 @@ export function PostsServer (userAuth) {
         reject(new Error('Error: cannot post something that already has an ID - this is server-assigned'))
         return
       }
-      newPost.id = posts.length
-      posts.push(newPost)
+      posts[newPostId++] = newPost
       console.log('Posting post succeeded')
       resolve()
     },
