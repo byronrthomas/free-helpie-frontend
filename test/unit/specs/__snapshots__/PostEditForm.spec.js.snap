@@ -156,6 +156,24 @@ exports[`post edit form has the expected HTML when all checks are inactive (i.e.
                 </label>
                  
                 <div>
+                  <div
+                    class="form-control list-item"
+                  >
+                    
+      Location
+      
+                    <button
+                      aria-label="Close"
+                      class="close"
+                      type="button"
+                    >
+                      <span
+                        aria-hidden="true"
+                      >
+                        ×
+                      </span>
+                    </button>
+                  </div>
                    
                   <select
                     class="form-control list-item"
@@ -224,6 +242,24 @@ exports[`post edit form has the expected HTML when all checks are inactive (i.e.
                 </label>
                  
                 <div>
+                  <div
+                    class="form-control list-item"
+                  >
+                    
+      Interest
+      
+                    <button
+                      aria-label="Close"
+                      class="close"
+                      type="button"
+                    >
+                      <span
+                        aria-hidden="true"
+                      >
+                        ×
+                      </span>
+                    </button>
+                  </div>
                    
                   <select
                     class="form-control list-item"
@@ -252,6 +288,24 @@ exports[`post edit form has the expected HTML when all checks are inactive (i.e.
                 </label>
                  
                 <div>
+                  <div
+                    class="form-control list-item"
+                  >
+                    
+      Skill
+      
+                    <button
+                      aria-label="Close"
+                      class="close"
+                      type="button"
+                    >
+                      <span
+                        aria-hidden="true"
+                      >
+                        ×
+                      </span>
+                    </button>
+                  </div>
                    
                   <select
                     class="form-control list-item"

@@ -28,32 +28,43 @@
 export default {
   data () {
     return {
-      newSelection: '',
-      alreadySelected: []}
+      // the drop-down is always inactive when we load the form, we either
+      // don't have any pre-existing data (creating new data or previous was empty)
+      // - in which case no pre-baked list items and drop-down is blank (inactive)
+      // OR
+      // we have some pre-existing data - it all gets rendered as list items, so again
+      // drop-down is inactive
+      openSlotIsActive: false
+    }
   },
-  props: ['possibleOptions'],
-  computed: {
-    value: {
-      get () {
-        return this.newSelection
-          ? Array.concat(this.alreadySelected, [this.newSelection])
-          : this.alreadySelected
-      },
-      set (newValue) {
-        console.log('Setting multi-select with')
-        console.log(newValue)
-        this.alreadySelected = [...newValue]
-        this.newSelection = ''
+  props: {
+    'possibleOptions': Array, 
+    'value': {
+      Type: Array,
+      default() {
+        return []
       }
     }
   },
+  computed: {
+    alreadySelected () {
+      return !this.openSlotIsActive
+        ? this.value
+        : this.value.slice(0, this.value.length - 1)
+    },
+    newSelection () {
+      return this.openSlotIsActive
+        ? this.value[this.value.length - 1]
+        : ''
+    }
+    // Possible states of the 'value' bit
+  },
   methods: {
     addRow () {
-      if (!this.newSelection) {
+      if (!this.openSlotIsActive) {
         alert('Cannot add another selection if nothing currently selected')
       } else {
-        this.alreadySelected.push(this.newSelection)
-        this.newSelection = ''
+        this.openSlotIsActive = false
         this.$emit('input', this.value)
       }
     },
@@ -61,12 +72,35 @@ export default {
       if (this.alreadySelected.length <= index || index < 0) {
         alert('Invalid row to delete')
       } else {
-        this.alreadySelected.splice(index, 1)
+        this.value.splice(index, 1)
         this.$emit('input', this.value)
       }
     },
     newSelectionChanged (newValue) {
-      this.newSelection = newValue
+      // If open slot was previously empty, we're adding
+      // to the array
+      if (!this.openSlotIsActive) {
+        console.log('open slot not currently active')
+        if (newValue) {
+          console.log('adding new value')
+          this.value.push(newValue)
+          this.openSlotIsActive = true
+        }
+      }
+      else {
+        console.log('open slot currently active')
+        // We're changing the existing array values
+        const openSlot = this.value.length - 1
+        if (newValue) {
+          console.log('changing last value')
+          this.value[openSlot] = newValue
+        } else {
+          console.log('removing last value')
+          this.openSlotIsActive = false
+          this.value.splice(openSlot, 1)
+        }
+      }
+
       this.$emit('input', this.value)
     }
   }
