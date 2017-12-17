@@ -4,12 +4,12 @@
     <div class="row">
       <div class="col-xs-12">
         <post-summary-item 
-          v-for="post in posts" 
+          v-for="(post, postId) in posts" 
           :post="post" 
-          :key="post.id"
-          :is-saved="isSaved(post)"
-          @viewPost="viewPost(post)"
-          @savePost="$emit('updateFavouritePosts', post, !isSaved(post))" />
+          :key="postId"
+          :is-saved="isSaved(postId)"
+          @viewPost="viewPost(postId)"
+          @savePost="$emit('updateFavouritePosts', postId, !isSaved(postId))" />
       </div>
     </div>
   </div>
@@ -20,15 +20,15 @@ import PostSummaryItem from './PostSummaryItem.vue'
 
 export default {
   props: {
-    posts: Array,
+    posts: Object,
     favouritePostIds: Array
   },
   methods: {
-    isSaved (post) {
-      return this.favouritePostIds.includes(post.id)
+    isSaved (postId) {
+      return this.favouritePostIds.includes(postId)
     },
-    viewPost (post) {
-      this.$router.push({name: 'postDetail', params: {postId: post.id}})
+    viewPost (postId) {
+      this.$router.push({name: 'postDetail', params: {postId}})
     }
   },
   components: {

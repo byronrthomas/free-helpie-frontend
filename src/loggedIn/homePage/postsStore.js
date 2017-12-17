@@ -12,7 +12,7 @@ export function postsStore (server) {
   return {
     namespaced: true,
     state: {
-      posts: [],
+      posts: {},
       filter: {
       }
     },

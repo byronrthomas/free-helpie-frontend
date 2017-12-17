@@ -130,16 +130,16 @@ export function loggedInStore (server) {
           .then(() => { console.log('Success'); dispatch('getUserFavourites', userId) })
           .catch(err => commit('setLastServerError', err.message, { root: true }))
       },
-      favouritePost ({ state, dispatch }, post) {
-        if (!state.favouritePostIds.includes(post.id)) {
+      favouritePost ({ state, dispatch }, postId) {
+        if (!state.favouritePostIds.includes(postId)) {
           const newFavourites = [...state.favouritePostIds]
-          newFavourites.push(post.id)
+          newFavourites.push(postId)
           dispatch('updateFavourites', newFavourites)
         }
       },
-      unfavouritePost ({ state, dispatch }, post) {
-        if (state.favouritePostIds.includes(post.id)) {
-          const newFavourites = state.favouritePostIds.filter(x => x !== post.id)
+      unfavouritePost ({ state, dispatch }, postId) {
+        if (state.favouritePostIds.includes(postId)) {
+          const newFavourites = state.favouritePostIds.filter(x => x !== postId)
           dispatch('updateFavourites', newFavourites)
         }
       }

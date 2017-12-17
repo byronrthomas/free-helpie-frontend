@@ -2,7 +2,7 @@
   <div>
     <button class="btn btn-primary">Message</button>
     <button class="btn btn-primary">{{ toggleSaveText }}</button>
-    <router-link tag="button" :to="{name: 'editPost', params: {postId: post.id}}" v-if="ableToEdit" class="btn btn-primary">Edit</router-link>
+    <router-link tag="button" :to="{name: 'editPost', params: {postId: postId}}" v-if="ableToEdit" class="btn btn-primary">Edit</router-link>
     <button v-if="ableToEdit" class="btn btn-primary">Take down</button>
     <h3>{{ post.title }}</h3>
     <p><strong>Requested by</strong> {{ post.postedBy }} </p>
