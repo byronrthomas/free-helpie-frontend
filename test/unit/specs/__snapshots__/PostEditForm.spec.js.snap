@@ -449,7 +449,7 @@ exports[`post edit form has the expected HTML when all checks are inactive (i.e.
                   <input
                     id="weekday"
                     type="checkbox"
-                    value="TimeslotWeekday"
+                    value="Weekday"
                   />
                    Weekday
       
@@ -461,7 +461,7 @@ exports[`post edit form has the expected HTML when all checks are inactive (i.e.
                   <input
                     id="weekend"
                     type="checkbox"
-                    value="TimeslotWeekend"
+                    value="Weekend"
                   />
                    Weekend
       
@@ -473,7 +473,7 @@ exports[`post edit form has the expected HTML when all checks are inactive (i.e.
                   <input
                     id="evening"
                     type="checkbox"
-                    value="TimeslotEvening"
+                    value="Evening"
                   />
                    Evening
       
@@ -485,7 +485,7 @@ exports[`post edit form has the expected HTML when all checks are inactive (i.e.
                   <input
                     id="daytime"
                     type="checkbox"
-                    value="TimeslotDaytime"
+                    value="Daytime"
                   />
                    Daytime
       
@@ -975,7 +975,7 @@ exports[`post edit form has the expected HTML when all checks are triggered (i.e
                   <input
                     id="weekday"
                     type="checkbox"
-                    value="TimeslotWeekday"
+                    value="Weekday"
                   />
                    Weekday
       
@@ -987,7 +987,7 @@ exports[`post edit form has the expected HTML when all checks are triggered (i.e
                   <input
                     id="weekend"
                     type="checkbox"
-                    value="TimeslotWeekend"
+                    value="Weekend"
                   />
                    Weekend
       
@@ -999,7 +999,7 @@ exports[`post edit form has the expected HTML when all checks are triggered (i.e
                   <input
                     id="evening"
                     type="checkbox"
-                    value="TimeslotEvening"
+                    value="Evening"
                   />
                    Evening
       
@@ -1011,7 +1011,7 @@ exports[`post edit form has the expected HTML when all checks are triggered (i.e
                   <input
                     id="daytime"
                     type="checkbox"
-                    value="TimeslotDaytime"
+                    value="Daytime"
                   />
                    Daytime
       
