@@ -38,10 +38,13 @@ export default {
     }
   },
   props: {
-    'possibleOptions': Array, 
+    'possibleOptions': {
+      type: Array,
+      required: true
+    },
     'value': {
-      Type: Array,
-      default() {
+      type: Array,
+      default () {
         return []
       }
     }
@@ -80,22 +83,16 @@ export default {
       // If open slot was previously empty, we're adding
       // to the array
       if (!this.openSlotIsActive) {
-        console.log('open slot not currently active')
         if (newValue) {
-          console.log('adding new value')
           this.value.push(newValue)
           this.openSlotIsActive = true
         }
-      }
-      else {
-        console.log('open slot currently active')
+      } else {
         // We're changing the existing array values
         const openSlot = this.value.length - 1
         if (newValue) {
-          console.log('changing last value')
           this.value[openSlot] = newValue
         } else {
-          console.log('removing last value')
           this.openSlotIsActive = false
           this.value.splice(openSlot, 1)
         }
