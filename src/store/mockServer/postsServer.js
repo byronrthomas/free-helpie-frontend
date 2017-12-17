@@ -120,6 +120,8 @@ export function PostsServer (userAuth) {
       srv.postWithoutAuth(reqData, resolve, reject)
     },
     put (reqData, resolve, reject) {
+      console.log('PUT post request:')
+      console.log(reqData)
       if (!reqData.hasOwnProperty('postId')) {
         reject(new Error("Error: you must supply postID when putting a post"))
         return

@@ -62,7 +62,7 @@ function Server (userAuth, userData, posts, userFavourites) {
     put (resourcePath, data) {
       if (resourcePath.startsWith('/posts/')) {
         const postId = resourcePath.substring('/posts/'.length)
-        return wrapAsPromise(posts.put, {postId: postId, data})
+        return wrapAsPromise(posts.put, {postId: postId, ...data})
       }
       throw new Error(`Unknown route: POST ${resourcePath}`)
     }

@@ -18,7 +18,7 @@ import {mapGetters} from 'vuex'
 export default {
   props: {
     postId: {
-      type: Number,
+      type: String,
       required: true
     }
   },
@@ -42,9 +42,12 @@ export default {
     'post-edit-form': PostEditForm
   },
   methods: {
+    updateSucceeded () {
+      alert('Updates have been saved')
+    },
     handleSubmit (post) {
       const action = 'updatePost'
-      this.$store.dispatch('loggedin/editpost/' + action, post)
+      this.$store.dispatch('loggedin/editpost/' + action, {updatedPost: post, successCallback: this.updateSucceeded})
     }
   },
   created () {
