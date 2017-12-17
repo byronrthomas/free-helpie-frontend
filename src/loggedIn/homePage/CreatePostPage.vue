@@ -44,9 +44,13 @@ export default {
     'post-edit-form': PostEditForm
   },
   methods: {
+    createSucceeded () {
+      alert('Your post has been successfully created, redirecting to latest posts...')
+      this.$router.push({name: 'latestPosts'})
+    },
     handleSubmit (post) {
       const action = 'createPost'
-      this.$store.dispatch('loggedin/editpost/' + action, post)
+      this.$store.dispatch('loggedin/editpost/' + action, {post, successCallback: this.createSucceeded})
     }
   }
 }

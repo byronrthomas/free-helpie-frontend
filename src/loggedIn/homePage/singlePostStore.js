@@ -31,9 +31,10 @@ export function singlePostStore (server) {
           .then(resp => commit('setPost', resp.data))
           .catch(err => commit('setLastServerError', err.message, { root: true }))
       },
-      createPost ({commit, rootGetters}, newPost) {
+      createPost ({commit, rootGetters}, {post, successCallback}) {
         commit('setLastServerError', '', {root: true})
-        server.post('/posts', {authToken: rootGetters.authToken, data: newPost})
+        server.post('/posts', {authToken: rootGetters.authToken, data: post})
+          .then(successCallback)
           .catch(err => commit('setLastServerError', err.message, { root: true }))
       },
       updatePost ({commit, rootGetters, state}, updatedPost) {
