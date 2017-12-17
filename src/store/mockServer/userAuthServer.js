@@ -80,6 +80,9 @@ export function UserAuthServer () {
     },
     syncGetUserCanPost (token) {
       return typeof usersToAuth.getByValue(token) !== 'undefined'
+    },
+    syncGetUserCanUpdate (token, postId) {
+      return typeof usersToAuth.getByValue(token) !== 'undefined'
     }
   }
 }

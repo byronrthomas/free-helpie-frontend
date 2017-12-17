@@ -107,9 +107,10 @@ export function PostsServer (userAuth) {
         reject(new Error('Error: cannot post something that already has an ID - this is server-assigned'))
         return
       }
-      posts[newPostId++] = newPost
+      const postId = newPostId++
+      posts[postId] = newPost
       console.log('Posting post succeeded')
-      resolve()
+      resolve({data: {postId: postId}})
     },
     post (reqData, resolve, reject) {
       if (!reqData.authToken || !userAuth.syncGetUserCanPost(reqData.authToken)) {
@@ -119,18 +120,23 @@ export function PostsServer (userAuth) {
       srv.postWithoutAuth(reqData, resolve, reject)
     },
     put (reqData, resolve, reject) {
-      if (!reqData.hasOwnProperty(postId)) {
+      if (!reqData.hasOwnProperty('postId')) {
         reject(new Error("Error: you must supply postID when putting a post"))
         return
       }
-      if (!reqData.authToken || !userAuth.syncGetUserCanUpdate(reqData.authToken, reqData.postId)) {
+      const postId = reqData.postId
+      if (!reqData.authToken || !userAuth.syncGetUserCanUpdate(reqData.authToken, postId)) {
         reject(new Error('Error: you dont have permission to update postId: ' + postId))
         return
       }
       
       if (!reqData.hasOwnProperty('data')) {
-        // Do the deletion
+        reject(new Error('Error: no data property on the request - cannot update post'))
+        return
       }
+
+      posts[postId] = {...reqData.data}
+      console.log('Put data succeeded for post ' + postId)
       resolve()
     }
 

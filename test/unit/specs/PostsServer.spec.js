@@ -7,14 +7,13 @@ const AUTH_TOKEN = Math.random()
 
 const dummyAuther = {
   syncGetUserCanPost(token) {
-    if (typeof token !== 'undefined') {
-      return true
-    }
+    return typeof token !== 'undefined'
   },
   syncGetUserCanSeeFullPosts(token) {
-    if (typeof token !== 'undefined') {
-      return true
-    }
+    return typeof token !== 'undefined'
+  },
+  syncGetUserCanUpdate(token) {
+    return typeof token !== 'undefined'
   }
 }
 
@@ -56,6 +55,36 @@ describe ('PostsServer', () => {
     
     shouldRunSuccessfully(onTest.post, makeReq({data: TEST_POST_DATA}))
   }),
+
+  describe('after a post', () => {
+    const postContents = INITIAL_POSTS[0]
+    let onTest
+    let postId
+    beforeEach(() => {
+      onTest = new PostsServer(dummyAuther)
+      onTest.post(
+        makeReq({data: postContents}), 
+        res => {postId = res.data.postId}, 
+        err => {throw err})
+    })
+
+    it('should be possible to put an edited version of the existing post', () => {
+      const newPostContents = {locations: ['Some new location'], ...postContents}
+      shouldRunSuccessfully(onTest.put, makeReq({data: newPostContents, postId: postId}))
+    })
+      
+    describe('after putting an edited version of the post', () => {
+      it('should give back the edited version on the next get', () => {
+        const newPostContents = {...postContents, locations: ['Some new location']}
+        shouldRunSuccessfully(onTest.put, makeReq({data: newPostContents, postId: postId}))
+        shouldRunSuccessfully(
+          onTest.getSingle,
+          makeReq({postId: postId}),
+          res => {expect(res.data).toEqual(newPostContents)})
+      })
+    })
+
+  })
   describe('after some posts', () => {
     const postsToPost = INITIAL_POSTS
     let onTest
@@ -67,6 +96,7 @@ describe ('PostsServer', () => {
     it('should be possible to fetch them back with unfiltered get', () => {
       shouldRunSuccessfully(onTest.get, makeReq({}), checkPostsEqualTo(postsToPost))
     })
+
 
     const checkNoResults = res => expect(extractPostData(res.data)).toHaveLength(0)
     describe('should give no results if an empty list is supplied as ', () => {
