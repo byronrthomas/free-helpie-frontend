@@ -1,13 +1,11 @@
 <template>
   <post-edit-form 
-    v-if="isInitialised"
     :initial-post-data="post"
-    :create-or-update="'Update'"
+    :create-or-update="'Create'"
     :possible-interests="possibleInterests"
     :possible-locations="possibleLocations"
     :possible-skills="possibleSkills"
     @submitForm="handleSubmit"/>
-  <p v-else>Initialising...</p>
 </template>
 
 <script>
@@ -15,13 +13,20 @@ import PostEditForm from './PostEditForm.vue'
 import {LOCATIONS, SKILLS, INTERESTS} from '../profileConstants'
 import {mapGetters} from 'vuex'
 
+function makeEmptyPost (postedBy) {
+  return {
+    postedBy: postedBy,
+    title: '',
+    interests: [],
+    skills: [],
+    locations: [],
+    remote: false,
+    description: '',
+    timings: {regularAmount: {unit: '', frequency: ''}, slots: []}
+  }
+}
+
 export default {
-  props: {
-    postId: {
-      type: Number,
-      required: true
-    }
-  },
   data () {
     return {
       possibleSkills: SKILLS,
@@ -30,27 +35,19 @@ export default {
     }
   },
   computed: {
-    isInitialised () {
-      return Boolean(this.storedPost)
-    },
     post () {
-      return this.storedPost
+      return makeEmptyPost(this.username)
     },
-    ...mapGetters({'storedPost': 'loggedin/editpost/post'})
+    ...mapGetters({'username': 'username'})
   },
   components: {
     'post-edit-form': PostEditForm
   },
   methods: {
     handleSubmit (post) {
-      const action = 'updatePost'
+      const action = 'createPost'
       this.$store.dispatch('loggedin/editpost/' + action, post)
     }
-  },
-  created () {
-    // Clear out previous form data first
-    this.$store.commit('loggedin/editpost/setPost', null)
-    this.$store.dispatch('loggedin/editpost/getPost', this.postId)
   }
 }
 </script>
