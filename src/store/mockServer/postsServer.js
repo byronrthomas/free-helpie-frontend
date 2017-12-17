@@ -89,15 +89,28 @@ export function PostsServer (userAuth) {
       resolve()
     },
     post (reqData, resolve, reject) {
-      // console.log('POST post with request:')
-      // console.log(reqData)
-
       if (!reqData.authToken || !userAuth.syncGetUserCanPost(reqData.authToken)) {
         reject(new Error('Error: you must be authenticated to view posts'))
         return
       }
       srv.postWithoutAuth(reqData, resolve, reject)
+    },
+    put (reqData, resolve, reject) {
+      if (!reqData.hasOwnProperty(postId)) {
+        reject(new Error("Error: you must supply postID when putting a post"))
+        return
+      }
+      if (!reqData.authToken || !userAuth.syncGetUserCanUpdate(reqData.authToken, reqData.postId)) {
+        reject(new Error('Error: you dont have permission to update postId: ' + postId))
+        return
+      }
+      
+      if (!reqData.hasOwnProperty('data')) {
+        // Do the deletion
+      }
+      resolve()
     }
+
   }
   return srv
 }

@@ -39,7 +39,7 @@ export function singlePostStore (server) {
       },
       updatePost ({commit, rootGetters, state}, updatedPost) {
         commit('setLastServerError', '', {root: true})
-        server.post(makeSpecificPostRoute(state.postId), {authToken: rootGetters.authToken, data: updatedPost})
+        server.put(makeSpecificPostRoute(state.postId), {authToken: rootGetters.authToken, data: updatedPost})
           .catch(err => commit('setLastServerError', err.message, { root: true }))
       }
     }
