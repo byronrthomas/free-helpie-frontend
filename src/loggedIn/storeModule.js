@@ -151,6 +151,7 @@ export function loggedInStore (server) {
       // when navigating back to previously viewed page
       latestposts: postsStore(server),
       savedposts: postsStore(server),
+      yourposts: postsStore(server),
       // Ditto for these
       postdetails: singlePostStore(server),
       editpost: singlePostStore(server)
