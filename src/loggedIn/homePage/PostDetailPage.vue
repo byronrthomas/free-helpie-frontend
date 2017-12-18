@@ -1,7 +1,7 @@
 <template>
   <div>
     <button class="btn btn-primary">Message</button>
-    <button class="btn btn-primary">{{ toggleSaveText }}</button>
+    <button class="btn btn-primary" @click="toggleFavourite">{{ toggleSaveText }}</button>
     <router-link tag="button" :to="{name: 'editPost', params: {postId: postId}}" v-if="ableToEdit" class="btn btn-primary">Edit</router-link>
     <button v-if="ableToEdit" class="btn btn-primary" @click="deletePost">Delete</button>
     <h3>{{ post.title }}</h3>
@@ -65,10 +65,16 @@ export default {
       // TODO: this should really be based on asking userAuth (is userXXX allowed to edit postYYY)
       return this.post.postedBy === this.username
     },
-    toggleSaveText () {
-      return this.post.postedBy === 'John Doe' ? 'Unfavourite' : 'Save'
+    isFavourited () {
+      return this.favouritePostIds.includes(this.postId)
     },
-    ...mapGetters({'storedPost': 'loggedin/postdetails/post', 'username': 'username'})
+    toggleSaveText () {
+      return this.isFavourited ? 'Unfavourite' : 'Favourite'
+    },
+    ...mapGetters({
+      'storedPost': 'loggedin/postdetails/post',
+      favouritePostIds: 'loggedin/favouritePostIds', 
+      'username': 'username'})
   },
   created () {
     this.$store.dispatch('loggedin/postdetails/getPost', this.postId)
@@ -81,6 +87,10 @@ export default {
       if (confirm('You are about to delete this post - are you sure?')) {
         this.$store.dispatch('loggedin/postdetails/deletePost', {postId: this.postId, successCallback: this.onDeleted})
       }
+    },
+    toggleFavourite () {
+      const storeAction = !this.isFavourited ? 'favouritePost' : 'unfavouritePost'
+      this.$store.dispatch('loggedin/' + storeAction, this.postId)
     }
   }
 }
