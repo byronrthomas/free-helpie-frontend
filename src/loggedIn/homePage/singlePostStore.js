@@ -42,6 +42,12 @@ export function singlePostStore (server) {
         server.put(makeSpecificPostRoute(state.postId), {authToken: rootGetters.authToken, data: updatedPost})
           .then(successCallback)
           .catch(err => commit('setLastServerError', err.message, { root: true }))
+      },
+      deletePost ({commit, rootGetters, state}, {successCallback}) {
+        commit('setLastServerError', '', {root: true})
+        server.delete(makeSpecificPostRoute(state.postId), {authToken: rootGetters.authToken})
+          .then(successCallback)
+          .catch(err => commit('setLastServerError', err.message, { root: true }))
       }
     }
   }

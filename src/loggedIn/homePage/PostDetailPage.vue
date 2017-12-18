@@ -3,7 +3,7 @@
     <button class="btn btn-primary">Message</button>
     <button class="btn btn-primary">{{ toggleSaveText }}</button>
     <router-link tag="button" :to="{name: 'editPost', params: {postId: postId}}" v-if="ableToEdit" class="btn btn-primary">Edit</router-link>
-    <button v-if="ableToEdit" class="btn btn-primary">Take down</button>
+    <button v-if="ableToEdit" class="btn btn-primary" @click="deletePost">Delete</button>
     <h3>{{ post.title }}</h3>
     <p><strong>Requested by</strong> {{ post.postedBy }} </p>
     <br>
@@ -72,6 +72,16 @@ export default {
   },
   created () {
     this.$store.dispatch('loggedin/postdetails/getPost', this.postId)
+  },
+  methods : {
+    onDeleted () {
+      this.$router.push({name: 'latestPosts'});
+    },
+    deletePost () {
+      if (confirm('You are about to delete this post - are you sure?')) {
+        this.$store.dispatch('loggedin/postdetails/deletePost', {postId: this.postId, successCallback: this.onDeleted})
+      }
+    }
   }
 }
 </script>
