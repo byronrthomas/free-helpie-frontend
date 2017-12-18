@@ -14,6 +14,9 @@ const dummyAuther = {
   },
   syncGetUserCanUpdate(token) {
     return typeof token !== 'undefined'
+  },
+  syncGetUserCanDelete (token, postId) {
+    return typeof token !== 'undefined'
   }
 }
 
@@ -49,6 +52,8 @@ function checkPostsEqualTo(expectedResults) {
 } 
 
 describe ('PostsServer', () => {
+  const checkNoResults = res => expect(extractPostData(res.data)).toHaveLength(0)
+
   it('should accept post requests', () => {
     const onTest = new PostsServer(dummyAuther)
     console.log(onTest)
@@ -84,6 +89,16 @@ describe ('PostsServer', () => {
       })
     })
 
+    it('should be possible to delete the post', () => {
+      shouldRunSuccessfully(onTest.delete, makeReq({postId: postId}))
+    })
+
+    describe('after deleting the post', () => {
+      it('should not appear in unfiltered get', () => {
+        shouldRunSuccessfully(onTest.delete, makeReq({postId: postId}))
+        shouldRunSuccessfully(onTest.get, makeReq({}), checkNoResults)
+      })
+    })
   })
   describe('after some posts', () => {
     const postsToPost = INITIAL_POSTS
@@ -98,7 +113,6 @@ describe ('PostsServer', () => {
     })
 
 
-    const checkNoResults = res => expect(extractPostData(res.data)).toHaveLength(0)
     describe('should give no results if an empty list is supplied as ', () => {
       const filtersToCheck = ['postIdsFilter', 'postedByFilter', 'interestsFilter', 'skillsFilter']
       for (const filterField of filtersToCheck) {

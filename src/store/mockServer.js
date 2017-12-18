@@ -65,6 +65,13 @@ function Server (userAuth, userData, posts, userFavourites) {
         return wrapAsPromise(posts.put, {postId: postId, ...data})
       }
       throw new Error(`Unknown route: POST ${resourcePath}`)
+    },
+    delete (resourcePath, data) {
+      if (resourcePath.startsWith('/posts/')) {
+        const postId = resourcePath.substring('/posts/'.length)
+        return wrapAsPromise(posts.delete, {postId: postId, ...data})
+      }
+      throw new Error(`Unknown route: POST ${resourcePath}`)
     }
   }
 }

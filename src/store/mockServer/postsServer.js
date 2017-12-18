@@ -140,6 +140,23 @@ export function PostsServer (userAuth) {
       posts[postId] = {...reqData.data}
       console.log('Put data succeeded for post ' + postId)
       resolve()
+    },
+    delete (reqData, resolve, reject) {
+      console.log('DELETE post request:')
+      console.log(reqData)
+      if (!reqData.hasOwnProperty('postId')) {
+        reject(new Error("Error: you must supply postID when deleting a post"))
+        return
+      }
+      const postId = reqData.postId
+      if (!reqData.authToken || !userAuth.syncGetUserCanDelete(reqData.authToken, postId)) {
+        reject(new Error('Error: you dont have permission to delete postId: ' + postId))
+        return
+      }
+
+      delete posts[postId]
+      console.log('delete succeeeded for post ' + postId)
+      resolve()
     }
 
   }

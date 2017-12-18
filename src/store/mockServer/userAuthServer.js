@@ -83,6 +83,9 @@ export function UserAuthServer () {
     },
     syncGetUserCanUpdate (token, postId) {
       return typeof usersToAuth.getByValue(token) !== 'undefined'
+    },
+    syncGetUserCanDelete (token, postId) {
+      return typeof usersToAuth.getByValue(token) !== 'undefined'
     }
   }
 }
