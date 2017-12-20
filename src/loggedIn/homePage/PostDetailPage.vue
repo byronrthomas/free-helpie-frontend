@@ -1,6 +1,5 @@
 <template>
   <div>
-    <button class="btn btn-primary">Message</button>
     <button class="btn btn-primary" @click="toggleFavourite">{{ toggleSaveText }}</button>
     <router-link tag="button" :to="{name: 'editPost', params: {postId: postId}}" v-if="ableToEdit" class="btn btn-primary">Edit</router-link>
     <button v-if="ableToEdit" class="btn btn-primary" @click="deletePost">Delete</button>
@@ -13,6 +12,9 @@
     <br>
     <h5>Description</h5>
     <div> {{ post.description }}</div>
+    <h5>Write a message to {{ postersName }}</h5>
+    <textarea name="messageContents" id="messageContents" cols="30" rows="10" v-model="mailContent"></textarea>
+    <button :disabled="!messageContents" class="btn btn-primary" @click="sendMail">Send</button>
   </div>
 </template>
 
@@ -29,6 +31,9 @@ function stringDotFormat (joiner, strings) {
 const REMOTE_LOCATION = 'REMOTE'
 
 export default {
+  data () {
+    return { mailContent: '' }
+  },
   props: ['postId'],
   computed: {
     post () {
@@ -71,6 +76,10 @@ export default {
     toggleSaveText () {
       return this.isFavourited ? 'Unfavourite' : 'Favourite'
     },
+    postersName () {
+      // This is incorrect, but just a placeholder for the correct implementation
+      return this.post.postedBy
+    },
     ...mapGetters({
       'storedPost': 'loggedin/postdetails/post',
       favouritePostIds: 'loggedin/favouritePostIds', 
@@ -91,6 +100,12 @@ export default {
     toggleFavourite () {
       const storeAction = !this.isFavourited ? 'favouritePost' : 'unfavouritePost'
       this.$store.dispatch('loggedin/' + storeAction, this.postId)
+    },
+    sendMail () {
+      if (this.mailContent) {
+        console.log("Sending mail:")
+        console.log(this.mailContent)
+      }
     }
   }
 }

@@ -1,35 +1,49 @@
 <template>
   <div class="container">
-    <post-edit-form 
-      :post="post"
-      :create-or-update="'Create'"
-      :possible-interests="['Cats']"
-      :possible-locations="['Brum']"
-      :possible-skills="['Gardening']"/>
+    <mail-thread-container 
+      :mail-items="mailItems"
+      :username="username"
+      :my-avatar="myAvatar"
+      :other-avatar="otherAvatar"/>
   </div>
   
 </template>
 
 
 <script>
-import PostEditForm from './loggedIn/homePage/PostEditForm.vue'
+import MailThreadContainer from './loggedIn/homePage/shared/MailThreadContainer.vue'
+
+const MAIL_ITEMS = [
+  {sender: 'test@test.com',
+  text: 'Hello, I could help you',
+  relatedToPostId: 1,
+  sent: Date(),
+  replayToMailId: -1,
+  id: 0},
+  {sender: 'otherperson@IneedHelp.com',
+  text: 'That would be great, thanks - how far away do you live?',
+  relatedToPostId: 1,
+  sent: Date(),
+  replayToMailId: 0,
+  id: 1},
+  {sender: 'test@test.com',
+  text: 'Bolton. Should we exchange contact details?',
+  relatedToPostId: 1,
+  sent: Date(),
+  replayToMailId: 1,
+  id: 2},
+]
+
 export default {
   data () {
     return {
-      post: {
-        postedBy: 'John Doe',
-        title: '',
-        interests: [],
-        skills: [],
-        locations: [],
-        remote: false,
-        description: '',
-        timings: {regularAmount: {unit: '', frequency: ''}, slots: []}
-      }
-    }
+      mailItems: MAIL_ITEMS,
+      myAvatar: {altText: 'YOU'},
+      otherAvatar: {altText: 'them'},
+      username: 'test@test.com'}
   },
   components: {
-    'post-edit-form': PostEditForm
+    'mail-thread-container': MailThreadContainer
   }
 }
 </script>
