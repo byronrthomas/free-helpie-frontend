@@ -82,15 +82,15 @@ export default {
     },
     ...mapGetters({
       'storedPost': 'loggedin/postdetails/post',
-      favouritePostIds: 'loggedin/favouritePostIds', 
+      favouritePostIds: 'loggedin/favouritePostIds',
       'username': 'username'})
   },
   created () {
     this.$store.dispatch('loggedin/postdetails/getPost', this.postId)
   },
-  methods : {
+  methods: {
     onDeleted () {
-      this.$router.push({name: 'latestPosts'});
+      this.$router.push({name: 'latestPosts'})
     },
     deletePost () {
       if (confirm('You are about to delete this post - are you sure?')) {
@@ -103,7 +103,7 @@ export default {
     },
     sendMail () {
       if (this.mailContent) {
-        console.log("Sending mail:")
+        console.log('Sending mail:')
         console.log(this.mailContent)
       }
     }

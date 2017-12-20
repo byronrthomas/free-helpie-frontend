@@ -38,11 +38,11 @@ function makeFilter (reqData) {
   return filter
 }
 
-function filterObj(obj, valueFilter) {
+function filterObj (obj, valueFilter) {
   const res = {}
   for (const key in obj) {
     if (obj.hasOwnProperty(key)) {
-      const element = obj[key];
+      const element = obj[key]
       if (valueFilter(element)) {
         res[key] = element
       }
@@ -51,11 +51,11 @@ function filterObj(obj, valueFilter) {
   return res
 }
 
-function filterObjWithKeys(obj, valueFilter, keys) {
+function filterObjWithKeys (obj, valueFilter, keys) {
   const res = {}
   for (const key of keys) {
     if (obj.hasOwnProperty(key)) {
-      const element = obj[key];
+      const element = obj[key]
       if (valueFilter(element)) {
         res[key] = element
       }
@@ -76,7 +76,7 @@ export function PostsServer (userAuth) {
         reject(new Error('Error: you must be authenticated to view posts'))
       } else {
         const criteriaFilter = makeFilter(reqData)
-        const result = 
+        const result =
           reqData.postIdsFilter
           ? filterObjWithKeys(posts, criteriaFilter, reqData.postIdsFilter)
           : filterObj(posts, makeFilter(reqData))
@@ -123,7 +123,7 @@ export function PostsServer (userAuth) {
       console.log('PUT post request:')
       console.log(reqData)
       if (!reqData.hasOwnProperty('postId')) {
-        reject(new Error("Error: you must supply postID when putting a post"))
+        reject(new Error('Error: you must supply postID when putting a post'))
         return
       }
       const postId = reqData.postId
@@ -131,7 +131,7 @@ export function PostsServer (userAuth) {
         reject(new Error('Error: you dont have permission to update postId: ' + postId))
         return
       }
-      
+
       if (!reqData.hasOwnProperty('data')) {
         reject(new Error('Error: no data property on the request - cannot update post'))
         return
@@ -145,7 +145,7 @@ export function PostsServer (userAuth) {
       console.log('DELETE post request:')
       console.log(reqData)
       if (!reqData.hasOwnProperty('postId')) {
-        reject(new Error("Error: you must supply postID when deleting a post"))
+        reject(new Error('Error: you must supply postID when deleting a post'))
         return
       }
       const postId = reqData.postId
