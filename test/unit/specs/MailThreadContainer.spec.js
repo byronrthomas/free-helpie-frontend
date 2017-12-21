@@ -9,6 +9,16 @@ function mailWithDate (sentDate) {
     sent: sentDate}
 }
 
+function makeOptionsForConnectCancel (connectCancel) {
+  return {
+    propsData: {
+      mailItems: [],
+      myAvatar: {altText: 'You'},
+      otherAvatar: {altText: 'Them'},
+      username: TEST_USERNAME,
+      connectOrCancelAllowed: connectCancel}}
+}
+
 const TEST_USERNAME = 'TestUser'
 function makeOptions (mails) {
   return {
@@ -81,11 +91,60 @@ describe('Mail thread container', () => {
     expect(onTest.vm.waitingForReply).toBeFalsy()
   })
 
-  it('should emit postMail with the new mail text when the button is clicked', () => {
-    fail()
+  it('should emit sendMail with the new mail text when the button is clicked', () => {
+    const emailText = 'Email text'
+    const onTest = mount(MailThreadContainer, NO_MAILS)
+    onTest.setData({...onTest.vm.$data, newMailText: emailText})
+    onTest.find('#submitButton').trigger('click')
+
+    expect(onTest.emitted().sendMail).toBeTruthy()
+    expect(onTest.emitted().sendMail.length).toBe(1)
+    expect(onTest.emitted().sendMail[0]).toEqual([emailText])
   })
 
-  it('should be rendered correctly when the mail thread is non-empty', () => {
-    fail()
+  it('should emit makeConnection when the button is clicked', () => {
+    const onTest = mount(MailThreadContainer, makeOptionsForConnectCancel('connectAllowed'))
+    onTest.find('#makeConnection').trigger('click')
+
+    expect(onTest.emitted().makeConnection).toBeTruthy()
+    expect(onTest.emitted().makeConnection.length).toBe(1)
+    expect(onTest.emitted().makeConnection[0]).toEqual([])
   })
+
+  it('should emit cancelConnection when the button is clicked', () => {
+    const onTest = mount(MailThreadContainer, makeOptionsForConnectCancel('cancelAllowed'))
+    onTest.find('#cancelConnection').trigger('click')
+
+    expect(onTest.emitted().cancelConnection).toBeTruthy()
+    expect(onTest.emitted().cancelConnection.length).toBe(1)
+    expect(onTest.emitted().cancelConnection[0]).toEqual([])
+  })
+
+  const allowedText = allowed => allowed ? 'allowed' : 'not allowed'
+  const aMail = mailWithDate(new Date())
+  for (const hasMessages of [false, true]) {
+    const messagesText = hasMessages ? 'messages' : 'no messages'
+    for (const connectOrCancelState of ['disabled', 'connectAllowed', 'cancelAllowed']) {
+      for (const allowedToMessage of [false, true]) {
+        // Impossible combo given current implementation
+        if (!allowedToMessage && !hasMessages) continue;
+
+        it(`should be rendered correctly when there are ${messagesText}, the cancelConnect state is ${connectOrCancelState} and the user is ${allowedText(allowedToMessage)} to message`, () => {
+          const msgs = 
+            allowedToMessage 
+              ? (hasMessages ? [{...aMail, sender: 'AnotherUser'}] : [])
+              : (hasMessages ? [{...aMail, sender: TEST_USERNAME}] : [])
+          const options = {
+            propsData: {
+              mailItems: msgs,
+              myAvatar: {altText: 'You'},
+              otherAvatar: {altText: 'Them'},
+              username: TEST_USERNAME},
+              connectOrCancelAllowed: connectOrCancelState}
+          const onTest = mount(MailThreadContainer, options)
+          expect(onTest.element).toMatchSnapshot()
+        })
+      }
+    }
+  }
 })

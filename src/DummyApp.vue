@@ -1,10 +1,13 @@
 <template>
   <div class="container">
-    <mail-thread-container 
-      :mail-items="mailItems"
-      :username="username"
-      :my-avatar="myAvatar"
-      :other-avatar="otherAvatar"/>
+    <div v-for="(config, i) in configs" :key="i">
+      <mail-thread-container 
+        :mail-items="config.mailItems"
+        :connect-or-cancel-allowed="config.connectCancel"
+        :username="username"
+        :my-avatar="myAvatar"
+        :other-avatar="otherAvatar"/>
+    </div>
   </div>
   
 </template>
@@ -37,10 +40,22 @@ const MAIL_ITEMS = [
     id: 2}
 ]
 
+const ALL_CONFIGS = [
+  {connectCancel: 'disabled', mails: []},
+  {connectCancel: 'connectAllowed', mails: []},
+  {connectCancel: 'cancelAllowed', mails: []},
+  {connectCancel: 'disabled', mails: MAIL_ITEMS},
+  {connectCancel: 'connectAllowed', mails: MAIL_ITEMS},
+  {connectCancel: 'cancelAllowed', mails: MAIL_ITEMS},
+  {connectCancel: 'disabled', mails: MAIL_ITEMS.slice(0, 2)},
+  {connectCancel: 'connectAllowed', mails: MAIL_ITEMS.slice(0, 2)},
+  {connectCancel: 'cancelAllowed', mails: MAIL_ITEMS.slice(0, 2)},
+]
+
 export default {
   data () {
     return {
-      mailItems: MAIL_ITEMS,
+      configs: ALL_CONFIGS,
       myAvatar: {altText: 'YOU'},
       otherAvatar: {altText: 'them'},
       username: 'test@test.com'}

@@ -1,0 +1,340 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Mail thread container should be rendered correctly when there are messages, the cancelConnect state is cancelAllowed and the user is allowed to message 1`] = `
+<div>
+  <div>
+    <textarea
+      cols="30"
+      id="messageContents"
+      name="messageContents"
+      rows="10"
+    />
+     
+    <button
+      class="btn btn-primary"
+      disabled="disabled"
+      id="submitButton"
+    >
+      Send
+    </button>
+  </div>
+   
+  <div>
+    <div
+      class="row"
+    >
+      <div
+        class="col-xs-2 col-xs-offset-10"
+      >
+         Thu Dec 21 2017 11:57:56 GMT+0000 (GMT Standard Time) 
+      </div>
+    </div>
+     
+    <div
+      class="row"
+    >
+      <div
+        class="col-xs-2"
+      >
+        <h3>
+           Them 
+        </h3>
+      </div>
+       
+      <div
+        class="col-xs-10"
+      >
+        <span>
+          
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Mail thread container should be rendered correctly when there are messages, the cancelConnect state is cancelAllowed and the user is not allowed to message 1`] = `
+<div>
+  <!---->
+   
+  <div>
+    <div
+      class="row"
+    >
+      <div
+        class="col-xs-2 col-xs-offset-10"
+      >
+         Thu Dec 21 2017 11:57:56 GMT+0000 (GMT Standard Time) 
+      </div>
+    </div>
+     
+    <div
+      class="row"
+    >
+      <div
+        class="col-xs-2"
+      >
+        <h3>
+           You 
+        </h3>
+      </div>
+       
+      <div
+        class="col-xs-10"
+      >
+        <span>
+          
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Mail thread container should be rendered correctly when there are messages, the cancelConnect state is connectAllowed and the user is allowed to message 1`] = `
+<div>
+  <div>
+    <textarea
+      cols="30"
+      id="messageContents"
+      name="messageContents"
+      rows="10"
+    />
+     
+    <button
+      class="btn btn-primary"
+      disabled="disabled"
+      id="submitButton"
+    >
+      Send
+    </button>
+  </div>
+   
+  <div>
+    <div
+      class="row"
+    >
+      <div
+        class="col-xs-2 col-xs-offset-10"
+      >
+         Thu Dec 21 2017 11:57:56 GMT+0000 (GMT Standard Time) 
+      </div>
+    </div>
+     
+    <div
+      class="row"
+    >
+      <div
+        class="col-xs-2"
+      >
+        <h3>
+           Them 
+        </h3>
+      </div>
+       
+      <div
+        class="col-xs-10"
+      >
+        <span>
+          
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Mail thread container should be rendered correctly when there are messages, the cancelConnect state is connectAllowed and the user is not allowed to message 1`] = `
+<div>
+  <!---->
+   
+  <div>
+    <div
+      class="row"
+    >
+      <div
+        class="col-xs-2 col-xs-offset-10"
+      >
+         Thu Dec 21 2017 11:57:56 GMT+0000 (GMT Standard Time) 
+      </div>
+    </div>
+     
+    <div
+      class="row"
+    >
+      <div
+        class="col-xs-2"
+      >
+        <h3>
+           You 
+        </h3>
+      </div>
+       
+      <div
+        class="col-xs-10"
+      >
+        <span>
+          
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Mail thread container should be rendered correctly when there are messages, the cancelConnect state is disabled and the user is allowed to message 1`] = `
+<div>
+  <div>
+    <textarea
+      cols="30"
+      id="messageContents"
+      name="messageContents"
+      rows="10"
+    />
+     
+    <button
+      class="btn btn-primary"
+      disabled="disabled"
+      id="submitButton"
+    >
+      Send
+    </button>
+  </div>
+   
+  <div>
+    <div
+      class="row"
+    >
+      <div
+        class="col-xs-2 col-xs-offset-10"
+      >
+         Thu Dec 21 2017 11:57:56 GMT+0000 (GMT Standard Time) 
+      </div>
+    </div>
+     
+    <div
+      class="row"
+    >
+      <div
+        class="col-xs-2"
+      >
+        <h3>
+           Them 
+        </h3>
+      </div>
+       
+      <div
+        class="col-xs-10"
+      >
+        <span>
+          
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Mail thread container should be rendered correctly when there are messages, the cancelConnect state is disabled and the user is not allowed to message 1`] = `
+<div>
+  <!---->
+   
+  <div>
+    <div
+      class="row"
+    >
+      <div
+        class="col-xs-2 col-xs-offset-10"
+      >
+         Thu Dec 21 2017 11:57:56 GMT+0000 (GMT Standard Time) 
+      </div>
+    </div>
+     
+    <div
+      class="row"
+    >
+      <div
+        class="col-xs-2"
+      >
+        <h3>
+           You 
+        </h3>
+      </div>
+       
+      <div
+        class="col-xs-10"
+      >
+        <span>
+          
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Mail thread container should be rendered correctly when there are no messages, the cancelConnect state is cancelAllowed and the user is allowed to message 1`] = `
+<div>
+  <div>
+    <textarea
+      cols="30"
+      id="messageContents"
+      name="messageContents"
+      rows="10"
+    />
+     
+    <button
+      class="btn btn-primary"
+      disabled="disabled"
+      id="submitButton"
+    >
+      Send
+    </button>
+  </div>
+   
+</div>
+`;
+
+exports[`Mail thread container should be rendered correctly when there are no messages, the cancelConnect state is connectAllowed and the user is allowed to message 1`] = `
+<div>
+  <div>
+    <textarea
+      cols="30"
+      id="messageContents"
+      name="messageContents"
+      rows="10"
+    />
+     
+    <button
+      class="btn btn-primary"
+      disabled="disabled"
+      id="submitButton"
+    >
+      Send
+    </button>
+  </div>
+   
+</div>
+`;
+
+exports[`Mail thread container should be rendered correctly when there are no messages, the cancelConnect state is disabled and the user is allowed to message 1`] = `
+<div>
+  <div>
+    <textarea
+      cols="30"
+      id="messageContents"
+      name="messageContents"
+      rows="10"
+    />
+     
+    <button
+      class="btn btn-primary"
+      disabled="disabled"
+      id="submitButton"
+    >
+      Send
+    </button>
+  </div>
+   
+</div>
+`;

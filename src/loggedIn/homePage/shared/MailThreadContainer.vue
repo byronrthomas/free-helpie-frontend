@@ -1,74 +1,65 @@
 <template>
   <div>
+    <button 
+      v-if="showMakeConnectionButton"
+      class="btn btn-primary"
+      id="makeConnection"
+      @click="$emit('makeConnection')">
+    Connect with user</button>
+    <button
+      v-if="showCancelConnectionButton"
+      class="btn btn-primary"
+      id="cancelConnection"
+      @click="$emit('cancelConnection')">
+    Cancel connection with user</button>
     <div v-if="!waitingForReply">
-      <textarea name="messageContents" id="messageContents" cols="30" rows="10" v-model="newMailText"></textarea>
-      <button :disabled="!newMailText" class="btn btn-primary" @click="sendMail">Send</button>
+      <textarea 
+        name="messageContents" 
+        id="messageContents" 
+        cols="30" rows="10" 
+        v-model="newMailText"></textarea>
+      <button 
+        :disabled="!newMailText" 
+        class="btn btn-primary" 
+        id="submitButton" 
+        @click="sendMail">Send</button>
     </div>
-    <mail-item 
-      v-for="mail in mailItems" 
-      :key="mail.id" 
+    <mail-item
+      v-for="mail in mailItems"
+      :key="mail.id"
       :mail="mail"
       :avatar="avatarImage(mail)"/>
   </div>
 </template>
 
 <script>
-function setupState (mails) {
-  const dict = {}
-  for (const mail in mails) {
-    dict[mail.id] = {content: mail}
-  }
-  return dict
-}
+import MailItem from './MailItem.vue'
 
-const PERMANENT_MARK = 'permanentMark'
-const TEMPORARY_MARK = 'temporaryMark'
-function visit(output, allState, current) {
-  if (current[PERMANENT_MARK]) return
-  if (current[TEMPORARY_MARK]) {
-    throw new Error("Cycle detected!")
-  }
-  current[TEMPORARY_MARK] = true
-  const nextLink = current.content.replayToMailId
-  if (allState.hasOwnProperty(nextLink)) {
-    visit(output, allState, allState[nextLink])
-  }
-  current[PERMANENT_MARK] = true
-  output.unshift(current.content)
-}
-
-function reverseTopological(mails) {
-  const state = setupState(mails)
-  const sorted = []
-  for (const mail of mails) {
-    const mailState = state[mail.id]
-    if (!mailState[PERMANENT_MARK] && !mailState[TEMPORARY_MARK]) {
-      visit(sorted, state, mailState)
-    }
-  }
-  console.log("reverseTop, sorted:")
-  console.log(sorted)
-  return sorted
-}
-
-function compareDates(aDate, bDate) {
+function compareDates (aDate, bDate) {
   return aDate.getTime() - bDate.getTime()
 }
 
-import MailItem from './MailItem.vue'
 export default {
   props: {
     mailItems: Array,
     username: String,
     myAvatar: Object,
-    otherAvatar: Object
+    otherAvatar: Object,
+    connectOrCancelAllowed: {
+      type: String,
+      default () {
+        return 'disabled'
+      },
+      validator (value) {
+        return ['disabled', 'connectAllowed', 'cancelAllowed'].includes(value)
+      }
+    }
   },
   data () {
     const sortedMailItems = [...this.mailItems]
     sortedMailItems.sort((a, b) => compareDates(b.sent, a.sent))
-    
+
     return {
-      fudge: 'AWESOME',
       newMailText: '',
       sortedMailItems: sortedMailItems
     }
@@ -89,10 +80,19 @@ export default {
         : this.otherAvatar
     },
     sendMail () {
+      console.log('Getting a sendMail click')
+      console.log(this.newMailText)
       if (this.newMailText) {
         console.log('Sending mail:')
         console.log(this.newMailText)
+        this.$emit('sendMail', this.newMailText)
       }
+    },
+    showMakeConnectionButton () {
+      return this.connectOrCancelAllowed === 'connectAllowed'
+    },
+    showCancelConnectionButton () {
+      return this.connectOrCancelAllowed === 'cancelAllowed'
     }
   },
   components: {
