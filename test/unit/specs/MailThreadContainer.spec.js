@@ -70,78 +70,15 @@ describe('Mail thread container', () => {
     expect(onTest.vm.sentByCurrentUser({sender: onTest.vm.username})).toBeTruthy()
   })
 
-  it('should return !waitingForReply when the mail thread is empty', () => {
-    const onTest = mount(MailThreadContainer, NO_MAILS)
-    expect(onTest.vm.waitingForReply).toBeFalsy()
-  })
-
-  it('should return waitingForReply when the mail thread is not empty and the current user mailed last', () => {
-    const inputMails = [
-      'UserA', TEST_USERNAME, 'UserB', 'UserA', TEST_USERNAME
-    ].map(makeAMailSentBy)
-    const onTest = mount(MailThreadContainer, makeOptions(inputMails))
-    expect(onTest.vm.waitingForReply).toBeTruthy()
-  })
-
-  it('should return !waitingForReply when the mail thread is not empty and another user mailed last', () => {
-    const inputMails = [
-      'UserA', TEST_USERNAME, 'UserB', 'UserA', TEST_USERNAME, 'UserC'
-    ].map(makeAMailSentBy)
-    const onTest = mount(MailThreadContainer, makeOptions(inputMails))
-    expect(onTest.vm.waitingForReply).toBeFalsy()
-  })
-
   it('should emit sendMail with the new mail text when the button is clicked', () => {
     const emailText = 'Email text'
     const onTest = mount(MailThreadContainer, NO_MAILS)
     onTest.setData({...onTest.vm.$data, newMailText: emailText})
     onTest.find('#submitButton').trigger('click')
 
-    const expectedMail = {text: emailText, replyToMailId: -1}
-
     expect(onTest.emitted().sendMail).toBeTruthy()
     expect(onTest.emitted().sendMail.length).toBe(1)
-    expect(onTest.emitted().sendMail[0]).toEqual([expectedMail])
-  })
-
-  it('should emit fill out replyToMailId when sending a mail as reply', () => {
-    const emailText = 'Email text'
-    const replyToID = 55
-    const mails = [
-      makeAMailSentBy(TEST_USERNAME),
-      { ...makeAMailSentBy('AnotherUser'), id: replyToID }
-    ]
-    
-    const onTest = mount(MailThreadContainer, makeOptions(mails))
-    onTest.setData({...onTest.vm.$data, newMailText: emailText})
-    onTest.find('#submitButton').trigger('click')
-
-    const expectedMail = {text: emailText, replyToMailId: replyToID}
-
-    expect(onTest.emitted().sendMail).toBeTruthy()
-    expect(onTest.emitted().sendMail.length).toBe(1)
-    expect(onTest.emitted().sendMail[0]).toEqual([expectedMail])
-  })
-
-  it('should emit treat the last mail from somebody as the replied to mail when sending a mail', () => {
-    const emailText = 'Email text'
-    const replyToID = 55
-    const mails = [
-      makeAMailSentBy(TEST_USERNAME),
-      { ...makeAMailSentBy('AnotherUser'), id: replyToID - 1 },
-      { ...makeAMailSentBy('AnotherUser'), id: replyToID },
-      { ...makeAMailSentBy(TEST_USERNAME), id: replyToID + 1 },
-    ]
-    
-    const onTest = mount(MailThreadContainer, makeOptions(mails))
-    onTest.setData({...onTest.vm.$data, newMailText: emailText})
-    onTest.find('#submitButton').trigger('click')
-
-    const expectedMail = {text: emailText, replyToMailId: replyToID}
-
-    expect(onTest.emitted().sendMail).toBeTruthy()
-    expect(onTest.emitted().sendMail.length).toBe(1)
-    expect(onTest.emitted().sendMail[0]).toEqual([expectedMail])
+    expect(onTest.emitted().sendMail[0]).toEqual([emailText])
   })
 
   it('should emit makeConnection when the button is clicked', () => {
@@ -167,26 +104,18 @@ describe('Mail thread container', () => {
   for (const hasMessages of [false, true]) {
     const messagesText = hasMessages ? 'messages' : 'no messages'
     for (const connectOrCancelState of ['disabled', 'connectAllowed', 'cancelAllowed']) {
-      for (const allowedToMessage of [false, true]) {
-        // Impossible combo given current implementation
-        if (!allowedToMessage && !hasMessages) continue;
-
-        it(`should be rendered correctly when there are ${messagesText}, the cancelConnect state is ${connectOrCancelState} and the user is ${allowedText(allowedToMessage)} to message`, () => {
-          const msgs = 
-            allowedToMessage 
-              ? (hasMessages ? [{...aMail, sender: 'AnotherUser'}] : [])
-              : (hasMessages ? [{...aMail, sender: TEST_USERNAME}] : [])
-          const options = {
-            propsData: {
-              mailItems: msgs,
-              myAvatar: {altText: 'You'},
-              otherAvatar: {altText: 'Them'},
-              username: TEST_USERNAME},
-              connectOrCancelAllowed: connectOrCancelState}
-          const onTest = mount(MailThreadContainer, options)
-          expect(onTest.element).toMatchSnapshot()
-        })
-      }
+      it(`should be rendered correctly when there are ${messagesText} and the cancelConnect state is ${connectOrCancelState}`, () => {
+        const msgs = hasMessages ? [{...aMail, sender: 'AnotherUser'}] : []
+        const options = {
+          propsData: {
+            mailItems: msgs,
+            myAvatar: {altText: 'You'},
+            otherAvatar: {altText: 'Them'},
+            username: TEST_USERNAME},
+            connectOrCancelAllowed: connectOrCancelState}
+        const onTest = mount(MailThreadContainer, options)
+        expect(onTest.element).toMatchSnapshot()
+      })
     }
   }
 })

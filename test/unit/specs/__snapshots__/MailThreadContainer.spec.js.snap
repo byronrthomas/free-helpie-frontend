@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Mail thread container should be rendered correctly when there are messages, the cancelConnect state is cancelAllowed and the user is allowed to message 1`] = `
+exports[`Mail thread container should be rendered correctly when there are messages and the cancelConnect state is cancelAllowed 1`] = `
 <div>
   <div
     class="panel panel-default"
@@ -78,75 +78,7 @@ exports[`Mail thread container should be rendered correctly when there are messa
 </div>
 `;
 
-exports[`Mail thread container should be rendered correctly when there are messages, the cancelConnect state is cancelAllowed and the user is not allowed to message 1`] = `
-<div>
-  <div
-    class="panel panel-default"
-  >
-    <div
-      class="panel-heading"
-    >
-      <div
-        class="row"
-      >
-        <div
-          class="col-sm-3"
-        >
-          <strong>
-             You 
-          </strong>
-        </div>
-         
-        <div
-          class="col-sm-3 col-sm-offset-6"
-        >
-          <p
-            style="float: right;"
-          >
-            2017-12-22 00:00:00
-          </p>
-        </div>
-      </div>
-    </div>
-     
-    <div
-      class="panel-body"
-    >
-      
-    
-  
-    </div>
-  </div>
-   
-  <div
-    class="panel panel-primary"
-  >
-    <div
-      class="panel-heading"
-    >
-      <h3
-        class="panel-title"
-      >
-        Send a message
-      </h3>
-    </div>
-     
-    <div
-      class="panel-body"
-    >
-      <p>
-        Please wait for a reply to your earlier message - don't spam each other!
-      </p>
-    </div>
-  </div>
-   
-  <!---->
-   
-  <!---->
-</div>
-`;
-
-exports[`Mail thread container should be rendered correctly when there are messages, the cancelConnect state is connectAllowed and the user is allowed to message 1`] = `
+exports[`Mail thread container should be rendered correctly when there are messages and the cancelConnect state is connectAllowed 1`] = `
 <div>
   <div
     class="panel panel-default"
@@ -224,75 +156,7 @@ exports[`Mail thread container should be rendered correctly when there are messa
 </div>
 `;
 
-exports[`Mail thread container should be rendered correctly when there are messages, the cancelConnect state is connectAllowed and the user is not allowed to message 1`] = `
-<div>
-  <div
-    class="panel panel-default"
-  >
-    <div
-      class="panel-heading"
-    >
-      <div
-        class="row"
-      >
-        <div
-          class="col-sm-3"
-        >
-          <strong>
-             You 
-          </strong>
-        </div>
-         
-        <div
-          class="col-sm-3 col-sm-offset-6"
-        >
-          <p
-            style="float: right;"
-          >
-            2017-12-22 00:00:00
-          </p>
-        </div>
-      </div>
-    </div>
-     
-    <div
-      class="panel-body"
-    >
-      
-    
-  
-    </div>
-  </div>
-   
-  <div
-    class="panel panel-primary"
-  >
-    <div
-      class="panel-heading"
-    >
-      <h3
-        class="panel-title"
-      >
-        Send a message
-      </h3>
-    </div>
-     
-    <div
-      class="panel-body"
-    >
-      <p>
-        Please wait for a reply to your earlier message - don't spam each other!
-      </p>
-    </div>
-  </div>
-   
-  <!---->
-   
-  <!---->
-</div>
-`;
-
-exports[`Mail thread container should be rendered correctly when there are messages, the cancelConnect state is disabled and the user is allowed to message 1`] = `
+exports[`Mail thread container should be rendered correctly when there are messages and the cancelConnect state is disabled 1`] = `
 <div>
   <div
     class="panel panel-default"
@@ -370,75 +234,7 @@ exports[`Mail thread container should be rendered correctly when there are messa
 </div>
 `;
 
-exports[`Mail thread container should be rendered correctly when there are messages, the cancelConnect state is disabled and the user is not allowed to message 1`] = `
-<div>
-  <div
-    class="panel panel-default"
-  >
-    <div
-      class="panel-heading"
-    >
-      <div
-        class="row"
-      >
-        <div
-          class="col-sm-3"
-        >
-          <strong>
-             You 
-          </strong>
-        </div>
-         
-        <div
-          class="col-sm-3 col-sm-offset-6"
-        >
-          <p
-            style="float: right;"
-          >
-            2017-12-22 00:00:00
-          </p>
-        </div>
-      </div>
-    </div>
-     
-    <div
-      class="panel-body"
-    >
-      
-    
-  
-    </div>
-  </div>
-   
-  <div
-    class="panel panel-primary"
-  >
-    <div
-      class="panel-heading"
-    >
-      <h3
-        class="panel-title"
-      >
-        Send a message
-      </h3>
-    </div>
-     
-    <div
-      class="panel-body"
-    >
-      <p>
-        Please wait for a reply to your earlier message - don't spam each other!
-      </p>
-    </div>
-  </div>
-   
-  <!---->
-   
-  <!---->
-</div>
-`;
-
-exports[`Mail thread container should be rendered correctly when there are no messages, the cancelConnect state is cancelAllowed and the user is allowed to message 1`] = `
+exports[`Mail thread container should be rendered correctly when there are no messages and the cancelConnect state is cancelAllowed 1`] = `
 <div>
    
   <div
@@ -479,7 +275,7 @@ exports[`Mail thread container should be rendered correctly when there are no me
 </div>
 `;
 
-exports[`Mail thread container should be rendered correctly when there are no messages, the cancelConnect state is connectAllowed and the user is allowed to message 1`] = `
+exports[`Mail thread container should be rendered correctly when there are no messages and the cancelConnect state is connectAllowed 1`] = `
 <div>
    
   <div
@@ -520,7 +316,7 @@ exports[`Mail thread container should be rendered correctly when there are no me
 </div>
 `;
 
-exports[`Mail thread container should be rendered correctly when there are no messages, the cancelConnect state is disabled and the user is allowed to message 1`] = `
+exports[`Mail thread container should be rendered correctly when there are no messages and the cancelConnect state is disabled 1`] = `
 <div>
    
   <div

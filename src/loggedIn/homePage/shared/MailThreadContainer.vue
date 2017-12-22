@@ -9,10 +9,7 @@
       <div class="panel-heading">
         <h3 class="panel-title">Send a message</h3>
       </div>
-      <div class="panel-body" v-if="waitingForReply">
-        <p>Please wait for a reply to your earlier message - don't spam each other!</p>
-      </div>
-      <div class="panel-body" v-else>
+      <div class="panel-body">
         <textarea
           name="messageContents" 
           id="messageContents" 
@@ -45,7 +42,7 @@
     </div>
     <div class="panel panel-info" v-if="showCancelConnectionButton">
       <div class="panel-heading">
-        <h3 class="panel-title">Share contact details with user</h3>
+        <h3 class="panel-title">You are sharing contact details</h3>
       </div>
       <div class="panel-body">
         <div class="alert alert-info">
@@ -94,10 +91,6 @@ export default {
     }
   },
   computed: {
-    waitingForReply () {
-      return this.sortedMailItems.length > 0 &&
-        this.sentByCurrentUser(this.sortedMailItems[0])
-    },
     showMakeConnectionButton () {
       return this.connectOrCancelAllowed === 'connectAllowed'
     },
