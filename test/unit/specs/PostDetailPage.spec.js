@@ -24,8 +24,9 @@ const testPostData = {
 }
 
 const otherUserPostId = 2
+const OTHER_USERNAME = 'SomeOtherDude'
 const otherUserPostData = {
-  postedBy: 'SomeOtherDude', ...emptyPost
+  postedBy: OTHER_USERNAME, ...emptyPost
 }
 
 const testEmails = [
@@ -37,7 +38,7 @@ const testEmails = [
     replayToMailId: -1,
     id: 0},
   {
-    sender: 'SomeOtherDude',
+    sender: OTHER_USERNAME,
     text: 'That would be great, thanks - how far away do you live?',
     relatedToPostId: 1,
     sent: new Date(2010, 1, 2),
@@ -130,7 +131,7 @@ describe('PostDetailsPage', () => {
     expect(onTest.contains('#linkToMailbox')).toBe(true)
   })
 
-  it('should dispatch newEmail(post_id, to_user, msg_text) if it receives a sendEmail event', () => {
+  it('should dispatch newEmail(post_id, post_author, thread_author, msg_text) if it receives a sendEmail event', () => {
     const onTest = shallow(PostDetailPage, {localVue, store, propsData: {postId: otherUserPostId}})
 
     const emailText = 'This is a test email'
@@ -139,7 +140,8 @@ describe('PostDetailsPage', () => {
 
     const expectedMailData = {
       threadAuthor: TEST_USERNAME,
-      postId: otherUserPostId,
+      relatedToPostId: otherUserPostId,
+      postAuthor: OTHER_USERNAME,
       text: emailText
     }
     expect(actions.newMail.mock.calls.length).toEqual(1)

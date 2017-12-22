@@ -86,6 +86,12 @@ export function UserAuthServer () {
     },
     syncGetUserCanDelete (token, postId) {
       return typeof usersToAuth.getByValue(token) !== 'undefined'
+    },
+    syncGetUserCanPostMails (token) {
+      return typeof usersToAuth.getByValue(token) !== 'undefined'
+    },
+    syncGetUserCanReadMails (token, postId, threadAuthor) {
+      return typeof usersToAuth.getByValue(token) !== 'undefined'
     }
   }
 }
