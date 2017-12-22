@@ -52,7 +52,7 @@ const ALL_CONFIGS = [
   {connectCancel: 'cancelAllowed', mails: MAIL_ITEMS},
   {connectCancel: 'disabled', mails: MAIL_ITEMS.slice(0, 2)},
   {connectCancel: 'connectAllowed', mails: MAIL_ITEMS.slice(0, 2)},
-  {connectCancel: 'cancelAllowed', mails: MAIL_ITEMS.slice(0, 2)},
+  {connectCancel: 'cancelAllowed', mails: MAIL_ITEMS.slice(0, 2)}
 ]
 
 export default {

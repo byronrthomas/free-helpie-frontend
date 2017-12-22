@@ -14,7 +14,7 @@
     <div> {{ post.description }}</div>
     <div v-if="!postedByCurrentUser">
       <h5>Your conversation with {{ postersName }}</h5>
-      <mail-thread-container 
+      <mail-thread-container
         :connect-or-cancel-allowed="'disabled'"
         :mail-items="mailItems"
         :my-avatar="myAvatar"
@@ -46,7 +46,7 @@ const REMOTE_LOCATION = 'REMOTE'
 
 export default {
   data () {
-    return { 
+    return {
       mailContent: '',
       myAvatar: {altText: 'You'}
     }
@@ -131,7 +131,6 @@ export default {
       this.$store.dispatch('loggedin/' + storeAction, this.postId)
     },
     sendMail (mailText) {
-      console.log("sendMail called")
       this.$store.dispatch('loggedin/postthread/newMail', {postId: this.postId, threadAuthor: this.username, text: mailText})
     }
   },

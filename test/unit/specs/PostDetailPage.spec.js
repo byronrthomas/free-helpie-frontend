@@ -83,7 +83,6 @@ describe('PostDetailsPage', () => {
             favouritePostIds (state) {return []}
           },
           modules: {
-            // postdetails: singlePostStore(dummySinglePostServer),
             postdetails: {
               namespaced: true,
               getters: {
