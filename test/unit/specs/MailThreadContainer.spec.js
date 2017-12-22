@@ -97,9 +97,51 @@ describe('Mail thread container', () => {
     onTest.setData({...onTest.vm.$data, newMailText: emailText})
     onTest.find('#submitButton').trigger('click')
 
+    const expectedMail = {text: emailText, replyToMailId: -1}
+
     expect(onTest.emitted().sendMail).toBeTruthy()
     expect(onTest.emitted().sendMail.length).toBe(1)
-    expect(onTest.emitted().sendMail[0]).toEqual([emailText])
+    expect(onTest.emitted().sendMail[0]).toEqual([expectedMail])
+  })
+
+  it('should emit fill out replyToMailId when sending a mail as reply', () => {
+    const emailText = 'Email text'
+    const replyToID = 55
+    const mails = [
+      makeAMailSentBy(TEST_USERNAME),
+      { ...makeAMailSentBy('AnotherUser'), id: replyToID }
+    ]
+    
+    const onTest = mount(MailThreadContainer, makeOptions(mails))
+    onTest.setData({...onTest.vm.$data, newMailText: emailText})
+    onTest.find('#submitButton').trigger('click')
+
+    const expectedMail = {text: emailText, replyToMailId: replyToID}
+
+    expect(onTest.emitted().sendMail).toBeTruthy()
+    expect(onTest.emitted().sendMail.length).toBe(1)
+    expect(onTest.emitted().sendMail[0]).toEqual([expectedMail])
+  })
+
+  it('should emit treat the last mail from somebody as the replied to mail when sending a mail', () => {
+    const emailText = 'Email text'
+    const replyToID = 55
+    const mails = [
+      makeAMailSentBy(TEST_USERNAME),
+      { ...makeAMailSentBy('AnotherUser'), id: replyToID - 1 },
+      { ...makeAMailSentBy('AnotherUser'), id: replyToID },
+      { ...makeAMailSentBy(TEST_USERNAME), id: replyToID + 1 },
+    ]
+    
+    const onTest = mount(MailThreadContainer, makeOptions(mails))
+    onTest.setData({...onTest.vm.$data, newMailText: emailText})
+    onTest.find('#submitButton').trigger('click')
+
+    const expectedMail = {text: emailText, replyToMailId: replyToID}
+
+    expect(onTest.emitted().sendMail).toBeTruthy()
+    expect(onTest.emitted().sendMail.length).toBe(1)
+    expect(onTest.emitted().sendMail[0]).toEqual([expectedMail])
   })
 
   it('should emit makeConnection when the button is clicked', () => {
@@ -121,7 +163,7 @@ describe('Mail thread container', () => {
   })
 
   const allowedText = allowed => allowed ? 'allowed' : 'not allowed'
-  const aMail = mailWithDate(new Date())
+  const aMail = mailWithDate(new Date(2017, 11, 22))
   for (const hasMessages of [false, true]) {
     const messagesText = hasMessages ? 'messages' : 'no messages'
     for (const connectOrCancelState of ['disabled', 'connectAllowed', 'cancelAllowed']) {

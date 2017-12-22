@@ -1,21 +1,22 @@
 <template>
-  <div>
-    <div class="row">
-      <div class="col-xs-2 col-xs-offset-10"> {{ formattedSent }} </div>
-    </div>
-    <div class="row">
-      <div class="col-xs-2">
-        <h3> {{ avatar.altText }} </h3>
-      </div>
-      <div class="col-xs-10">
-        <span>{{ mail.text }}</span>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <div class="row">
+        <div class="col-sm-3">  <strong> {{ avatar.altText }} </strong> </div>
+        <div class="col-sm-3 col-sm-offset-6"> <p style="float:right">{{ formattedSent }}</p></div>
       </div>
     </div>
-
+    <div class="panel-body">
+      {{ mail.text }}
+    </div>
   </div>
 </template>
 
 <script>
+function formatDateTime(date) {
+  return date.toLocaleDateString() + ' ' + date.toLocaleTimeString()
+}
+
 export default {
   props: {
     mail: Object,
@@ -23,7 +24,7 @@ export default {
   },
   computed: {
     formattedSent () {
-      return this.mail.sent.toString()
+      return formatDateTime(this.mail.sent)
     }
   }
 }
