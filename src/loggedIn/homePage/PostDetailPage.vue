@@ -12,14 +12,28 @@
     <br>
     <h5>Description</h5>
     <div> {{ post.description }}</div>
-    <h5>Write a message to {{ postersName }}</h5>
-    <textarea name="messageContents" id="messageContents" cols="30" rows="10" v-model="mailContent"></textarea>
-    <button :disabled="!messageContents" class="btn btn-primary" @click="sendMail">Send</button>
+    <div v-if="!postedByCurrentUser">
+      <h5>Your conversation with {{ postersName }}</h5>
+      <mail-thread-container 
+        :connect-or-cancel-allowed="'disabled'"
+        :mail-items="mailItems"
+        :my-avatar="myAvatar"
+        :other-avatar="postersAvatar"
+        @sendMail="sendMail($ev)"/>
+    </div>
+    <div v-else>
+      <h5>This is your post</h5>
+      <p>You cannot start a conversation about your own post - somebody needs
+        to start a conversation with you.</p>
+      <br>
+      <p>To view conversations from others about your posts, view <router-link :to="{name: 'mailbox'}" id="linkToMailbox">your mailbox</router-link></p>
+    </div>
   </div>
 </template>
 
 <script>
 import {mapGetters} from 'vuex'
+import MailThreadContainer from './shared/MailThreadContainer.vue'
 
 // This probably exists, just can't find it right now
 function stringDotFormat (joiner, strings) {
@@ -32,7 +46,10 @@ const REMOTE_LOCATION = 'REMOTE'
 
 export default {
   data () {
-    return { mailContent: '' }
+    return { 
+      mailContent: '',
+      myAvatar: {altText: 'You'}
+    }
   },
   props: ['postId'],
   computed: {
@@ -52,8 +69,6 @@ export default {
       }
     },
     formattedSkills () {
-      console.log('post = ')
-      console.log(this.post)
       return stringDotFormat(', ', this.post.skills)
     },
     formattedInterests () {
@@ -80,13 +95,27 @@ export default {
       // This is incorrect, but just a placeholder for the correct implementation
       return this.post.postedBy
     },
+    postersAvatar () {
+      return {altText: this.postersName}
+    },
+    postedByCurrentUser () {
+      return this.post.postedBy === this.username
+    },
     ...mapGetters({
       'storedPost': 'loggedin/postdetails/post',
       favouritePostIds: 'loggedin/favouritePostIds',
-      'username': 'username'})
+      'username': 'username',
+      mailItems: 'loggedin/postthread/mailItems'})
   },
   created () {
     this.$store.dispatch('loggedin/postdetails/getPost', this.postId)
+    const mailThreadQuery = {
+      postId: this.postId,
+      threadAuthor: this.username,
+      sortField: 'sent',
+      sortOrderAsc: true
+    }
+    this.$store.dispatch('loggedin/postthread/getMailThread', mailThreadQuery)
   },
   methods: {
     onDeleted () {
@@ -101,12 +130,13 @@ export default {
       const storeAction = !this.isFavourited ? 'favouritePost' : 'unfavouritePost'
       this.$store.dispatch('loggedin/' + storeAction, this.postId)
     },
-    sendMail () {
-      if (this.mailContent) {
-        console.log('Sending mail:')
-        console.log(this.mailContent)
-      }
+    sendMail (mailText) {
+      console.log("sendMail called")
+      this.$store.dispatch('loggedin/postthread/newMail', {postId: this.postId, threadAuthor: this.username, text: mailText})
     }
+  },
+  components: {
+    'mail-thread-container': MailThreadContainer
   }
 }
 </script>

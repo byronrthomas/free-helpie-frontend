@@ -6,6 +6,25 @@ import {loggedInStore} from '../loggedIn/storeModule'
 
 Vue.use(Vuex)
 
+export const rootGetters = {
+  isLoggedIn: state => {
+    return state.userState != null
+  },
+  username: state => {
+    return state.userState == null
+      ? ''
+      : state.userState.username
+  },
+  lastServerError: state => {
+    return state.lastServerError
+  },
+  authToken: state => {
+    return state.userState == null
+      ? ''
+      : state.userState.authToken
+  }
+}
+
 export function store (server) {
   return new Vuex.Store({
     modules: {
@@ -16,24 +35,7 @@ export function store (server) {
       userState: null,
       lastServerError: ''
     },
-    getters: {
-      isLoggedIn: state => {
-        return state.userState != null
-      },
-      username: state => {
-        return state.userState == null
-          ? ''
-          : state.userState.username
-      },
-      lastServerError: state => {
-        return state.lastServerError
-      },
-      authToken: state => {
-        return state.userState == null
-          ? ''
-          : state.userState.authToken
-      }
-    },
+    getters: rootGetters,
     mutations: {
       setUser (state, payload) {
         state.userState = payload

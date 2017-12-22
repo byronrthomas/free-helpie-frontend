@@ -1,5 +1,14 @@
 const makeSpecificPostRoute = postId => `/posts/${postId}`
 
+export const getters = {
+  postId (state) {
+    return state.postId
+  },
+  post (state) {
+    return state.post
+  }
+}
+
 export function singlePostStore (server) {
   return {
     namespaced: true,
@@ -7,14 +16,7 @@ export function singlePostStore (server) {
       postId: null,
       post: null
     },
-    getters: {
-      postId (state) {
-        return state.postId
-      },
-      post (state) {
-        return state.post
-      }
-    },
+    getters,
     mutations: {
       setPost (state, newDetails) {
         state.post = newDetails

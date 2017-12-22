@@ -66,6 +66,7 @@ function compareDates (aDate, bDate) {
 }
 
 export default {
+  name: 'MailThreadContainer',
   props: {
     mailItems: Array,
     username: String,
