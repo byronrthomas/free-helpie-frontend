@@ -1,9 +1,41 @@
 export function MailsServer(userAuth, postsServer) {
   const mails = {}
+  const activeThreads = {}
   let nextMailId = 0
 
+  const persistMail = (threadKey, content) => {
+    if (!mails.hasOwnProperty(threadKey)) {
+      mails[threadKey] = []
+    }
+    mails[threadKey].push(content)
+  }
+
+  const makeThreadKey = (threadId) => {
+    `${threadId.relatedToPostId}:${threadId.threadAuthor}`
+  }
+
+  const recordThreadActivity = (threadId, username) => {
+    if (!activeThreads.hasOwnProperty(username)) {
+      activeThreads[username] = {}
+    }
+    activeThreads[username][makeThreadKey(threadId)] = threadId
+  }
+
+  const getActiveThreads = (username) => {
+    if (!activeThreads[username]) {
+      return []
+    }
+    const result = []
+    for (const threadKey in activeThreads[username]) {
+      if (activeThreads[username].hasOwnProperty(threadKey)) {
+        result.push(activeThreads[username][threadKey]);
+      }
+    }
+    return result
+  }
+
   const srv = {
-    postWithoutAuth (postUser, reqData, resolve, reject) {
+    postWithoutAuth (authedUser, reqData, resolve, reject) {
       if (!reqData.hasOwnProperty('data')) {
         reject(new Error('Cannot post a mail - empty data'))
         return
@@ -16,21 +48,24 @@ export function MailsServer(userAuth, postsServer) {
         return
       }
       const postAuthor = postsServer.syncGetPostedBy(data.relatedToPostId)
-      console.log('postUser = ', postUser)
+      console.log('postUser = ', authedUser)
       console.log('postAuthor = ', postAuthor)
       
-      const postUserName = postUser.username
-      if (postUserName !== postAuthor && postUserName !== data.threadAuthor) {
+      const username     = authedUser.username
+      const threadAuthor = data.threadAuthor
+      if (username !== postAuthor && username !== threadAuthor) {
         reject(new Error('Cannot post a mail - you must be either the postAuthor or threadAuthor'))
         return
       }
 
-      let newMail = {sender: postUser.username, sent: new Date(), text: data.mailText, id: nextMailId++}
-      let threadKey = `${data.relatedToPostId}:${data.threadAuthor}`
-      if (!mails.hasOwnProperty(threadKey)) {
-        mails[threadKey] = []
-      }
-      mails[threadKey].push(newMail)
+      const newMail = {sender: username, sent: new Date(), text: data.mailText, id: nextMailId++}
+      const threadId = {relatedToPostId: data.relatedToPostId, threadAuthor: threadAuthor}
+      persistMail(makeThreadKey(threadId), newMail)
+      // const userToAlert = postAuthor === postUserName ? data.threadAuthor : postAuthor
+      recordThreadActivity(threadId, threadAuthor)
+      recordThreadActivity(threadId, postAuthor)
+
+      console.log('activeThreads', activeThreads)
       console.log('Posting mail succeeded')
       resolve()
     },
@@ -65,6 +100,23 @@ export function MailsServer(userAuth, postsServer) {
       const respData = mails.hasOwnProperty(threadKey) 
         ? [...mails[threadKey]]
         : []
+      resolve({data: respData})
+    },
+    getActiveThreads (reqData, resolve, reject) {
+      if (!reqData.authToken) {
+        reject(new Error('Error: you must be authenticated to view posts'))
+        return
+      }
+      const users = userAuth.syncGetAuthUsers(reqData.authToken)
+      console.log(reqData)
+      if (users.length !== 1) {
+        reject(new Error('Error: can\'t work out your UserID from your auth token'))
+        return
+      }
+      const username = users[0].username
+      const respData = getActiveThreads(username)
+      console.log('username to look up', username)
+      
       resolve({data: respData})
     }
   }

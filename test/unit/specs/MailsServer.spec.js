@@ -2,8 +2,8 @@ import {MailsServer} from '@/store/mockServer/mailsServer'
 import {INITIAL_MAILS} from '@/store/mockServer/initialMails'
 import {runAll} from '@/store/mockServer/callbackTools'
 
-const THREAD_AUTHOR_ID = {id: 0, username: 'UserRespondingToThePost'}
-const AUTH_TOKEN = Math.random()
+const THREAD_AUTHOR_ID = {id: 0, username: 'UserRespondingToThePost', authToken: Math.random()}
+const POST_AUTHOR_ID = {id: 55, username: 'UserWhoPosted', authToken: Math.random()}
 
 const dummyAuther = {
   syncGetUserCanPostMails(token) {
@@ -19,25 +19,33 @@ const dummyAuther = {
     return typeof token !== 'undefined'
   },
   syncGetAuthUsers (token) {
-    console.log(token)
-    console.log(AUTH_TOKEN)
-    return token === AUTH_TOKEN ? [THREAD_AUTHOR_ID] : []
+    console.log("getUsersForToken", token)
+    console.log("ThreadAuthor", THREAD_AUTHOR_ID)
+    console.log("PostAuthor", POST_AUTHOR_ID)
+    if (token === THREAD_AUTHOR_ID.authToken) {
+      return [THREAD_AUTHOR_ID]
+    } if (token === POST_AUTHOR_ID.authToken) {
+      return [POST_AUTHOR_ID]
+    }
+    return []
   },
   syncGetUserCanReadMails (token, postId, threadAuthor) {
     return typeof token !== 'undefined'
   }
 }
 
+function makeReqFromUser(remainingReq, userId) {
+  return {authToken: userId.authToken, ...remainingReq}
+}
 
 function makeReq(remainingReq) {
-  return {authToken: AUTH_TOKEN, ...remainingReq}
+  return makeReqFromUser(remainingReq, THREAD_AUTHOR_ID)
 }
 
 const TEST_POST_ID = 55
-const TEST_POSTER = 'UserWhoPosted'
 const TEST_MAIL_DATA = {
   threadAuthor: THREAD_AUTHOR_ID.username,
-  postAuthor: TEST_POSTER,
+  postAuthor: POST_AUTHOR_ID.username,
   relatedToPostId: TEST_POST_ID,
   mailText: 'Hello, maybe I could help you, I live locally'
 }
@@ -52,7 +60,7 @@ function findThreadForId (postId) {
 
 const dummyPostServer = {
   syncGetPostedBy(postId) {
-    return postId === TEST_POST_ID ? TEST_POSTER : findThreadForId(postId).mails[0].sender
+    return postId === TEST_POST_ID ? POST_AUTHOR_ID.username : findThreadForId(postId).mails[0].sender
   }
 }
 
@@ -108,15 +116,29 @@ describe ('MailsServer', () => {
     })
 
     it('should be possible to post another mail on the same thread', () => {
-      fail()
+      shouldRunSuccessfully(onTest.post, makeReq({data: mailContents}))
     })
 
-    it('the thread should be returned by a query to fetch unread mails of the post author', () => {
-      fail()
+    it('the thread should be returned by a query to fetch active threads of the post author', () => {
+      const checkRes = res => {
+        expect(res.data).toBeTruthy()
+        expect(res.data.length).toBe(1)
+        const thread = res.data[0]
+        expect(thread.relatedToPostId).toEqual(mailContents.relatedToPostId)
+        expect(thread.threadAuthor).toEqual(mailContents.threadAuthor)
+      }
+      shouldRunSuccessfully(onTest.getActiveThreads, makeReqFromUser({}, POST_AUTHOR_ID), checkRes)
     })
 
-    it('it should be possible to read the contents of the thread by getting it using thread author and post ID', () => {
-      fail()
+    it('the thread should be returned by a query to fetch active threads of the thread author', () => {
+      const checkRes = res => {
+        expect(res.data).toBeTruthy()
+        expect(res.data.length).toBe(1)
+        const thread = res.data[0]
+        expect(thread.relatedToPostId).toEqual(mailContents.relatedToPostId)
+        expect(thread.threadAuthor).toEqual(mailContents.threadAuthor)
+      }
+      shouldRunSuccessfully(onTest.getActiveThreads, makeReq({}), checkRes)
     })
 
     it('it should be possible to read the contents of the thread in a different sort order', () => {
