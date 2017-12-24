@@ -111,18 +111,13 @@ function arrayGroup(keyProjection, inputArray) {
 function reqForTestMail (threadId, testMail) {
   const reqData = {
     mailText: testMail.text,
-    ...threadId} 
+    relatedToPostId: threadId.relatedToPostId,
+    threadAuthor: threadId.threadAuthor.username} 
   return makeReqFromUser({data: reqData}, testMail.sender)
 }
 
-function makeThreadId (threadContents) {
-  return { 
-    relatedToPostId: threadContents.postId, 
-    threadAuthor: threadContents.mails[0].sender.username}
-}
-
 function reqsForThread (threadContents) {
-  const threadId = makeThreadId(threadContents)
+  const threadId = threadContents.threadId
   return threadContents.mails.map((mail) => reqForTestMail(threadId, mail))
 }
 
@@ -220,7 +215,7 @@ describe ('MailsServer', () => {
 
   describe('after multiple mails have been posted on multiple threads', () => {
     const expectedMailThreads = INITIAL_MAILS
-    const postedThreadIds = expectedMailThreads.map(makeThreadId)
+    const postedThreadIds = expectedMailThreads.map(thread => thread.threadId)
     let onTest
     beforeEach(() => {
       onTest = new MailsServer(dummyAuther, dummyPostServer)
@@ -253,9 +248,9 @@ describe ('MailsServer', () => {
     for (let i = 0; i < expectedMailThreads.length; ++i) {
       const thread = expectedMailThreads[i]
       const userToCheck = thread.userWithUnread
-      it(`initially ${thread.userWithUnread} should have unread mails for thread ${i}`, () => {
+      it(`initially ${thread.userWithUnread.username} should have unread mails for thread ${i}`, () => {
         const reqByUser = makeReqFromUser({}, userToCheck)
-        const checkRes = res => expect(res.data).toContain(makeThreadId(thread.threadId))
+        const checkRes = res => expect(res.data).toContain(thread.threadId)
         shouldRunSuccessfully(onTest.getUnreadThreads, reqByUser, checkRes)
       })
     }
