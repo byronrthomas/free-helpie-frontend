@@ -15,6 +15,8 @@ const postByUser2 = {
 
 export const INITIAL_POSTS = [postByUser1, postByUser2]
 
+/// Want a setup where a poster (user1) has multiple threads for one post (postByUser1),
+/// and some user has started multiple threads about other posts (user3)
 export const INITIAL_MAILS = [
   {postId: postByUser1.postId,
    mails: [{
@@ -32,4 +34,9 @@ export const INITIAL_MAILS = [
    {sender: user3,
    text: '10 hrs, I don\'t work much'}]
  },
+ {postId: postByUser1.postId,
+  mails: [{
+    sender: user3,
+    text: 'Hey - do you need help with coaching at all?'}]
+ }
 ]
