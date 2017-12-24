@@ -18,29 +18,35 @@ export const INITIAL_POSTS = [postByUser1, postByUser2]
 /// Want a setup where a poster (user1) has multiple threads for one post (postByUser1),
 /// and some user has started multiple threads about other posts (user3)
 export const INITIAL_MAILS = [
-  {postAuthor: user1,
-  userWithUnread: user2,
-  threadId: {relatedToPostId: postByUser1.postId, threadAuthor: user2},
-  mails: [{
-    sender: user2,
-    text: 'I could help you'},
-    {sender: user1,
-    text: 'Oh yeah, where you living?'}]
+  {threadName: '1',
+    postAuthor: user1,
+    threadAuthor: user2,
+    userWithUnread: user2,
+    threadId: {relatedToPostId: postByUser1.postId, threadAuthor: user2.username},
+    mails: [{
+      sender: user2,
+      text: 'I could help you'},
+      {sender: user1,
+      text: 'Oh yeah, where you living?'}]
   },
-  {postAuthor: user2,
-  userWithUnread: user2,
-  threadId: {relatedToPostId: postByUser2.postId, threadAuthor: user3},
-  mails: [{
-    sender: user3,
-    text: 'Hey, I\'ve been coaching for ten years, let\'s meet for a coffee'},
-    {sender: user2,
-    text: 'Maybe - how many hours a week do you have spare?'},
-    {sender: user3,
-    text: '10 hrs, I don\'t work much'}]
+  {threadName: '2',
+    postAuthor: user2,
+    threadAuthor: user3,
+    userWithUnread: user2,
+    threadId: {relatedToPostId: postByUser2.postId, threadAuthor: user3.username},
+    mails: [{
+      sender: user3,
+      text: 'Hey, I\'ve been coaching for ten years, let\'s meet for a coffee'},
+      {sender: user2,
+      text: 'Maybe - how many hours a week do you have spare?'},
+      {sender: user3,
+      text: '10 hrs, I don\'t work much'}]
  },
- {postAuthor: user1,
+ {threadName: '3',
+  postAuthor: user1,
+  threadAuthor: user3,
   userWithUnread: user1,
-  threadId: {relatedToPostId: postByUser1.postId, threadAuthor: user3},
+  threadId: {relatedToPostId: postByUser1.postId, threadAuthor: user3.username},
   mails: [{
     sender: user3,
     text: 'Hey - do you need help with coaching at all?'}]
