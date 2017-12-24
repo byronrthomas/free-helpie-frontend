@@ -1,6 +1,7 @@
 import {MailsServer} from '@/store/mockServer/mailsServer'
-import {INITIAL_MAILS} from '@/store/mockServer/initialMails'
 import {runAll} from '@/store/mockServer/callbackTools'
+import {INITIAL_MAIL_USERS, INITIAL_MAILS, INITIAL_POSTS} from '@/store/mockServer/initialMails'
+
 
 const THREAD_AUTHOR_ID = {id: 0, username: 'UserRespondingToThePost', authToken: Math.random()}
 const POST_AUTHOR_ID = {id: 55, username: 'UserWhoPosted', authToken: Math.random()}
@@ -27,7 +28,8 @@ const dummyAuther = {
     } if (token === POST_AUTHOR_ID.authToken) {
       return [POST_AUTHOR_ID]
     }
-    return []
+    const userFromInitialMails = INITIAL_MAIL_USERS.find(x => token === x.authToken)
+    return userFromInitialMails ? [userFromInitialMails] : []
   },
   syncGetUserCanReadMails (token, postId, threadAuthor) {
     return typeof token !== 'undefined'
@@ -50,17 +52,17 @@ const TEST_MAIL_DATA = {
   mailText: 'Hello, maybe I could help you, I live locally'
 }
 
-function findThreadForId (postId) {
-  const res = INITIAL_MAILS.find(thread => thread.postId === postId)
+function findPostedBy (postId) {
+  const res = INITIAL_POSTS.find(post => post.postId === postId)
   if (!res) {
     throw new Error("Cannot find any thread for postId " + postId)
   }
-  return res
+  return res.postedBy
 }
 
 const dummyPostServer = {
   syncGetPostedBy(postId) {
-    return postId === TEST_POST_ID ? POST_AUTHOR_ID.username : findThreadForId(postId).mails[0].sender
+    return postId === TEST_POST_ID ? POST_AUTHOR_ID.username : findPostedBy(postId).username
   }
 }
 
@@ -73,6 +75,32 @@ function shouldRunSuccessfully(method, data, checkResult) {
     err => {throw err}
   )
   expect(hasSucceeded).toBeTruthy()
+}
+
+function expectRespDataToEqual(expectedData) {
+  return res => expect(res.data).toEqual(expectedData)
+}
+
+// This is like the equivalent of F# seq.collect, apply
+// a function of 'a -> 'b Array on each element of a 'a Array
+// and concat the resulting arrays to give a result 'b Array
+function arrayCollect(collectFun, inputArray) {
+  const arrayOfArrays = inputArray.map(collectFun)
+  return arrayOfArrays.reduce((l, r) => l.concat(r), [])
+}
+
+function reqForTestMail (relatedToPostId, threadAuthor, testMail) {
+  const reqData = {
+    mailText: testMail.text, 
+    relatedToPostId: relatedToPostId, 
+    threadAuthor: threadAuthor}
+  return makeReqFromUser({data: reqData}, testMail.sender)
+}
+
+function reqsForThread (threadContents) {
+  const relatedToPostId = threadContents.postId
+  const threadAuthor = threadContents.mails[0].sender.username
+  return threadContents.mails.map((mail) => reqForTestMail(relatedToPostId, threadAuthor, mail))
 }
 
 describe ('MailsServer', () => {
@@ -91,28 +119,40 @@ describe ('MailsServer', () => {
 
   describe('after a mail is posted', () => {
     const mailContents = TEST_MAIL_DATA
+    const mailThreadId = {
+      relatedToPostId: mailContents.relatedToPostId,
+      threadAuthor: mailContents.threadAuthor
+    }
     let onTest
-    let postDate
+    let justBeforePost
     beforeEach(() => {
       onTest = new MailsServer(dummyAuther, dummyPostServer)
+      justBeforePost = new Date()
       onTest.post(
         makeReq({data: mailContents}), 
-        res => { postDate = new Date()},
+        res => { },
         err => {throw err})
     })
 
-    it('should have been persisted with an ID, a sent datetimestamp, and with logged in user recorded as the sender', () => {
-      const reqData = {relatedToPostId: mailContents.relatedToPostId, threadAuthor: mailContents.threadAuthor}
+    it('should return the mail from a request to get the thread', () => {
       const checkRes = res => {
-        expect(res.data).toBeTruthy()
-        expect(res.data.length).toBe(1)
-        expect(res.data[0]).toMatchObject({text: mailContents.mailText, sender: THREAD_AUTHOR_ID.username})
-        expect(res.data[0].sent).toBeTruthy()
-        expect(res.data[0].sent.getTime()).toBeGreaterThanOrEqual(postDate.getTime())
+        expect(res.data).toEqual([expect.objectContaining({text: mailContents.mailText})])
+      }
+      shouldRunSuccessfully(onTest.getMailThread, makeReq({data: mailThreadId}), checkRes)
+    })
+
+    it('should have been persisted with an ID, a sent datetimestamp, and with logged in user recorded as the sender', () => {
+      const checkRes = res => {
+        expect(res.data).toEqual([expect.objectContaining({
+          sender: THREAD_AUTHOR_ID.username,
+          id: expect.any(Number),
+          sent: expect.any(Date)
+        })])
+        expect(res.data[0].sent.getTime()).toBeGreaterThanOrEqual(justBeforePost.getTime())
         expect(res.data[0].id).toBeGreaterThanOrEqual(0)
       }
 
-      shouldRunSuccessfully(onTest.getMailThread, makeReq({data: reqData}), checkRes)
+      shouldRunSuccessfully(onTest.getMailThread, makeReq({data: mailThreadId}), checkRes)
     })
 
     it('should be possible to post another mail on the same thread', () => {
@@ -120,49 +160,48 @@ describe ('MailsServer', () => {
     })
 
     it('the thread should be returned by a query to fetch active threads of the post author', () => {
-      const checkRes = res => {
-        expect(res.data).toBeTruthy()
-        expect(res.data.length).toBe(1)
-        const thread = res.data[0]
-        expect(thread.relatedToPostId).toEqual(mailContents.relatedToPostId)
-        expect(thread.threadAuthor).toEqual(mailContents.threadAuthor)
-      }
-      shouldRunSuccessfully(onTest.getActiveThreads, makeReqFromUser({}, POST_AUTHOR_ID), checkRes)
+      const reqByPostAuthor = makeReqFromUser({}, POST_AUTHOR_ID)
+      shouldRunSuccessfully(onTest.getActiveThreads, reqByPostAuthor, expectRespDataToEqual([mailThreadId]))
     })
 
     it('the thread should be returned by a query to fetch active threads of the thread author', () => {
-      const checkRes = res => {
-        expect(res.data).toBeTruthy()
-        expect(res.data.length).toBe(1)
-        const thread = res.data[0]
-        expect(thread.relatedToPostId).toEqual(mailContents.relatedToPostId)
-        expect(thread.threadAuthor).toEqual(mailContents.threadAuthor)
-      }
-      shouldRunSuccessfully(onTest.getActiveThreads, makeReq({}), checkRes)
+      shouldRunSuccessfully(onTest.getActiveThreads, makeReq({}), expectRespDataToEqual([mailThreadId]))
     })
 
     it('it should be possible to read the contents of the thread in a different sort order', () => {
-      fail()
       // Look at what the rest of the world expects
+      fail()
     })
 
     describe('after posting another mail on the same thread', () => {
-      it('should give back the new message on a subsequent get', () => {
-        const newMailContents = {...mailContents, locations: ['Some new location']}
-        shouldRunSuccessfully(onTest.put, makeReq({data: newMailContents, postId: postId}))
-        shouldRunSuccessfully(
-          onTest.getSingle,
-          makeReq({postId: postId}),
-          res => {expect(res.data).toEqual(newMailContents)})
+      beforeEach(() => {
+        onTest.post(
+          makeReq({data: mailContents}), 
+          res => { },
+          err => {throw err})
+      })
+
+      it('the new message should extend the mail thread', () => {
+        const checkRes = res => {
+          expect(res.data).toHaveLength(2)
+        }
+        shouldRunSuccessfully(onTest.getMailThread, makeReq({data: mailThreadId}), checkRes)
       })
     })
   })
-  describe('after some mails are posted on some threads', () => {
-    const postsToPost = INITIAL_MAILS
+
+  it('should be possible to post multiple mails on multiple threads', () => {
+    const onTest = new MailsServer(dummyAuther, dummyPostServer)
+    runAll(onTest.post, arrayCollect(reqsForThread, INITIAL_MAILS))
+  })
+
+  describe('after multiple mails have been posted on multiple threads', () => {
+    const mailsToPost = INITIAL_MAILS
     let onTest
     beforeEach(() => {
       onTest = new MailsServer(dummyAuther, dummyPostServer)
-      runAll(onTest.post, postsToPost.map(post => makeReq({data: post})))
+
+      runAll(onTest.post, arrayCollect(reqsForThread, mailsToPost))
     })
 
     it('should be possible to find the threads as active for the post author', () => {

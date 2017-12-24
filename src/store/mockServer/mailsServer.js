@@ -11,7 +11,7 @@ export function MailsServer(userAuth, postsServer) {
   }
 
   const makeThreadKey = (threadId) => {
-    `${threadId.relatedToPostId}:${threadId.threadAuthor}`
+    return `${threadId.relatedToPostId}:${threadId.threadAuthor}`
   }
 
   const recordThreadActivity = (threadId, username) => {
@@ -58,6 +58,11 @@ export function MailsServer(userAuth, postsServer) {
         return
       }
 
+      if (postAuthor === threadAuthor) {
+        reject(new Error('Cannot start a thread about a post you wrote yourself - who would you email?'))
+        return
+      }
+
       const newMail = {sender: username, sent: new Date(), text: data.mailText, id: nextMailId++}
       const threadId = {relatedToPostId: data.relatedToPostId, threadAuthor: threadAuthor}
       persistMail(makeThreadKey(threadId), newMail)
@@ -96,7 +101,7 @@ export function MailsServer(userAuth, postsServer) {
         reject(new Error('Cannot get a mail thread - data must contain relatedToPostId and threadAuthor'))
         return
       }
-      let threadKey = `${data.relatedToPostId}:${data.threadAuthor}`
+      let threadKey = makeThreadKey(reqData.data)
       const respData = mails.hasOwnProperty(threadKey) 
         ? [...mails[threadKey]]
         : []
@@ -108,7 +113,6 @@ export function MailsServer(userAuth, postsServer) {
         return
       }
       const users = userAuth.syncGetAuthUsers(reqData.authToken)
-      console.log(reqData)
       if (users.length !== 1) {
         reject(new Error('Error: can\'t work out your UserID from your auth token'))
         return
