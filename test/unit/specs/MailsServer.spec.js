@@ -60,6 +60,14 @@ function findPostedBy (postId) {
   return res.postedBy
 }
 
+function findUserId (username) {
+  const res = INITIAL_MAIL_USERS.find(user => user.username === username)
+  if (!res) {
+    throw new Error("Cannot find user having username " + username)
+  }
+  return res
+}
+
 const dummyPostServer = {
   syncGetPostedBy(postId) {
     return postId === TEST_POST_ID ? POST_AUTHOR_ID.username : findPostedBy(postId).username
@@ -89,18 +97,22 @@ function arrayCollect(collectFun, inputArray) {
   return arrayOfArrays.reduce((l, r) => l.concat(r), [])
 }
 
-function reqForTestMail (relatedToPostId, threadAuthor, testMail) {
+function reqForTestMail (threadId, testMail) {
   const reqData = {
-    mailText: testMail.text, 
-    relatedToPostId: relatedToPostId, 
-    threadAuthor: threadAuthor}
+    mailText: testMail.text,
+    ...threadId} 
   return makeReqFromUser({data: reqData}, testMail.sender)
 }
 
+function makeThreadId (threadContents) {
+  return { 
+    relatedToPostId: threadContents.postId, 
+    threadAuthor: threadContents.mails[0].sender.username}
+}
+
 function reqsForThread (threadContents) {
-  const relatedToPostId = threadContents.postId
-  const threadAuthor = threadContents.mails[0].sender.username
-  return threadContents.mails.map((mail) => reqForTestMail(relatedToPostId, threadAuthor, mail))
+  const threadId = makeThreadId(threadContents)
+  return threadContents.mails.map((mail) => reqForTestMail(threadId, mail))
 }
 
 describe ('MailsServer', () => {
@@ -197,6 +209,7 @@ describe ('MailsServer', () => {
 
   describe('after multiple mails have been posted on multiple threads', () => {
     const mailsToPost = INITIAL_MAILS
+    const postedThreadIds = mailsToPost.map(makeThreadId)
     let onTest
     beforeEach(() => {
       onTest = new MailsServer(dummyAuther, dummyPostServer)
@@ -204,9 +217,22 @@ describe ('MailsServer', () => {
       runAll(onTest.post, arrayCollect(reqsForThread, mailsToPost))
     })
 
-    it('should be possible to find the threads as active for the post author', () => {
-      fail()
-    })
+    const threadsByPoster = {}
+    for (const threadId of postedThreadIds) {
+      const username = findPostedBy(threadId.relatedToPostId).username
+      if (!threadsByPoster[username]) {
+        threadsByPoster[username] = []
+      }
+      threadsByPoster[username].push(threadId)
+    }
+
+    for (const username in threadsByPoster) {
+      it('should be possible to find the threads as active for the post author - ' + username, () => {
+        const reqByPostAuthor = makeReqFromUser({}, findUserId(username))
+        const checkRes = res => expect(res.data).toEqual(expect.arrayContaining(threadsByPoster[username]))
+        shouldRunSuccessfully(onTest.getActiveThreads, reqByPostAuthor, checkRes)
+      })
+    }
 
     it('should be possible to find the threads as active for the thread author', () => {
       fail()
