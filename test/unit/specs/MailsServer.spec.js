@@ -1,6 +1,6 @@
 import {MailsServer} from '@/store/mockServer/mailsServer'
 import {runAll} from '@/store/mockServer/callbackTools'
-import {INITIAL_MAIL_USERS, INITIAL_MAILS, INITIAL_POSTS} from '@/store/mockServer/initialMails'
+import {INITIAL_MAIL_USERS, INITIAL_MAILS, INITIAL_POSTS} from './initialMails'
 
 
 const THREAD_AUTHOR_ID = {id: 0, username: 'UserRespondingToThePost', authToken: Math.random()}
