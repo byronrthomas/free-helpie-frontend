@@ -19,22 +19,25 @@ export const INITIAL_POSTS = [postByUser1, postByUser2]
 /// and some user has started multiple threads about other posts (user3)
 export const INITIAL_MAILS = [
   {postId: postByUser1.postId,
-   mails: [{
+  userWithUnread: user2,
+  mails: [{
     sender: user2,
     text: 'I could help you'},
     {sender: user1,
     text: 'Oh yeah, where you living?'}]
   },
   {postId: postByUser2.postId,
+  userWithUnread: user2,
   mails: [{
-   sender: user3,
-   text: 'Hey, I\'ve been coaching for ten years, let\'s meet for a coffee'},
-   {sender: user2,
-   text: 'Maybe - how many hours a week do you have spare?'},
-   {sender: user3,
-   text: '10 hrs, I don\'t work much'}]
+    sender: user3,
+    text: 'Hey, I\'ve been coaching for ten years, let\'s meet for a coffee'},
+    {sender: user2,
+    text: 'Maybe - how many hours a week do you have spare?'},
+    {sender: user3,
+    text: '10 hrs, I don\'t work much'}]
  },
  {postId: postByUser1.postId,
+  userWithUnread: user1,
   mails: [{
     sender: user3,
     text: 'Hey - do you need help with coaching at all?'}]

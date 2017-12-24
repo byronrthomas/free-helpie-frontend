@@ -20,9 +20,9 @@ const dummyAuther = {
     return typeof token !== 'undefined'
   },
   syncGetAuthUsers (token) {
-    console.log("getUsersForToken", token)
-    console.log("ThreadAuthor", THREAD_AUTHOR_ID)
-    console.log("PostAuthor", POST_AUTHOR_ID)
+    // console.log("getUsersForToken", token)
+    // console.log("ThreadAuthor", THREAD_AUTHOR_ID)
+    // console.log("PostAuthor", POST_AUTHOR_ID)
     if (token === THREAD_AUTHOR_ID.authToken) {
       return [THREAD_AUTHOR_ID]
     } if (token === POST_AUTHOR_ID.authToken) {
@@ -95,6 +95,17 @@ function expectRespDataToEqual(expectedData) {
 function arrayCollect(collectFun, inputArray) {
   const arrayOfArrays = inputArray.map(collectFun)
   return arrayOfArrays.reduce((l, r) => l.concat(r), [])
+}
+
+function arrayGroup(keyProjection, inputArray) {
+  const result = {}
+  for (const element of inputArray) {
+    const key = keyProjection(element)
+    if (!result[key]) {
+      result[key] = []
+    }
+    result[key].push(element)
+  }
 }
 
 function reqForTestMail (threadId, testMail) {
@@ -208,23 +219,17 @@ describe ('MailsServer', () => {
   })
 
   describe('after multiple mails have been posted on multiple threads', () => {
-    const mailsToPost = INITIAL_MAILS
-    const postedThreadIds = mailsToPost.map(makeThreadId)
+    const expectedMailThreads = INITIAL_MAILS
+    const postedThreadIds = expectedMailThreads.map(makeThreadId)
     let onTest
     beforeEach(() => {
       onTest = new MailsServer(dummyAuther, dummyPostServer)
 
-      runAll(onTest.post, arrayCollect(reqsForThread, mailsToPost))
+      runAll(onTest.post, arrayCollect(reqsForThread, expectedMailThreads))
     })
 
-    const threadsByPoster = {}
-    for (const threadId of postedThreadIds) {
-      const username = findPostedBy(threadId.relatedToPostId).username
-      if (!threadsByPoster[username]) {
-        threadsByPoster[username] = []
-      }
-      threadsByPoster[username].push(threadId)
-    }
+    const threadsByPoster = 
+      arrayGroup(threadId => findPostedBy(threadId.relatedToPostId).username, postedThreadIds)
 
     for (const username in threadsByPoster) {
       it('should be possible to find the threads as active for the post author - ' + username, () => {
@@ -234,15 +239,30 @@ describe ('MailsServer', () => {
       })
     }
 
-    it('should be possible to find the threads as active for the thread author', () => {
-      fail()
-    })
+    const threadsByAuthor = 
+      arrayGroup(threadId => threadId.threadAuthor, postedThreadIds)
 
-    it('should be possible for the post author to mark they have read the thread', () => {
-      fail()
-    })
+    for (const username in threadsByAuthor) {
+      it('should be possible to find the threads as active for the thread author - ' + username, () => {
+        const reqByThreadAuthor = makeReqFromUser({}, findUserId(username))
+        const checkRes = res => expect(res.data).toEqual(expect.arrayContaining(threadsByAuthor[username]))
+        shouldRunSuccessfully(onTest.getActiveThreads, reqByThreadAuthor, checkRes)
+      })
+    }
+
+    for (let i = 0; i < expectedMailThreads.length; ++i) {
+      const thread = expectedMailThreads[i]
+      const userToCheck = thread.userWithUnread
+      it(`initially ${thread.userWithUnread} should have unread mails for thread ${i}`, () => {
+        const reqByUser = makeReqFromUser({}, userToCheck)
+        const checkRes = res => expect(res.data).toContain(makeThreadId(thread.threadId))
+        shouldRunSuccessfully(onTest.getUnreadThreads, reqByUser, checkRes)
+      })
+    }
 
     for (const subject of ['post author', 'thread author']) {
+      it('should initially report the ')
+
       describe(`after the ${subject} has read the thread`, () => {
         it('should not appear as unread for them when queried', () => {
           fail()

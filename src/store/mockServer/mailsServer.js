@@ -48,8 +48,8 @@ export function MailsServer(userAuth, postsServer) {
         return
       }
       const postAuthor = postsServer.syncGetPostedBy(data.relatedToPostId)
-      console.log('postUser = ', authedUser)
-      console.log('postAuthor = ', postAuthor)
+      // console.log('postUser = ', authedUser)
+      // console.log('postAuthor = ', postAuthor)
       
       const username     = authedUser.username
       const threadAuthor = data.threadAuthor
@@ -70,7 +70,7 @@ export function MailsServer(userAuth, postsServer) {
       recordThreadActivity(threadId, threadAuthor)
       recordThreadActivity(threadId, postAuthor)
 
-      console.log('activeThreads', activeThreads)
+      // console.log('activeThreads', activeThreads)
       console.log('Posting mail succeeded')
       resolve()
     },
@@ -80,7 +80,7 @@ export function MailsServer(userAuth, postsServer) {
         return
       }
       const users = userAuth.syncGetAuthUsers(reqData.authToken)
-      console.log(reqData)
+      // console.log(reqData)
       if (users.length !== 1) {
         reject(new Error('Error: can\'t work out your UserID from your auth token'))
         return
@@ -119,7 +119,7 @@ export function MailsServer(userAuth, postsServer) {
       }
       const username = users[0].username
       const respData = getActiveThreads(username)
-      console.log('username to look up', username)
+      // console.log('username to look up', username)
       
       resolve({data: respData})
     }
