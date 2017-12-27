@@ -2,7 +2,7 @@
   <div class="post-summary-container">
     <div class="row" style="margin-right: 0px">
       <div class="col-xs-3">
-        <a href="unknown" @click.prevent="alertNotImplemented">{{ post.postedBy }}</a>
+        <a href="unknown" @click.prevent="alertNotImplemented">{{ userDisplay }}</a>
       </div>
       <div class="col-xs-3">
         <a href="unknown" @click.prevent="$emit('viewPost')">
@@ -23,7 +23,7 @@
 
 <script>
 export default {
-  props: ['post', 'isSaved'],
+  props: ['post', 'isSaved', 'userDisplay'],
   computed: {
     formattedSkills () {
       return this.post.skills.length === 1

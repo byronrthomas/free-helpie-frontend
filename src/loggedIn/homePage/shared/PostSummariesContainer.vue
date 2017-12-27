@@ -6,6 +6,7 @@
         <post-summary-item 
           v-for="(post, postId) in posts" 
           :post="post" 
+          :user-display="getDisplayName(post.postedBy)"
           :key="postId"
           :is-saved="isSaved(postId)"
           @viewPost="viewPost(postId)"
@@ -21,7 +22,8 @@ import PostSummaryItem from './PostSummaryItem.vue'
 export default {
   props: {
     posts: Object,
-    favouritePostIds: Array
+    favouritePostIds: Array,
+    profileInfo: Object
   },
   methods: {
     isSaved (postId) {
@@ -29,6 +31,10 @@ export default {
     },
     viewPost (postId) {
       this.$router.push({name: 'postDetail', params: {postId}})
+    },
+    getDisplayName (userId) {
+      const userInfo = this.profileInfo[userId] || {name: '[unknown]'}
+      return userInfo.name
     }
   },
   components: {

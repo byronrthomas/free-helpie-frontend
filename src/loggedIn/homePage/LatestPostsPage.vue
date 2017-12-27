@@ -2,6 +2,7 @@
     <post-summaries-container 
       :posts="posts" 
       :favourite-post-ids="favouritePostIds"
+      :profile-info="profileInfo"
       @viewPost="$emit('viewPost', $event)"
       @updateFavouritePosts="updateFavouritePosts">
       <div class="row" style="margin-bottom: 10px">
@@ -49,6 +50,7 @@ export default {
       filteringByLocations: 'loggedin/latestposts/isFilteredByLocations',
       filteringByInterests: 'loggedin/latestposts/isFilteredByInterests',
       posts: 'loggedin/latestposts/getPosts',
+      profileInfo: 'loggedin/latestposts/profileInfo',
       favouritePostIds: 'loggedin/favouritePostIds'})
   },
   methods: {
