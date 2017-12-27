@@ -62,7 +62,7 @@ export function MailsServer (userAuth, postsServer) {
   }
 
   const srv = {
-    postWithoutAuth (authedUser, reqData, resolve, reject) {
+    postWithoutAuth (authedUserId, reqData, resolve, reject) {
       if (!reqData.hasOwnProperty('data')) {
         reject(new Error('Cannot post a mail - empty data'))
         return
@@ -74,35 +74,34 @@ export function MailsServer (userAuth, postsServer) {
         reject(new Error('Cannot post a mail - data must contain relatedToPostId and threadAuthor and mailText'))
         return
       }
-      const postAuthor = postsServer.syncGetPostedBy(data.relatedToPostId)
-      if (!postAuthor) {
+      const postAuthorId = postsServer.syncGetPostedBy(data.relatedToPostId)
+      if (!postAuthorId) {
         reject(new Error(`Cannot post a mail related to - ${data.relatedToPostId} - can't find this post`))
         return
       }
-      const username = authedUser.username
       const threadAuthor = data.threadAuthor
       // console.log('username = ', username)
       // console.log('postAuthor = ', postAuthor)
       // console.log('threadAuthor = ', threadAuthor)
-      if (username !== postAuthor && username !== threadAuthor) {
+      if (authedUserId !== postAuthorId && authedUserId !== threadAuthor) {
         reject(new Error('Cannot post a mail - you must be either the postAuthor or threadAuthor'))
         return
       }
 
-      if (postAuthor === threadAuthor) {
+      if (postAuthorId === threadAuthor) {
         reject(new Error('Cannot start a thread about a post you wrote yourself - who would you email?'))
         return
       }
 
-      const newMail = {sender: username, sent: new Date(), text: data.mailText, id: nextMailId++}
+      const newMail = {sender: authedUserId, sent: new Date(), text: data.mailText, id: nextMailId++}
       const threadId = {relatedToPostId: data.relatedToPostId, threadAuthor: threadAuthor}
       persistMail(makeThreadKey(threadId), newMail)
-      if (username === postAuthor) {
+      if (authedUserId === postAuthorId) {
         recordThreadActivity(threadId, threadAuthor, [newMail.id])
-        recordThreadActivity(threadId, postAuthor, [])
+        recordThreadActivity(threadId, postAuthorId, [])
       } else {
         recordThreadActivity(threadId, threadAuthor, [])
-        recordThreadActivity(threadId, postAuthor, [newMail.id])
+        recordThreadActivity(threadId, postAuthorId, [newMail.id])
       }
 
       // console.log('activeThreads', activeThreads)
@@ -114,13 +113,13 @@ export function MailsServer (userAuth, postsServer) {
         reject(new Error('Error: you must be authenticated to view posts'))
         return
       }
-      const users = userAuth.syncGetAuthUsers(reqData.authToken)
+      const userIds = userAuth.syncGetAuthUsers(reqData.authToken)
       // console.log(reqData)
-      if (users.length !== 1) {
+      if (userIds.length !== 1) {
         reject(new Error('Error: can\'t work out your UserID from your auth token'))
         return
       }
-      srv.postWithoutAuth(users[0], reqData, resolve, reject)
+      srv.postWithoutAuth(userIds[0], reqData, resolve, reject)
     },
     getMailThread (reqData, resolve, reject) {
       // TODO: should reject requests that aren't from the thread author or poster
@@ -154,13 +153,13 @@ export function MailsServer (userAuth, postsServer) {
         reject(new Error('Error: you must be authenticated to view posts'))
         return
       }
-      const users = userAuth.syncGetAuthUsers(reqData.authToken)
-      if (users.length !== 1) {
+      const userIds = userAuth.syncGetAuthUsers(reqData.authToken)
+      if (userIds.length !== 1) {
         reject(new Error('Error: can\'t work out your UserID from your auth token'))
         return
       }
-      const username = users[0].username
-      const respData = getActiveThreads(username)
+      const userId = userIds[0]
+      const respData = getActiveThreads(userId)
       // console.log('username to look up', username)
 
       resolve({data: respData})
@@ -170,13 +169,13 @@ export function MailsServer (userAuth, postsServer) {
         reject(new Error('Error: you must be authenticated to view posts'))
         return
       }
-      const users = userAuth.syncGetAuthUsers(reqData.authToken)
-      if (users.length !== 1) {
+      const userIds = userAuth.syncGetAuthUsers(reqData.authToken)
+      if (userIds.length !== 1) {
         reject(new Error('Error: can\'t work out your UserID from your auth token'))
         return
       }
-      const username = users[0].username
-      const respData = getUnreadThreads(username)
+      const userId = userIds[0]
+      const respData = getUnreadThreads(userId)
       // console.log('username to look up', username)
 
       resolve({data: respData})
@@ -186,13 +185,12 @@ export function MailsServer (userAuth, postsServer) {
         reject(new Error('Error: you must be authenticated to mark mails as read'))
         return
       }
-      const users = userAuth.syncGetAuthUsers(reqData.authToken)
-      // console.log(reqData)
-      if (users.length !== 1) {
+      const userIds = userAuth.syncGetAuthUsers(reqData.authToken)
+      if (userIds.length !== 1) {
         reject(new Error('Error: can\'t work out your UserID from your auth token'))
         return
       }
-      const user = users[0]
+      const userId = userIds[0]
       if (!reqData.hasOwnProperty('data')) {
         reject(new Error('Cannot mark as read - empty data'))
         return
@@ -206,7 +204,7 @@ export function MailsServer (userAuth, postsServer) {
       }
       const threadKey = makeThreadKey({threadAuthor: data.threadAuthor, relatedToPostId: data.relatedToPostId})
 
-      const activityForThread = activeThreads[user.username][threadKey]
+      const activityForThread = activeThreads[userId][threadKey]
       const idToMark = data.readMailId
       if (activityForThread && activityForThread.unreadMails.includes(idToMark)) {
         activityForThread.unreadMails = activityForThread.unreadMails.filter(x => x !== idToMark)

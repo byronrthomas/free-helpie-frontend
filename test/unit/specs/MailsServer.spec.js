@@ -24,12 +24,12 @@ const dummyAuther = {
     // console.log("ThreadAuthor", THREAD_AUTHOR_ID)
     // console.log("PostAuthor", POST_AUTHOR_ID)
     if (token === THREAD_AUTHOR_ID.authToken) {
-      return [THREAD_AUTHOR_ID]
+      return [THREAD_AUTHOR_ID.id]
     } if (token === POST_AUTHOR_ID.authToken) {
-      return [POST_AUTHOR_ID]
+      return [POST_AUTHOR_ID.id]
     }
     const userFromInitialMails = INITIAL_MAIL_USERS.find(x => token === x.authToken)
-    return userFromInitialMails ? [userFromInitialMails] : []
+    return userFromInitialMails ? [userFromInitialMails.id] : []
   },
   syncGetUserCanReadMails (token, postId, threadAuthor) {
     return typeof token !== 'undefined'
@@ -46,7 +46,7 @@ function makeReq(remainingReq) {
 
 const TEST_POST_ID = 55
 const TEST_MAIL_DATA = {
-  threadAuthor: THREAD_AUTHOR_ID.username,
+  threadAuthor: THREAD_AUTHOR_ID.id,
   relatedToPostId: TEST_POST_ID,
   mailText: 'Hello, maybe I could help you, I live locally'
 }
@@ -61,7 +61,7 @@ function findPostedBy (postId) {
 
 const dummyPostServer = {
   syncGetPostedBy(postId) {
-    return postId === TEST_POST_ID ? POST_AUTHOR_ID.username : findPostedBy(postId).username
+    return postId === TEST_POST_ID ? POST_AUTHOR_ID.id : findPostedBy(postId).id
   }
 }
 
@@ -153,7 +153,7 @@ describe ('MailsServer', () => {
     it('should have been persisted with an ID, a sent datetimestamp, and with logged in user recorded as the sender', () => {
       const checkRes = res => {
         expect(res.data).toEqual([expect.objectContaining({
-          sender: THREAD_AUTHOR_ID.username,
+          sender: THREAD_AUTHOR_ID.id,
           id: expect.any(Number),
           sent: expect.any(Date)
         })])

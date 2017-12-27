@@ -22,7 +22,7 @@ export const INITIAL_MAILS = [
     postAuthor: user1,
     threadAuthor: user2,
     userWithUnread: user2,
-    threadId: {relatedToPostId: postByUser1.postId, threadAuthor: user2.username},
+    threadId: {relatedToPostId: postByUser1.postId, threadAuthor: user2.id},
     mails: [{
       sender: user2,
       text: 'I could help you'},
@@ -33,7 +33,7 @@ export const INITIAL_MAILS = [
     postAuthor: user2,
     threadAuthor: user3,
     userWithUnread: user2,
-    threadId: {relatedToPostId: postByUser2.postId, threadAuthor: user3.username},
+    threadId: {relatedToPostId: postByUser2.postId, threadAuthor: user3.id},
     mails: [{
       sender: user3,
       text: 'Hey, I\'ve been coaching for ten years, let\'s meet for a coffee'},
@@ -46,7 +46,7 @@ export const INITIAL_MAILS = [
   postAuthor: user1,
   threadAuthor: user3,
   userWithUnread: user1,
-  threadId: {relatedToPostId: postByUser1.postId, threadAuthor: user3.username},
+  threadId: {relatedToPostId: postByUser1.postId, threadAuthor: user3.id},
   mails: [{
     sender: user3,
     text: 'Hey - do you need help with coaching at all?'}]
