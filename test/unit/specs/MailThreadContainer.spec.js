@@ -3,24 +3,24 @@ import { mount } from 'vue-test-utils'
 import MailThreadContainer from '@/loggedIn/homePage/shared/MailThreadContainer.vue'
 import { fail } from 'assert';
 
+const TEST_USER_ID = 'TestUser'
 function makeOptionsForConnectCancel (connectCancel) {
   return {
     propsData: {
       mailItems: [],
       myAvatar: {altText: 'You'},
       otherAvatar: {altText: 'Them'},
-      username: TEST_USERNAME,
+      userId: TEST_USER_ID,
       connectOrCancelAllowed: connectCancel}}
 }
 
-const TEST_USERNAME = 'TestUser'
 function makeOptions (mails) {
   return {
     propsData: {
       mailItems: mails,
       myAvatar: {altText: 'You'},
       otherAvatar: {altText: 'Them'},
-      username: TEST_USERNAME}}
+      userId: TEST_USER_ID}}
 }
 
 let nextDate = new Date(2014, 10, 10)
@@ -41,12 +41,13 @@ const NO_MAILS = makeOptions([])
 describe('Mail thread container', () => {
   it('should return !sentByCurrentUser if the sender of the mail is not the current user', () => {
     const onTest = mount(MailThreadContainer, NO_MAILS)
-    expect(onTest.vm.sentByCurrentUser({sender: 'SomebodyElse'})).toBeFalsy()
+    const anotherUser = TEST_USER_ID + 1
+    expect(onTest.vm.sentByCurrentUser({sender: anotherUser})).toBeFalsy()
   })
 
   it('should return sentByCurrentUser if the sender of the mail is the current user', () => {
     const onTest = mount(MailThreadContainer, NO_MAILS)
-    expect(onTest.vm.sentByCurrentUser({sender: onTest.vm.username})).toBeTruthy()
+    expect(onTest.vm.sentByCurrentUser({sender: onTest.vm.userId})).toBeTruthy()
   })
 
   it('should emit sendMail with the new mail text when the button is clicked', () => {
@@ -90,7 +91,7 @@ describe('Mail thread container', () => {
             mailItems: msgs,
             myAvatar: {altText: 'You'},
             otherAvatar: {altText: 'Them'},
-            username: TEST_USERNAME},
+            userId: TEST_USER_ID},
             connectOrCancelAllowed: connectOrCancelState}
         const onTest = mount(MailThreadContainer, options)
         expect(onTest.element).toMatchSnapshot()

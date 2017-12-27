@@ -65,7 +65,7 @@ export default {
   name: 'MailThreadContainer',
   props: {
     mailItems: Array,
-    username: String,
+    userId: Number,
     myAvatar: Object,
     otherAvatar: Object,
     connectOrCancelAllowed: {
@@ -93,7 +93,7 @@ export default {
   },
   methods: {
     sentByCurrentUser (mail) {
-      return this.username === mail.sender
+      return this.userId === mail.sender
     },
     avatarImage (mail) {
       return this.sentByCurrentUser(mail)

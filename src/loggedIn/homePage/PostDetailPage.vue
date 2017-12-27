@@ -19,6 +19,7 @@
         :mail-items="mailItems"
         :my-avatar="myAvatar"
         :other-avatar="postersAvatar"
+        :user-id="userId"
         @sendMail="sendMail($event)"/>
     </div>
     <div v-else>
