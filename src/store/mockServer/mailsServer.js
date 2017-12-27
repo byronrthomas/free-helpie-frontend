@@ -79,11 +79,11 @@ export function MailsServer (userAuth, postsServer) {
         reject(new Error(`Cannot post a mail related to - ${data.relatedToPostId} - can't find this post`))
         return
       }
-      // console.log('postUser = ', authedUser)
-      // console.log('postAuthor = ', postAuthor)
-
       const username = authedUser.username
       const threadAuthor = data.threadAuthor
+      // console.log('username = ', username)
+      // console.log('postAuthor = ', postAuthor)
+      // console.log('threadAuthor = ', threadAuthor)
       if (username !== postAuthor && username !== threadAuthor) {
         reject(new Error('Cannot post a mail - you must be either the postAuthor or threadAuthor'))
         return
