@@ -61,7 +61,6 @@
 <script>
 import MailItem from './MailItem.vue'
 
-
 export default {
   name: 'MailThreadContainer',
   props: {
