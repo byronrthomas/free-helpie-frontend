@@ -61,9 +61,6 @@
 <script>
 import MailItem from './MailItem.vue'
 
-function compareDates (aDate, bDate) {
-  return aDate.getTime() - bDate.getTime()
-}
 
 export default {
   name: 'MailThreadContainer',
@@ -84,7 +81,6 @@ export default {
   },
   data () {
     const sortedMailItems = [...this.mailItems]
-    sortedMailItems.sort((a, b) => compareDates(b.sent, a.sent))
 
     return {
       newMailText: '',

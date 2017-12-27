@@ -110,11 +110,11 @@ describe('PostDetailsPage', () => {
     })
   })
 
-  it('should dispatch getMailThread(post_id, sent_date ASC) if post.postedBy !== currentUser', () => {
+  it('should dispatch getMailThread(thread_id, sent_date ASC) if post.postedBy !== currentUser', () => {
     shallow(PostDetailPage, {localVue, store, propsData: {postId: otherUserPostId}})
 
     const expectedActionData = {
-      postId: otherUserPostId,
+      relatedToPostId: otherUserPostId,
       sortField: 'sent',
       sortOrderAsc: true,
       threadAuthor: TEST_USERNAME

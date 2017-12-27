@@ -1,3 +1,7 @@
+function compareDates (aDate, bDate) {
+  return aDate.getTime() - bDate.getTime()
+}
+
 export function MailsServer(userAuth, postsServer) {
   const mails = {}
   const activeThreads = {}
@@ -114,6 +118,13 @@ export function MailsServer(userAuth, postsServer) {
       const respData = mails.hasOwnProperty(threadKey) 
         ? [...mails[threadKey]]
         : []
+      if (data.sortField === 'sent') {
+        if (data.sortOrderAsc) {
+          respData.sort((mail1, mail2) => compareDates(mail1.sent, mail2.sent))
+        } else {
+          respData.sort((mail1, mail2) => compareDates(mail2.sent, mail1.sent))
+        }
+      }
       resolve({data: respData})
     },
     getActiveThreads (reqData, resolve, reject) {

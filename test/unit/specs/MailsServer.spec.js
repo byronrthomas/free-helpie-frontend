@@ -100,6 +100,10 @@ function reqsForThread (threadContents) {
   return threadContents.mails.map((mail) => reqForTestMail(threadId, mail))
 }
 
+function expectSentTimesAscending (mail1, mail2) {
+  expect(mail2.sent.getTime()).toBeGreaterThan(mail1.sent.getTime())
+}
+
 describe ('MailsServer', () => {
   const checkNoResults = res => expect(extractPostData(res.data)).toHaveLength(0)
 
@@ -120,7 +124,6 @@ describe ('MailsServer', () => {
 
     expect(onError.mock.calls).toEqual([[expect.any(Error)]])
     expect(onSuccess.mock.calls).toHaveLength(0)
-    // Again, I could just make it so that I don't trust & check I write it
   })
 
   describe('after a mail is posted', () => {
@@ -174,17 +177,14 @@ describe ('MailsServer', () => {
       shouldRunSuccessfully(onTest.getActiveThreads, makeReq({}), expectRespDataToEqual([mailThreadId]))
     })
 
-    it('it should be possible to read the contents of the thread in a different sort order', () => {
-      // Look at what the rest of the world expects
-      fail()
-    })
-
-    describe('after posting another mail on the same thread', () => {
-      beforeEach(() => {
-        onTest.post(
-          makeReq({data: mailContents}), 
-          res => { },
-          err => {throw err})
+    describe('after posting another mail on the same thread with some delay', () => {
+      beforeEach((done) => {
+        setTimeout(() => {
+          onTest.post(
+            makeReq({data: mailContents}), 
+            res => { done() },
+            err => {throw err})
+        }, 10)
       })
 
       it('the new message should extend the mail thread', () => {
@@ -193,6 +193,24 @@ describe ('MailsServer', () => {
         }
         shouldRunSuccessfully(onTest.getMailThread, makeReq({data: mailThreadId}), checkRes)
       })
+
+      for (const orderIsAscending of [false, true]) {
+        const description = orderIsAscending ? '' : 'reverse'
+        it(`should be possible to read the contents of the thread in ${description} chronological order`, () => {
+          const reqData = {...mailThreadId, sortField: 'sent', sortOrderAsc: orderIsAscending}
+          const req = makeReq({data: reqData})
+          const checkRes = res =>
+            {
+              expect(res.data).toHaveLength(2) // Returns both results
+              if (orderIsAscending) {
+                expectSentTimesAscending(res.data[0], res.data[1])
+              } else {
+                expectSentTimesAscending(res.data[1], res.data[0])
+              }
+            }
+          shouldRunSuccessfully(onTest.getMailThread, req, checkRes)
+        })
+      }
     })
   })
 
