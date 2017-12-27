@@ -4,7 +4,7 @@
     <router-link tag="button" :to="{name: 'editPost', params: {postId: postId}}" v-if="ableToEdit" class="btn btn-primary">Edit</router-link>
     <button v-if="ableToEdit" class="btn btn-primary" @click="deletePost">Delete</button>
     <h3>{{ post.title }}</h3>
-    <p><strong>Requested by</strong> {{ post.postedBy }} </p>
+    <p><strong>Requested by</strong> {{ postersName }} </p>
     <br>
     <p><strong>Location:</strong> {{ formattedLocation }}</p>
     <br>
@@ -93,8 +93,8 @@ export default {
       return this.isFavourited ? 'Unfavourite' : 'Favourite'
     },
     postersName () {
-      // This is incorrect, but just a placeholder for the correct implementation
-      return this.post.postedBy
+      const userData = this.profileInfo[this.post.postedBy] || {name: '[unknown]'}
+      return userData.name
     },
     postersAvatar () {
       return {altText: this.postersName}
@@ -104,6 +104,7 @@ export default {
     },
     ...mapGetters({
       'storedPost': 'loggedin/postdetails/post',
+      'profileInfo': 'loggedin/postdetails/profileInfo',
       favouritePostIds: 'loggedin/favouritePostIds',
       'userId': 'loggedin/userId',
       mailItems: 'loggedin/postthread/mailItems'})

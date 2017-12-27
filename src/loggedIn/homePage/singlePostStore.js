@@ -6,6 +6,9 @@ export const getters = {
   },
   post (state) {
     return state.post
+  },
+  profileInfo (state) {
+    return state.profileInfo
   }
 }
 
@@ -14,7 +17,8 @@ export function singlePostStore (server) {
     namespaced: true,
     state: {
       postId: null,
-      post: null
+      post: null,
+      profileInfo: {}
     },
     getters,
     mutations: {
@@ -23,14 +27,28 @@ export function singlePostStore (server) {
       },
       setPostId (state, newId) {
         state.postId = newId
+      },
+      setProfileInfo (state, profileInfo) {
+        state.profileInfo = profileInfo
       }
     },
     actions: {
-      getPost ({ commit, rootGetters }, postId) {
+      refreshProfileInfo ({state, commit, rootGetters}) {
+        console.log('Refresh profile, state.post = ', state.post)
+        if (!state.post || !state.post.hasOwnProperty('postedBy')) return
+
+        const idsToFetch = [state.post.postedBy]
+        const req = {authToken: rootGetters.authToken, data: {userIds: idsToFetch}}
+        commit('setLastServerError', '', { root: true })
+        server.get('/userDisplayInfos', req)
+          .then(resp => commit('setProfileInfo', resp.data))
+          .catch(err => commit('setLastServerError', err.message, { root: true }))
+      },
+      getPost ({ commit, rootGetters, dispatch }, postId) {
         commit('setPostId', postId)
         commit('setLastServerError', '', {root: true})
         server.get(makeSpecificPostRoute(postId), {authToken: rootGetters.authToken})
-          .then(resp => commit('setPost', resp.data))
+          .then(resp => { commit('setPost', resp.data); dispatch('refreshProfileInfo') })
           .catch(err => commit('setLastServerError', err.message, { root: true }))
       },
       createPost ({commit, rootGetters}, {post, successCallback}) {
