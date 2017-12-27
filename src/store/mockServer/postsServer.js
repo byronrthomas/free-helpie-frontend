@@ -97,6 +97,9 @@ export function PostsServer (userAuth) {
         resolve({data: result})
       }
     },
+    syncGetPostedBy (postId) {
+      return posts[postId] ? posts[postId].postedBy : null
+    },
     postWithoutAuth (reqData, resolve, reject) {
       if (!reqData.hasOwnProperty('data')) {
         reject(new Error('Cannot post - empty data'))

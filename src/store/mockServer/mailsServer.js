@@ -75,6 +75,10 @@ export function MailsServer (userAuth, postsServer) {
         return
       }
       const postAuthor = postsServer.syncGetPostedBy(data.relatedToPostId)
+      if (!postAuthor) {
+        reject(new Error(`Cannot post a mail related to - ${data.relatedToPostId} - can't find this post`))
+        return
+      }
       // console.log('postUser = ', authedUser)
       // console.log('postAuthor = ', postAuthor)
 

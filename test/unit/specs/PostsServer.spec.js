@@ -73,6 +73,11 @@ describe ('PostsServer', () => {
         err => {throw err})
     })
 
+    it('should return that the post was posted by the correct user', () => {
+      const result = onTest.syncGetPostedBy(postId)
+      expect(result).toEqual(postContents.postedBy)
+    })
+
     it('should be possible to put an edited version of the existing post', () => {
       const newPostContents = {locations: ['Some new location'], ...postContents}
       shouldRunSuccessfully(onTest.put, makeReq({data: newPostContents, postId: postId}))
