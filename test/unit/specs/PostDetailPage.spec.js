@@ -130,7 +130,7 @@ describe('PostDetailsPage', () => {
   })
 
   it('should display a link to the mailbox if post.postedBy === currentUser', () => {
-    const onTest = mount(PostDetailPage, {localVue, store, propsData: {postId: currentUsersPostId}})
+    const onTest = mount(PostDetailPage, {localVue, store, propsData: {postId: currentUsersPostId.toString()}})
     expect(onTest.vm.postedByCurrentUser).toBe(true)
 
     // expect(onTest.contains('[text="your mailbox"]')).toBe(true)
@@ -138,7 +138,7 @@ describe('PostDetailsPage', () => {
   })
 
   it('should dispatch newEmail(post_id, post_author, thread_author, msg_text) if it receives a sendEmail event', () => {
-    const onTest = shallow(PostDetailPage, {localVue, store, propsData: {postId: otherUserPostId}})
+    const onTest = shallow(PostDetailPage, {localVue, store, propsData: {postId: otherUserPostId.toString()}})
 
     const emailText = 'This is a test email'
     // Ideally we would trigger the event from the MTC, rather than call the method directly

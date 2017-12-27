@@ -3,7 +3,7 @@ import { mount } from 'vue-test-utils'
 import MailThreadContainer from '@/loggedIn/homePage/shared/MailThreadContainer.vue'
 import { fail } from 'assert';
 
-const TEST_USER_ID = 'TestUser'
+const TEST_USER_ID = 555
 function makeOptionsForConnectCancel (connectCancel) {
   return {
     propsData: {
