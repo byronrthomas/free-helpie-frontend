@@ -141,7 +141,6 @@ describe('PostDetailsPage', () => {
     const expectedMailData = {
       threadAuthor: TEST_USERNAME,
       relatedToPostId: otherUserPostId,
-      postAuthor: OTHER_USERNAME,
       text: emailText
     }
     expect(actions.newMail.mock.calls.length).toEqual(1)

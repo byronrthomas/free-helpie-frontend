@@ -47,7 +47,6 @@ function makeReq(remainingReq) {
 const TEST_POST_ID = 55
 const TEST_MAIL_DATA = {
   threadAuthor: THREAD_AUTHOR_ID.username,
-  postAuthor: POST_AUTHOR_ID.username,
   relatedToPostId: TEST_POST_ID,
   mailText: 'Hello, maybe I could help you, I live locally'
 }

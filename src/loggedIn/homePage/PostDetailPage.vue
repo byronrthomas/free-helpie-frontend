@@ -131,7 +131,7 @@ export default {
       this.$store.dispatch('loggedin/' + storeAction, this.postId)
     },
     sendMail (mailText) {
-      this.$store.dispatch('loggedin/postthread/newMail', {postId: this.postId, threadAuthor: this.username, text: mailText})
+      this.$store.dispatch('loggedin/postthread/newMail', {relatedToPostId: this.postId, threadAuthor: this.username, text: mailText})
     }
   },
   components: {
