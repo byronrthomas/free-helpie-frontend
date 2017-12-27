@@ -110,7 +110,7 @@ export default {
   created () {
     this.$store.dispatch('loggedin/postdetails/getPost', this.postId)
     const mailThreadQuery = {
-      postId: this.postId,
+      relatedToPostId: this.postId,
       threadAuthor: this.username,
       sortField: 'sent',
       sortOrderAsc: true
