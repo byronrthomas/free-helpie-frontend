@@ -55,6 +55,10 @@ const testEmails = [
 
 let postStore = {post: null}
 
+const USER_DISPLAY_INFOS = {}
+USER_DISPLAY_INFOS[TEST_USER_ID] = {name: 'TheCurrentUser'}
+USER_DISPLAY_INFOS[OTHER_USER_ID] = {name: 'AnOtherUser'}
+
 function updatePostStore(postId) {
   if (postId === currentUsersPostId) {
     postStore.post = testPostData
@@ -86,7 +90,10 @@ describe('PostDetailsPage', () => {
             postdetails: {
               namespaced: true,
               getters: {
-                post (state) { return postStore.post }
+                post (state) { return postStore.post },
+                profileInfo (state) {
+                  return USER_DISPLAY_INFOS
+                }
               },
               actions: {
                 getPost ({state}, postId) {
