@@ -2,6 +2,7 @@ import { UserAuthServer } from './mockServer/userAuthServer'
 import { UserDataServer } from './mockServer/userDataServer'
 import { PostsServer } from './mockServer/postsServer'
 import { UserFavouritesServer } from './mockServer/userFavouritesServer'
+import { MailsServer } from './mockServer/mailsServer'
 import { INITIAL_POSTS } from './mockServer/initialPosts'
 import { runAll } from './mockServer/callbackTools'
 
@@ -16,7 +17,7 @@ function wrapAsPromise (func, data) {
 }
 
 const USER_PATH_REG_EXP = RegExp(/^\/users\/(\d+)\/favourites$/)
-function Server (userAuth, userData, posts, userFavourites) {
+function Server (userAuth, userData, posts, userFavourites, mails) {
   return {
     get (resourcePath, data) {
       if (resourcePath === '/accounts') {
@@ -35,6 +36,15 @@ function Server (userAuth, userData, posts, userFavourites) {
       const matchToUsersPath = resourcePath.match(USER_PATH_REG_EXP)
       if (matchToUsersPath != null) {
         return wrapAsPromise(userFavourites.get, {userId: matchToUsersPath[1], ...data})
+      }
+      if (resourcePath === '/activeMailThreads') {
+        return wrapAsPromise(mails.getActiveThreads, data)
+      }
+      if (resourcePath === '/unreadMailThreads') {
+        return wrapAsPromise(mails.getUnreadThreads, data)
+      }
+      if (resourcePath === '/mails') {
+        return wrapAsPromise(mails.getMailThread, data)
       }
       throw new Error(`Unknown route: GET ${resourcePath}`)
     },
@@ -56,6 +66,12 @@ function Server (userAuth, userData, posts, userFavourites) {
       const matchToUsersPath = resourcePath.match(USER_PATH_REG_EXP)
       if (matchToUsersPath != null) {
         return wrapAsPromise(userFavourites.post, {userId: matchToUsersPath[1], ...data})
+      }
+      if (resourcePath === '/mails') {
+        return wrapAsPromise(mails.post, data)
+      }
+      if (resourcePath === '/mailReads') {
+        return wrapAsPromise(mails.postMarkAsRead, data)
       }
       throw new Error(`Unknown route: POST ${resourcePath}`)
     },
@@ -84,7 +100,8 @@ function makeServer () {
     auther,
     new UserDataServer(auther),
     postsServer,
-    new UserFavouritesServer(auther))
+    new UserFavouritesServer(auther),
+    new MailsServer(auther, postsServer))
 }
 
 export const mockServer = makeServer()
