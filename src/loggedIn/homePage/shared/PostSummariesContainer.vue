@@ -23,7 +23,10 @@ export default {
   props: {
     posts: Object,
     favouritePostIds: Array,
-    profileInfo: Object
+    profileInfo: {
+      type: Object,
+      required: true
+    }
   },
   methods: {
     isSaved (postId) {
