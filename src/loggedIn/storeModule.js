@@ -1,6 +1,7 @@
 import { postsStore } from './homePage/postsStore'
 import { singlePostStore } from './homePage/singlePostStore'
 import { LOCATIONS, SKILLS, INTERESTS, PROFILE_TEXT_SUGGESTION } from './profileConstants'
+import { singleMailThreadStore } from './homePage/mailThreadStore'
 
 function userProfileIsComplete (profile) {
   return profile &&
@@ -154,7 +155,10 @@ export function loggedInStore (server) {
       yourposts: postsStore(server),
       // Ditto for these
       postdetails: singlePostStore(server),
-      editpost: singlePostStore(server)
+      editpost: singlePostStore(server),
+
+      // Onto mail thread handling
+      postthread: singleMailThreadStore(server)
     }
   }
 }

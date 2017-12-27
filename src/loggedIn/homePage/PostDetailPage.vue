@@ -19,7 +19,7 @@
         :mail-items="mailItems"
         :my-avatar="myAvatar"
         :other-avatar="postersAvatar"
-        @sendMail="sendMail($ev)"/>
+        @sendMail="sendMail($event)"/>
     </div>
     <div v-else>
       <h5>This is your post</h5>
@@ -131,7 +131,7 @@ export default {
       this.$store.dispatch('loggedin/' + storeAction, this.postId)
     },
     sendMail (mailText) {
-      this.$store.dispatch('loggedin/postthread/newMail', {relatedToPostId: this.postId, threadAuthor: this.username, text: mailText})
+      this.$store.dispatch('loggedin/postthread/newMail', {relatedToPostId: this.postId, threadAuthor: this.username, mailText: mailText})
     }
   },
   components: {
