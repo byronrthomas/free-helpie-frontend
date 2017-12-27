@@ -72,6 +72,9 @@ export function loggedInStore (server) {
       },
       profileTextSuggestion (state) {
         return state.profileTextSuggestion
+      },
+      userId (state) {
+        return state.userId
       }
     },
     mutations: {

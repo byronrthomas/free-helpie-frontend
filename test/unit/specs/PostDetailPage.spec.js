@@ -10,7 +10,7 @@ import Vuex from 'vuex'
 const localVue = createLocalVue()
 localVue.use(Vuex)
 
-const TEST_USERNAME = "theCurrentUser"
+const TEST_USER_ID = 777
 
 const emptyPost = {
   skills: [],
@@ -20,32 +20,32 @@ const emptyPost = {
 
 const currentUsersPostId = 1
 const testPostData = {
-  postedBy: TEST_USERNAME, ...emptyPost
+  postedBy: TEST_USER_ID, ...emptyPost
 }
 
 const otherUserPostId = 2
-const OTHER_USERNAME = 'SomeOtherDude'
+const OTHER_USER_ID = 555
 const otherUserPostData = {
-  postedBy: OTHER_USERNAME, ...emptyPost
+  postedBy: OTHER_USER_ID, ...emptyPost
 }
 
 const testEmails = [
   {
-    sender: TEST_USERNAME,
+    sender: TEST_USER_ID,
     text: 'Hello, I could help you',
     relatedToPostId: 1,
     sent: new Date(2010, 1, 1),
     replayToMailId: -1,
     id: 0},
   {
-    sender: OTHER_USERNAME,
+    sender: OTHER_USER_ID,
     text: 'That would be great, thanks - how far away do you live?',
     relatedToPostId: 1,
     sent: new Date(2010, 1, 2),
     replayToMailId: 0,
     id: 1},
   {
-    sender: TEST_USERNAME,
+    sender: TEST_USER_ID,
     text: 'Bolton. Should we exchange contact details?',
     relatedToPostId: 1,
     sent: new Date(2010, 1, 3),
@@ -75,13 +75,12 @@ describe('PostDetailsPage', () => {
       newMail: jest.fn()
     }
     store = new Vuex.Store({
-      state: {userState: {username: TEST_USERNAME}},
-      getters: {...rootGetters},
       modules: {
         loggedin: {
           namespaced: true,
           getters: {
-            favouritePostIds (state) {return []}
+            favouritePostIds (state) {return []},
+            userId (state) {return TEST_USER_ID}
           },
           modules: {
             postdetails: {
@@ -117,7 +116,7 @@ describe('PostDetailsPage', () => {
       relatedToPostId: otherUserPostId,
       sortField: 'sent',
       sortOrderAsc: true,
-      threadAuthor: TEST_USERNAME
+      threadAuthor: TEST_USER_ID
     }
     expect(actions.getMailThread.mock.calls.length).toEqual(1)
     expect(actions.getMailThread.mock.calls[0][1]).toEqual(expectedActionData)
@@ -139,7 +138,7 @@ describe('PostDetailsPage', () => {
     onTest.vm.sendMail(emailText)
 
     const expectedMailData = {
-      threadAuthor: TEST_USERNAME,
+      threadAuthor: TEST_USER_ID,
       relatedToPostId: otherUserPostId,
       mailText: emailText
     }

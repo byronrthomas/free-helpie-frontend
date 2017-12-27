@@ -99,19 +99,19 @@ export default {
       return {altText: this.postersName}
     },
     postedByCurrentUser () {
-      return this.post.postedBy === this.username
+      return this.post.postedBy === this.userId
     },
     ...mapGetters({
       'storedPost': 'loggedin/postdetails/post',
       favouritePostIds: 'loggedin/favouritePostIds',
-      'username': 'username',
+      'userId': 'loggedin/userId',
       mailItems: 'loggedin/postthread/mailItems'})
   },
   created () {
     this.$store.dispatch('loggedin/postdetails/getPost', this.postId)
     const mailThreadQuery = {
       relatedToPostId: this.postId,
-      threadAuthor: this.username,
+      threadAuthor: this.userId,
       sortField: 'sent',
       sortOrderAsc: true
     }
@@ -131,7 +131,7 @@ export default {
       this.$store.dispatch('loggedin/' + storeAction, this.postId)
     },
     sendMail (mailText) {
-      this.$store.dispatch('loggedin/postthread/newMail', {relatedToPostId: this.postId, threadAuthor: this.username, mailText: mailText})
+      this.$store.dispatch('loggedin/postthread/newMail', {relatedToPostId: this.postId, threadAuthor: this.userId, mailText: mailText})
     }
   },
   components: {
