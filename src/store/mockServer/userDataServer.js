@@ -1,6 +1,11 @@
-export function UserDataServer (userAuth) {
-  const userData = {}
+export function UserDataServer (userAuth, initialUserData) {
+  const userData = initialUserData || {}
   let nextId = 0
+  for (const userId in userData) {
+    if (userData.hasOwnProperty(userId)) {
+      nextId = Math.max(nextId, parseInt(userId) + 1)
+    }
+  }
   return {
     get (reqData, resolve, reject) {
       console.log('GET userdata: Getting users authorised by token ' + reqData)

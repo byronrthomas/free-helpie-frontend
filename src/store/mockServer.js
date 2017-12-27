@@ -4,6 +4,7 @@ import { PostsServer } from './mockServer/postsServer'
 import { UserFavouritesServer } from './mockServer/userFavouritesServer'
 import { MailsServer } from './mockServer/mailsServer'
 import { INITIAL_POSTS } from './mockServer/initialPosts'
+import { INITIAL_USER_DATA } from './mockServer/initialUserData'
 import { runAll } from './mockServer/callbackTools'
 
 const MOCK_NETWORK_LATENCY = 500
@@ -98,7 +99,7 @@ function makeServer () {
   runAll(postsServer.postWithoutAuth, INITIAL_POSTS.map(post => { return { data: post } }))
   return new Server(
     auther,
-    new UserDataServer(auther),
+    new UserDataServer(auther, INITIAL_USER_DATA),
     postsServer,
     new UserFavouritesServer(auther),
     new MailsServer(auther, postsServer))
