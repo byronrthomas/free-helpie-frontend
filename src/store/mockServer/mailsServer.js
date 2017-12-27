@@ -47,6 +47,20 @@ export function MailsServer(userAuth, postsServer) {
     return result
   }
 
+  const getUnreadThreads = (username) => {
+    if (!activeThreads[username]) {
+      return []
+    }
+    const result = []
+    for (const threadKey in activeThreads[username]) {
+      if (activeThreads[username].hasOwnProperty(threadKey) &&
+        activeThreads[username][threadKey].unreadMails.length > 0) {
+        result.push(activeThreads[username][threadKey].id);
+      }
+    }
+    return result
+  }
+
   const srv = {
     postWithoutAuth (authedUser, reqData, resolve, reject) {
       if (!reqData.hasOwnProperty('data')) {
@@ -79,9 +93,13 @@ export function MailsServer(userAuth, postsServer) {
       const newMail = {sender: username, sent: new Date(), text: data.mailText, id: nextMailId++}
       const threadId = {relatedToPostId: data.relatedToPostId, threadAuthor: threadAuthor}
       persistMail(makeThreadKey(threadId), newMail)
-      // const userToAlert = postAuthor === postUserName ? data.threadAuthor : postAuthor
-      recordThreadActivity(threadId, threadAuthor, [newMail.id])
-      recordThreadActivity(threadId, postAuthor, [newMail.id])
+      if (username === postAuthor) {
+        recordThreadActivity(threadId, threadAuthor, [newMail.id])
+        recordThreadActivity(threadId, postAuthor, [])
+      } else {
+        recordThreadActivity(threadId, threadAuthor, [])
+        recordThreadActivity(threadId, postAuthor, [newMail.id])
+      }
 
       // console.log('activeThreads', activeThreads)
       console.log('Posting mail succeeded')
@@ -154,7 +172,7 @@ export function MailsServer(userAuth, postsServer) {
         return
       }
       const username = users[0].username
-      const respData = getActiveThreads(username)
+      const respData = getUnreadThreads(username)
       // console.log('username to look up', username)
       
       resolve({data: respData})

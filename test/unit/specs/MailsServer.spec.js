@@ -255,16 +255,40 @@ describe ('MailsServer', () => {
     })
 
     describe(`after ${threadToWorkWith.userWithUnread.username} has read the thread`, () => {
+      const userWhoStartsWithUnread = threadToWorkWith.userWithUnread
+      beforeEach(() => {
+        const reqByUser = makeReqFromUser({data: {readMailId: 1, ...threadToWorkWith.threadId}}, userWhoStartsWithUnread)
+        shouldRunSuccessfully(onTest.postMarkAsRead, reqByUser)
+      })
+
+      const getUnreadThreadsReq = makeReqFromUser({}, userWhoStartsWithUnread)
+      const checkThreadIsRead = res => expect(res.data).not.toEqual(expect.arrayContaining([threadToWorkWith.threadId]))
       it('should not appear as unread for them when queried', () => {
-        fail()
+        shouldRunSuccessfully(onTest.getUnreadThreads, getUnreadThreadsReq, checkThreadIsRead)
       })
 
+      const sendNewMailOnThreadFromUser = user =>
+        {
+          const newMailData = {mailText: 'new mail', ...threadToWorkWith.threadId}
+          const req = makeReqFromUser({data: newMailData}, user)
+          shouldRunSuccessfully(onTest.post, req)
+        }
       it('should switch back to unread if another mail occurs', () => {
-        fail()
+        const userToSend = 
+          userWhoStartsWithUnread.username === threadToWorkWith.postAuthor.username 
+          ? threadToWorkWith.threadAuthor 
+          : threadToWorkWith.postAuthor
+        
+        sendNewMailOnThreadFromUser(userToSend)
+        const checkThreadIsUnread = res => {
+          expect(res.data).toEqual(expect.arrayContaining([threadToWorkWith.threadId]))
+        }
+        shouldRunSuccessfully(onTest.getUnreadThreads, getUnreadThreadsReq, checkThreadIsUnread)
       })
 
-      it('should not become unread if they mail and no other mail occurs', () => {
-        fail()
+      it('should not become unread if they mail again and no other mail occurs', () => {
+        sendNewMailOnThreadFromUser(userWhoStartsWithUnread)
+        shouldRunSuccessfully(onTest.getUnreadThreads, getUnreadThreadsReq, checkThreadIsRead)
       })
     })
   })
