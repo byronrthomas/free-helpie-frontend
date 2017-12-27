@@ -27,6 +27,20 @@ export function UserDataServer (userAuth, initialUserData) {
         console.log('GET userdata: No data present for user - returning empty')
       }
     },
+    getUserDisplayInfo (reqData, resolve, reject) {
+      console.log('GET user display info: ', reqData)
+      if (!userAuth.syncGetUserCanSeeUserProfiles(reqData.authToken)) {
+        reject(new Error('Cannot get user display info, current user not authorized to do so'))
+        return
+      }
+      let dataToReturn = {}
+      for (const userId of reqData.data.userIds) {
+        if (userData.hasOwnProperty(userId)) {
+          dataToReturn[userId] = userData[userId].personalInfo
+        }
+      }
+      resolve({data: dataToReturn})
+    },
     post (reqData, resolve, reject) {
       const users = userAuth.syncGetAuthUsers(reqData.token)
       console.log('PUT userdata: Getting users authorised by token ' + reqData.token)

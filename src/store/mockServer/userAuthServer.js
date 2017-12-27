@@ -92,6 +92,9 @@ export function UserAuthServer () {
     },
     syncGetUserCanReadMails (token, postId, threadAuthor) {
       return typeof usersToAuth.getByValue(token) !== 'undefined'
+    },
+    syncGetUserCanSeeUserProfiles (token) {
+      return typeof usersToAuth.getByValue(token) !== 'undefined'
     }
   }
 }

@@ -27,6 +27,9 @@ function Server (userAuth, userData, posts, userFavourites, mails) {
       if (resourcePath.startsWith('/users?token=')) {
         return wrapAsPromise(userData.get, resourcePath.substring('/users?token='.length))
       }
+      if (resourcePath === '/userDisplayInfos') {
+        return wrapAsPromise(userData.getUserDisplayInfo, data)
+      }
       if (resourcePath.startsWith('/posts/')) {
         const postId = resourcePath.substring('/posts/'.length)
         return wrapAsPromise(posts.getSingle, {postId: postId, ...data})

@@ -1,6 +1,6 @@
 export const INITIAL_POSTS = [
   {
-    postedBy: 'John Doe',
+    postedBy: 0,
     title: 'Help around Garden',
     interests: ['House'],
     skills: ['Gardening'],
@@ -16,7 +16,7 @@ export const INITIAL_POSTS = [
     }
   },
   {
-    postedBy: 'Wendy Small',
+    postedBy: 1,
     title: 'Please help me get into Executive Coaching',
     interests: ['Work', 'Mentoring'],
     skills: ['Executive coaching'],
@@ -34,7 +34,7 @@ A small amount of time once a week or once a month should be fine. We can do it 
     }
   },
   {
-    postedBy: 'Jana Swiss',
+    postedBy: 2,
     title: 'Please could somebody local walk my dog',
     interests: ['Pets'],
     skills: [],

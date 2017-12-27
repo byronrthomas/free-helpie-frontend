@@ -8,13 +8,24 @@ function updateFiltering (state, fieldName, newCriteria) {
   state.filter = newFilter
 }
 
+function mapObjectValuesToArray (mapper, object) {
+  const result = []
+  for (const key in object) {
+    if (object.hasOwnProperty(key)) {
+      result.push(mapper(object[key]))
+    }
+  }
+  return result
+}
+
 export function postsStore (server) {
   return {
     namespaced: true,
     state: {
       posts: {},
       filter: {
-      }
+      },
+      profileInfo: {}
     },
     getters: {
       getPosts (state) {
@@ -31,6 +42,9 @@ export function postsStore (server) {
       },
       isFilteredByPostIds (state) {
         return Boolean(state.filter.postIdsFilter)
+      },
+      profileInfo (state) {
+        return state.profileInfo
       }
     },
     mutations: {
@@ -51,6 +65,9 @@ export function postsStore (server) {
       },
       setPosts (state, posts) {
         state.posts = posts
+      },
+      setProfileInfo (state, profileInfo) {
+        state.profileInfo = profileInfo
       }
     },
     actions: {
@@ -74,12 +91,20 @@ export function postsStore (server) {
         commit('setPostIdsFilter', postIds)
         dispatch('refresh')
       },
+      refreshProfileInfo ({state, commit, rootGetters}) {
+        const idsToFetch = mapObjectValuesToArray(post => post.postedBy, state.posts)
+        const req = {authToken: rootGetters.authToken, data: {userIds: idsToFetch}}
+        commit('setLastServerError', '', { root: true })
+        server.get('/userDisplayInfos', req)
+          .then(resp => commit('setProfileInfo', resp.data))
+          .catch(err => commit('setLastServerError', err.message, { root: true }))
+      },
       refresh ({ commit, dispatch, rootGetters, state }) {
         commit('setLastServerError', '', { root: true })
         const filter = state.filter
         const req = {authToken: rootGetters.authToken, ...filter}
         server.get('/posts', req)
-          .then(resp => commit('setPosts', resp.data))
+          .then(resp => { commit('setPosts', resp.data); dispatch('refreshProfileInfo') })
           .catch(err => commit('setLastServerError', err.message, { root: true }))
       }
     }
