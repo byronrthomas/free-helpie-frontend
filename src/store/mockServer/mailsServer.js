@@ -14,11 +14,20 @@ export function MailsServer(userAuth, postsServer) {
     return `${threadId.relatedToPostId}:${threadId.threadAuthor}`
   }
 
-  const recordThreadActivity = (threadId, username) => {
-    if (!activeThreads.hasOwnProperty(username)) {
+  const recordThreadActivity = (threadId, username, newUnreadMails) => {
+    const threadKey = makeThreadKey(threadId)
+    if (!activeThreads[username]) {
       activeThreads[username] = {}
     }
-    activeThreads[username][makeThreadKey(threadId)] = threadId
+    if (!activeThreads[username][threadKey]) {
+      activeThreads[username][threadKey] = {unreadMails: []}
+    }
+    activeThreads[username][threadKey] = {
+      id: threadId,
+      unreadMails: [
+        ...newUnreadMails, 
+        ...activeThreads[username][threadKey].unreadMails]
+    }
   }
 
   const getActiveThreads = (username) => {
@@ -28,7 +37,7 @@ export function MailsServer(userAuth, postsServer) {
     const result = []
     for (const threadKey in activeThreads[username]) {
       if (activeThreads[username].hasOwnProperty(threadKey)) {
-        result.push(activeThreads[username][threadKey]);
+        result.push(activeThreads[username][threadKey].id);
       }
     }
     return result
@@ -67,8 +76,8 @@ export function MailsServer(userAuth, postsServer) {
       const threadId = {relatedToPostId: data.relatedToPostId, threadAuthor: threadAuthor}
       persistMail(makeThreadKey(threadId), newMail)
       // const userToAlert = postAuthor === postUserName ? data.threadAuthor : postAuthor
-      recordThreadActivity(threadId, threadAuthor)
-      recordThreadActivity(threadId, postAuthor)
+      recordThreadActivity(threadId, threadAuthor, [newMail.id])
+      recordThreadActivity(threadId, postAuthor, [newMail.id])
 
       // console.log('activeThreads', activeThreads)
       console.log('Posting mail succeeded')
@@ -122,6 +131,62 @@ export function MailsServer(userAuth, postsServer) {
       // console.log('username to look up', username)
       
       resolve({data: respData})
+    },
+    getUnreadThreads (reqData, resolve, reject) {
+      if (!reqData.authToken) {
+        reject(new Error('Error: you must be authenticated to view posts'))
+        return
+      }
+      const users = userAuth.syncGetAuthUsers(reqData.authToken)
+      if (users.length !== 1) {
+        reject(new Error('Error: can\'t work out your UserID from your auth token'))
+        return
+      }
+      const username = users[0].username
+      const respData = getActiveThreads(username)
+      // console.log('username to look up', username)
+      
+      resolve({data: respData})
+    },
+    postMarkAsRead (reqData, resolve, reject) {
+      if (!reqData.authToken || !userAuth.syncGetUserCanPostMails(reqData.authToken)) {
+        reject(new Error('Error: you must be authenticated to mark mails as read'))
+        return
+      }
+      const users = userAuth.syncGetAuthUsers(reqData.authToken)
+      // console.log(reqData)
+      if (users.length !== 1) {
+        reject(new Error('Error: can\'t work out your UserID from your auth token'))
+        return
+      }
+      const user = users[0]
+      if (!reqData.hasOwnProperty('data')) {
+        reject(new Error('Cannot mark as read - empty data'))
+        return
+      }
+      const data = reqData.data
+      if (!data.hasOwnProperty('relatedToPostId') || 
+        !data.hasOwnProperty('threadAuthor') ||
+        !data.hasOwnProperty('readMailId')) {
+        reject(new Error('Cannot mark mail as read - data must contain relatedToPostId and threadAuthor and readMailId'))
+        return
+      }
+      const threadKey = makeThreadKey({threadAuthor: data.threadAuthor, relatedToPostId: data.relatedToPostId})
+      
+      const activityForThread = activeThreads[user.username][threadKey]
+      const idToMark = data.readMailId
+      if (activityForThread && activityForThread.unreadMails.includes(idToMark)) {
+        activityForThread.unreadMails = activityForThread.unreadMails.filter(x => x !== idToMark)
+        resolve()
+      } else {
+        if (!activityForThread) {
+          reject(new Error('Cannot mark as read - thread not found'))
+        } else {
+          reject(new Error(`Cannot mark as read - unread mails does not contain ID ${idToMark} only has ` + activityForThread.unreadMails.join()))
+          return
+
+        }
+      }
     }
   }
   return srv

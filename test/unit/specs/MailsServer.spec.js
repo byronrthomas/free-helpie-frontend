@@ -111,7 +111,16 @@ describe ('MailsServer', () => {
   }),
 
   it('should refuse a post request where the user is not the postAuthor or the threadAuthor', () => {
-    fail()
+    const onError = jest.fn()
+    const onSuccess = jest.fn()
+
+    const onTest = new MailsServer(dummyAuther, dummyPostServer)
+    const anotherUser = INITIAL_MAIL_USERS[0]
+    const req = makeReqFromUser({data: TEST_MAIL_DATA}, anotherUser)
+    onTest.post(req, onSuccess, onError)
+
+    expect(onError.mock.calls).toEqual([[expect.any(Error)]])
+    expect(onSuccess.mock.calls).toHaveLength(0)
     // Again, I could just make it so that I don't trust & check I write it
   })
 
@@ -214,35 +223,32 @@ describe ('MailsServer', () => {
           shouldRunSuccessfully(onTest.getActiveThreads, reqByPostAuthor, checkRes)
         })
       }
-    }
 
-    for (let i = 0; i < expectedMailThreads.length; ++i) {
-      const thread = expectedMailThreads[i]
-      const userToCheck = thread.userWithUnread
-      it(`initially ${thread.userWithUnread.username} should have unread mails for thread ${i}`, () => {
-        const reqByUser = makeReqFromUser({}, userToCheck)
-        const checkRes = res => expect(res.data).toContain(thread.threadId)
+      it(`initially ${thread.userWithUnread.username} should have unread mails for thread ${thread.threadName}`, () => {
+        const reqByUser = makeReqFromUser({}, thread.userWithUnread)
+        const checkRes = res => expect(res.data).toEqual(expect.arrayContaining([thread.threadId]))
         shouldRunSuccessfully(onTest.getUnreadThreads, reqByUser, checkRes)
       })
     }
 
-    for (const subject of ['post author', 'thread author']) {
-      it('should initially report the ')
+    const threadToWorkWith = expectedMailThreads[0]
+    it (`should be possible for ${threadToWorkWith.userWithUnread.username} to mark thread ${threadToWorkWith.threadName} as read`, () => {
+      const reqByUser = makeReqFromUser({data: {readMailId: 1, ...threadToWorkWith.threadId}}, threadToWorkWith.userWithUnread)
+      shouldRunSuccessfully(onTest.postMarkAsRead, reqByUser)
+    })
 
-      describe(`after the ${subject} has read the thread`, () => {
-        it('should not appear as unread for them when queried', () => {
-          fail()
-        })
-  
-        it('should switch back to unread if another mail occurs', () => {
-          fail()
-        })
-
-        it('should not become unread if they mail and no other mail occurs', () => {
-          fail()
-        })
+    describe(`after ${threadToWorkWith.userWithUnread.username} has read the thread`, () => {
+      it('should not appear as unread for them when queried', () => {
+        fail()
       })
-    }
 
+      it('should switch back to unread if another mail occurs', () => {
+        fail()
+      })
+
+      it('should not become unread if they mail and no other mail occurs', () => {
+        fail()
+      })
+    })
   })
 })
