@@ -1,7 +1,7 @@
 <template>
   <div>
     <mail-item
-      v-for="mail in sortedMailItems"
+      v-for="mail in mailItems"
       :key="mail.id"
       :mail="mail"
       :avatar="avatarImage(mail)"/>
@@ -80,11 +80,8 @@ export default {
     }
   },
   data () {
-    const sortedMailItems = [...this.mailItems]
-
     return {
-      newMailText: '',
-      sortedMailItems: sortedMailItems
+      newMailText: ''
     }
   },
   computed: {

@@ -25,7 +25,7 @@ exports[`Mail thread container should be rendered correctly when there are messa
           <p
             style="float: right;"
           >
-            2017-12-22 00:00:00
+            2014-11-10 00:00:01
           </p>
         </div>
       </div>
@@ -103,7 +103,7 @@ exports[`Mail thread container should be rendered correctly when there are messa
           <p
             style="float: right;"
           >
-            2017-12-22 00:00:00
+            2014-11-10 00:00:01
           </p>
         </div>
       </div>
@@ -181,7 +181,7 @@ exports[`Mail thread container should be rendered correctly when there are messa
           <p
             style="float: right;"
           >
-            2017-12-22 00:00:00
+            2014-11-10 00:00:01
           </p>
         </div>
       </div>

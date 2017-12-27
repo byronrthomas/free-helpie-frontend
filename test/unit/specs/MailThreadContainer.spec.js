@@ -3,12 +3,6 @@ import { mount } from 'vue-test-utils'
 import MailThreadContainer from '@/loggedIn/homePage/shared/MailThreadContainer.vue'
 import { fail } from 'assert';
 
-function mailWithDate (sentDate) {
-  return {
-    id: 0,
-    sent: sentDate}
-}
-
 function makeOptionsForConnectCancel (connectCancel) {
   return {
     propsData: {
@@ -45,21 +39,6 @@ function makeAMailSentBy (user) {
 const NO_MAILS = makeOptions([])
 
 describe('Mail thread container', () => {
-  it('should sort mail items in reverse sent order', () => {
-    const inputMails = [
-      new Date(2010, 1, 1, 11, 11, 5),
-      new Date(2011, 1, 1, 11, 11, 5),
-      new Date(2010, 1, 1, 11, 10, 5),
-      new Date(2010, 2, 1, 11, 11, 5),
-    ].map(mailWithDate)
-
-    const expectedOrder = 
-      [inputMails[1], inputMails[3], inputMails[0], inputMails[2]]
-
-    const onTest = mount(MailThreadContainer, makeOptions(inputMails))
-    expect(onTest.vm.sortedMailItems).toEqual(expectedOrder)
-  })
-
   it('should return !sentByCurrentUser if the sender of the mail is not the current user', () => {
     const onTest = mount(MailThreadContainer, NO_MAILS)
     expect(onTest.vm.sentByCurrentUser({sender: 'SomebodyElse'})).toBeFalsy()
@@ -100,12 +79,12 @@ describe('Mail thread container', () => {
   })
 
   const allowedText = allowed => allowed ? 'allowed' : 'not allowed'
-  const aMail = mailWithDate(new Date(2017, 11, 22))
+  const aMail = makeAMailSentBy('AnotherUser')
   for (const hasMessages of [false, true]) {
     const messagesText = hasMessages ? 'messages' : 'no messages'
     for (const connectOrCancelState of ['disabled', 'connectAllowed', 'cancelAllowed']) {
       it(`should be rendered correctly when there are ${messagesText} and the cancelConnect state is ${connectOrCancelState}`, () => {
-        const msgs = hasMessages ? [{...aMail, sender: 'AnotherUser'}] : []
+        const msgs = hasMessages ? [aMail] : []
         const options = {
           propsData: {
             mailItems: msgs,
