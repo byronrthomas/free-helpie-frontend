@@ -75,7 +75,7 @@ export function MailsServer (userAuth, postsServer) {
         return
       }
       const postAuthorId = postsServer.syncGetPostedBy(data.relatedToPostId)
-      if (!postAuthorId) {
+      if (typeof postAuthorId !== 'number') {
         reject(new Error(`Cannot post a mail related to - ${data.relatedToPostId} - can't find this post`))
         return
       }
@@ -114,6 +114,7 @@ export function MailsServer (userAuth, postsServer) {
         return
       }
       const userIds = userAuth.syncGetAuthUsers(reqData.authToken)
+      console.log('Post email req: ', reqData)
       // console.log(reqData)
       if (userIds.length !== 1) {
         reject(new Error('Error: can\'t work out your UserID from your auth token'))

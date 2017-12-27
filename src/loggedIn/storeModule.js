@@ -30,8 +30,10 @@ const EMPTY_USER_PROFILE = {
 function extractUserData (resp) {
   let users = []
   for (let key in resp.data) {
-    const user = {profile: resp.data[key], userId: key}
-    users.push(user)
+    if (resp.data.hasOwnProperty(key)) {
+      const user = {profile: resp.data[key], userId: parseInt(key)}
+      users.push(user)
+    }
   }
   if (users.length === 0) {
     return EMPTY_USER_PROFILE

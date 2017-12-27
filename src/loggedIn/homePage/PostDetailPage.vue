@@ -1,7 +1,7 @@
 <template>
   <div>
     <button class="btn btn-primary" @click="toggleFavourite">{{ toggleSaveText }}</button>
-    <router-link tag="button" :to="{name: 'editPost', params: {postId: postId}}" v-if="ableToEdit" class="btn btn-primary">Edit</router-link>
+    <router-link tag="button" :to="{name: 'editPost', params: {postId: postKey}}" v-if="ableToEdit" class="btn btn-primary">Edit</router-link>
     <button v-if="ableToEdit" class="btn btn-primary" @click="deletePost">Delete</button>
     <h3>{{ post.title }}</h3>
     <p><strong>Requested by</strong> {{ postersName }} </p>
@@ -52,8 +52,16 @@ export default {
       myAvatar: {altText: 'You'}
     }
   },
-  props: ['postId'],
+  props: {
+    postId: String,
+    validator (value) {
+      return !isNaN(parseInt(value))
+    }
+  },
   computed: {
+    postKey () {
+      return parseInt(this.postId)
+    },
     post () {
       if (this.storedPost) {
         return this.storedPost
@@ -87,7 +95,7 @@ export default {
       return this.post.postedBy === this.username
     },
     isFavourited () {
-      return this.favouritePostIds.includes(this.postId)
+      return this.favouritePostIds.includes(this.postKey)
     },
     toggleSaveText () {
       return this.isFavourited ? 'Unfavourite' : 'Favourite'
@@ -110,9 +118,9 @@ export default {
       mailItems: 'loggedin/postthread/mailItems'})
   },
   created () {
-    this.$store.dispatch('loggedin/postdetails/getPost', this.postId)
+    this.$store.dispatch('loggedin/postdetails/getPost', this.postKey)
     const mailThreadQuery = {
-      relatedToPostId: this.postId,
+      relatedToPostId: this.postKey,
       threadAuthor: this.userId,
       sortField: 'sent',
       sortOrderAsc: true
@@ -125,15 +133,15 @@ export default {
     },
     deletePost () {
       if (confirm('You are about to delete this post - are you sure?')) {
-        this.$store.dispatch('loggedin/postdetails/deletePost', {postId: this.postId, successCallback: this.onDeleted})
+        this.$store.dispatch('loggedin/postdetails/deletePost', {postId: this.postKey, successCallback: this.onDeleted})
       }
     },
     toggleFavourite () {
       const storeAction = !this.isFavourited ? 'favouritePost' : 'unfavouritePost'
-      this.$store.dispatch('loggedin/' + storeAction, this.postId)
+      this.$store.dispatch('loggedin/' + storeAction, this.postKey)
     },
     sendMail (mailText) {
-      this.$store.dispatch('loggedin/postthread/newMail', {relatedToPostId: this.postId, threadAuthor: this.userId, mailText: mailText})
+      this.$store.dispatch('loggedin/postthread/newMail', {relatedToPostId: this.postKey, threadAuthor: this.userId, mailText: mailText})
     }
   },
   components: {
