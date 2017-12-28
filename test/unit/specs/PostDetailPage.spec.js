@@ -117,7 +117,7 @@ describe('PostDetailsPage', () => {
   })
 
   it('should dispatch getMailThread(thread_id, sent_date ASC) if post.postedBy !== currentUser', () => {
-    shallow(PostDetailPage, {localVue, store, propsData: {postId: otherUserPostId}})
+    shallow(PostDetailPage, {localVue, store, propsData: {postId: `${otherUserPostId}`}})
 
     const expectedActionData = {
       relatedToPostId: otherUserPostId,
@@ -130,7 +130,7 @@ describe('PostDetailsPage', () => {
   })
 
   it('should display a link to the mailbox if post.postedBy === currentUser', () => {
-    const onTest = mount(PostDetailPage, {localVue, store, propsData: {postId: currentUsersPostId.toString()}})
+    const onTest = mount(PostDetailPage, {localVue, store, propsData: {postId: `${currentUsersPostId}`}})
     expect(onTest.vm.postedByCurrentUser).toBe(true)
 
     // expect(onTest.contains('[text="your mailbox"]')).toBe(true)
@@ -138,7 +138,7 @@ describe('PostDetailsPage', () => {
   })
 
   it('should dispatch newEmail(post_id, post_author, thread_author, msg_text) if it receives a sendEmail event', () => {
-    const onTest = shallow(PostDetailPage, {localVue, store, propsData: {postId: otherUserPostId.toString()}})
+    const onTest = shallow(PostDetailPage, {localVue, store, propsData: {postId: `${otherUserPostId}`}})
 
     const emailText = 'This is a test email'
     // Ideally we would trigger the event from the MTC, rather than call the method directly
@@ -154,7 +154,7 @@ describe('PostDetailsPage', () => {
   })
 
   it('should pass on mails in the thread to its MailThreadContainer component', () => {
-    const onTest = mount(PostDetailPage, {localVue, store, propsData: {postId: otherUserPostId}})
+    const onTest = mount(PostDetailPage, {localVue, store, propsData: {postId: `${otherUserPostId}`}})
     
     expect(onTest.find(MailThreadContainer).vm.mailItems).toEqual(testEmails)
   })
