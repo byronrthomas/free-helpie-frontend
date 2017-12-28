@@ -18,8 +18,8 @@ export function MailsServer (userAuth, postsServer) {
     return `${threadId.relatedToPostId}:${threadId.threadAuthor}`
   }
 
-  const recordThreadActivity = (threadId, username, newUnreadMails) => {
-    const threadKey = makeThreadKey(threadId)
+  const recordThreadActivity = (threadInfo, username, newUnreadMails) => {
+    const threadKey = makeThreadKey(threadInfo.threadId)
     if (!activeThreads[username]) {
       activeThreads[username] = {}
     }
@@ -27,13 +27,19 @@ export function MailsServer (userAuth, postsServer) {
       activeThreads[username][threadKey] = {unreadMails: []}
     }
     activeThreads[username][threadKey] = {
-      id: threadId,
+      info: threadInfo,
       unreadMails: [
         ...newUnreadMails,
         ...activeThreads[username][threadKey].unreadMails]
     }
   }
 
+  const makeActivityRecord = activeThreadRecord => {
+    return {
+      ...activeThreadRecord.info,
+      unread: activeThreadRecord.unreadMails.length > 0
+    }
+  }
   const getActiveThreads = (username) => {
     if (!activeThreads[username]) {
       return []
@@ -41,7 +47,7 @@ export function MailsServer (userAuth, postsServer) {
     const result = []
     for (const threadKey in activeThreads[username]) {
       if (activeThreads[username].hasOwnProperty(threadKey)) {
-        result.push(activeThreads[username][threadKey].id)
+        result.push(makeActivityRecord(activeThreads[username][threadKey]))
       }
     }
     return result
@@ -55,7 +61,7 @@ export function MailsServer (userAuth, postsServer) {
     for (const threadKey in activeThreads[username]) {
       if (activeThreads[username].hasOwnProperty(threadKey) &&
         activeThreads[username][threadKey].unreadMails.length > 0) {
-        result.push(activeThreads[username][threadKey].id)
+        result.push(activeThreads[username][threadKey].info.threadId)
       }
     }
     return result
@@ -95,13 +101,18 @@ export function MailsServer (userAuth, postsServer) {
 
       const newMail = {sender: authedUserId, sent: new Date(), text: data.mailText, id: nextMailId++}
       const threadId = {relatedToPostId: data.relatedToPostId, threadAuthor: threadAuthor}
+      const threadInfo = {
+        threadId: threadId,
+        postAuthor: postAuthorId,
+        latestMessageSent: newMail.sent
+      }
       persistMail(makeThreadKey(threadId), newMail)
       if (authedUserId === postAuthorId) {
-        recordThreadActivity(threadId, threadAuthor, [newMail.id])
-        recordThreadActivity(threadId, postAuthorId, [])
+        recordThreadActivity(threadInfo, threadAuthor, [newMail.id])
+        recordThreadActivity(threadInfo, postAuthorId, [])
       } else {
-        recordThreadActivity(threadId, threadAuthor, [])
-        recordThreadActivity(threadId, postAuthorId, [newMail.id])
+        recordThreadActivity(threadInfo, threadAuthor, [])
+        recordThreadActivity(threadInfo, postAuthorId, [newMail.id])
       }
 
       // console.log('activeThreads', activeThreads)
@@ -114,7 +125,7 @@ export function MailsServer (userAuth, postsServer) {
         return
       }
       const userIds = userAuth.syncGetAuthUsers(reqData.authToken)
-      console.log('Post email req: ', reqData)
+      // console.log('Post email req: ', reqData)
       // console.log(reqData)
       if (userIds.length !== 1) {
         reject(new Error('Error: can\'t work out your UserID from your auth token'))

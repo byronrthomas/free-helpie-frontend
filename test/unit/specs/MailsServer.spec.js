@@ -170,16 +170,46 @@ describe ('MailsServer', () => {
 
     it('the thread should be returned by a query to fetch active threads of the post author', () => {
       const reqByPostAuthor = makeReqFromUser({}, POST_AUTHOR_ID)
-      shouldRunSuccessfully(onTest.getActiveThreads, reqByPostAuthor, expectRespDataToEqual([mailThreadId]))
+      const expectedThreadInfo = expect.objectContaining({threadId: mailThreadId})
+      shouldRunSuccessfully(onTest.getActiveThreads, reqByPostAuthor, expectRespDataToEqual([expectedThreadInfo]))
     })
 
     it('the thread should be returned by a query to fetch active threads of the thread author', () => {
-      shouldRunSuccessfully(onTest.getActiveThreads, makeReq({}), expectRespDataToEqual([mailThreadId]))
+      const expectedThreadInfo = expect.objectContaining({threadId: mailThreadId})
+      shouldRunSuccessfully(onTest.getActiveThreads, makeReq({}), expectRespDataToEqual([expectedThreadInfo]))
+    })
+
+    it('should report the post author in the thread info when fetching active threads', () => {
+      const expectedThreadInfo = expect.objectContaining({postAuthor: POST_AUTHOR_ID.id})
+      shouldRunSuccessfully(onTest.getActiveThreads, makeReq({}), expectRespDataToEqual([expectedThreadInfo]))
+    })
+
+    it('should report the latest sent time in the thread info when fetching active threads', () => {
+      let persistedMail
+      onTest.getMailThread(makeReq({data: mailThreadId}), 
+        (res) => {persistedMail = res.data[0]},
+        (err) => {throw err})
+
+      const expectedThreadInfo = expect.objectContaining({latestMessageSent: persistedMail.sent})
+      shouldRunSuccessfully(onTest.getActiveThreads, makeReq({}), expectRespDataToEqual([expectedThreadInfo]))
+    })
+
+    it('should report that the thread is read when the thread author fetches active threads', () => {
+      const expectedThreadInfo = expect.objectContaining({unread: false})
+      shouldRunSuccessfully(onTest.getActiveThreads, makeReq({}), expectRespDataToEqual([expectedThreadInfo]))
+    })
+
+    it('should report that the thread is unread when the post author fetches active threads', () => {
+      const expectedThreadInfo = expect.objectContaining({unread: true})
+      const req = makeReqFromUser({}, POST_AUTHOR_ID)
+      shouldRunSuccessfully(onTest.getActiveThreads, req, expectRespDataToEqual([expectedThreadInfo]))
     })
 
     describe('after posting another mail on the same thread with some delay', () => {
+      let startTimeForSecondPost
       beforeEach((done) => {
         setTimeout(() => {
+          startTimeForSecondPost = new Date()
           onTest.post(
             makeReq({data: mailContents}), 
             res => { done() },
@@ -192,6 +222,15 @@ describe ('MailsServer', () => {
           expect(res.data).toHaveLength(2)
         }
         shouldRunSuccessfully(onTest.getMailThread, makeReq({data: mailThreadId}), checkRes)
+      })
+
+      it('should update the last activity time on the thread', () => {
+        const checkRes = res => {
+          expect(res.data).toHaveLength(1)
+          expect(res.data[0].latestMessageSent).toBeTruthy()
+          expect(res.data[0].latestMessageSent.getTime()).toBeGreaterThanOrEqual(startTimeForSecondPost.getTime())
+        }
+        shouldRunSuccessfully(onTest.getActiveThreads, makeReq({}), checkRes)
       })
 
       for (const orderIsAscending of [false, true]) {
@@ -219,6 +258,11 @@ describe ('MailsServer', () => {
     runAll(onTest.post, arrayCollect(reqsForThread, INITIAL_MAILS))
   })
 
+  const threadAppearsAsUnread = threadId => res => 
+    expectRespDataToEqual(
+      expect.arrayContaining([expect.objectContaining({threadId, unread: true})]))
+  const threadIsPresent = threadId => res => expectRespDataToEqual(expect.arrayContaining([threadId]))
+      
   describe('after multiple mails have been posted on multiple threads', () => {
     const expectedMailThreads = INITIAL_MAILS
     const postedThreadIds = expectedMailThreads.map(thread => thread.threadId)
@@ -236,15 +280,20 @@ describe ('MailsServer', () => {
           : thread.threadAuthor
         it(`should report thread ${thread.threadName} as active for the ${role} - ${user.username}`, () => {
           const reqByPostAuthor = makeReqFromUser({}, user)
-          const checkRes = res => expect(res.data).toEqual(expect.arrayContaining([thread.threadId]))
+          const expectedThreadInfo = expect.objectContaining({threadId: thread.threadId})
+          const checkRes = expectRespDataToEqual(expect.arrayContaining([expectedThreadInfo]))
           shouldRunSuccessfully(onTest.getActiveThreads, reqByPostAuthor, checkRes)
         })
       }
 
       it(`initially ${thread.userWithUnread.username} should have unread mails for thread ${thread.threadName}`, () => {
         const reqByUser = makeReqFromUser({}, thread.userWithUnread)
-        const checkRes = res => expect(res.data).toEqual(expect.arrayContaining([thread.threadId]))
-        shouldRunSuccessfully(onTest.getUnreadThreads, reqByUser, checkRes)
+        shouldRunSuccessfully(onTest.getUnreadThreads, reqByUser, threadIsPresent(thread.threadId))
+      })
+
+      it(`initially ${thread.userWithUnread.username} should have unread mails for thread ${thread.threadName} according to getActiveThreads`, () => {
+        const reqByUser = makeReqFromUser({}, thread.userWithUnread)
+        shouldRunSuccessfully(onTest.getActiveThreads, reqByUser, threadAppearsAsUnread(thread.threadId))
       })
     }
 
@@ -261,10 +310,17 @@ describe ('MailsServer', () => {
         shouldRunSuccessfully(onTest.postMarkAsRead, reqByUser)
       })
 
-      const getUnreadThreadsReq = makeReqFromUser({}, userWhoStartsWithUnread)
-      const checkThreadIsRead = res => expect(res.data).not.toEqual(expect.arrayContaining([threadToWorkWith.threadId]))
-      it('should not appear as unread for them when queried', () => {
-        shouldRunSuccessfully(onTest.getUnreadThreads, getUnreadThreadsReq, checkThreadIsRead)
+      const threadsReqForUser = makeReqFromUser({}, userWhoStartsWithUnread)
+      const threadIsNotPresent = res => expect(res.data).not.toEqual(expect.arrayContaining([threadToWorkWith.threadId]))
+      it('should appear as read for them when querying for unread', () => {
+        shouldRunSuccessfully(onTest.getUnreadThreads, threadsReqForUser, threadIsNotPresent)
+      })
+
+      const threadAppearsAsRead = res => expectRespDataToEqual(expect.arrayContaining(
+        [expect.objectContaining({threadId: threadToWorkWith.threadId, unread: false})]
+      ))
+      it('should appear as read for them when querying for active', () => {
+        shouldRunSuccessfully(onTest.getActiveThreads, threadsReqForUser, threadAppearsAsRead)
       })
 
       const sendNewMailOnThreadFromUser = user =>
@@ -273,7 +329,7 @@ describe ('MailsServer', () => {
           const req = makeReqFromUser({data: newMailData}, user)
           shouldRunSuccessfully(onTest.post, req)
         }
-      it('should switch back to unread if another mail occurs', () => {
+      it('should switch back to unread according to getUnread if another mail occurs', () => {
         const userToSend = 
           userWhoStartsWithUnread.username === threadToWorkWith.postAuthor.username 
           ? threadToWorkWith.threadAuthor 
@@ -283,12 +339,30 @@ describe ('MailsServer', () => {
         const checkThreadIsUnread = res => {
           expect(res.data).toEqual(expect.arrayContaining([threadToWorkWith.threadId]))
         }
-        shouldRunSuccessfully(onTest.getUnreadThreads, getUnreadThreadsReq, checkThreadIsUnread)
+        shouldRunSuccessfully(onTest.getUnreadThreads, threadsReqForUser, checkThreadIsUnread)
       })
 
-      it('should not become unread if they mail again and no other mail occurs', () => {
+      it('should switch back to unread according to getActive if another mail occurs', () => {
+        const userToSend = 
+          userWhoStartsWithUnread.username === threadToWorkWith.postAuthor.username 
+          ? threadToWorkWith.threadAuthor 
+          : threadToWorkWith.postAuthor
+        
+        sendNewMailOnThreadFromUser(userToSend)
+        const checkThreadIsUnread = res => {
+          expect(res.data).toEqual(expect.arrayContaining([threadToWorkWith.threadId]))
+        }
+        shouldRunSuccessfully(onTest.getUnreadThreads, threadsReqForUser, checkThreadIsUnread)
+      })
+
+      it('should not become unread according to getUnread if they mail again and no other mail occurs', () => {
         sendNewMailOnThreadFromUser(userWhoStartsWithUnread)
-        shouldRunSuccessfully(onTest.getUnreadThreads, getUnreadThreadsReq, checkThreadIsRead)
+        shouldRunSuccessfully(onTest.getUnreadThreads, threadsReqForUser, threadIsNotPresent)
+      })
+
+      it('should not become unread according to getActive if they mail again and no other mail occurs', () => {
+        sendNewMailOnThreadFromUser(userWhoStartsWithUnread)
+        shouldRunSuccessfully(onTest.getActiveThreads, threadsReqForUser, threadAppearsAsRead)
       })
     })
   })
