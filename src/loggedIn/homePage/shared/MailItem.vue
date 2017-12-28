@@ -13,9 +13,7 @@
 </template>
 
 <script>
-function formatDateTime (date) {
-  return date.toLocaleDateString() + ' ' + date.toLocaleTimeString()
-}
+import {formatDateTime} from '../../../format-utils/formatDateTime'
 
 export default {
   props: {
