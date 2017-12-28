@@ -133,7 +133,6 @@ describe('PostDetailsPage', () => {
     const onTest = mount(PostDetailPage, {localVue, store, propsData: {postId: `${currentUsersPostId}`}})
     expect(onTest.vm.postedByCurrentUser).toBe(true)
 
-    // expect(onTest.contains('[text="your mailbox"]')).toBe(true)
     expect(onTest.contains('#linkToMailbox')).toBe(true)
   })
 
