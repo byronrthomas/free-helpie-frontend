@@ -31,6 +31,11 @@ export function singleMailThreadStore (server) {
           .then(() => dispatch('refreshMails'))
           .catch(err => commit('setLastServerError', err.message, { root: true }))
       },
+      markThreadAsRead ({commit, rootGetters, dispatch}, data) {
+        commit('setLastServerError', '', {root: true})
+        server.post('/mailReads', {authToken: rootGetters.authToken, data: data})
+          .catch(err => commit('setLastServerError', err.message, { root: true }))
+      },
       getMailThread ({commit, dispatch}, data) {
         commit('setThreadQuery', data)
         dispatch('refreshMails')

@@ -210,7 +210,7 @@ export function MailsServer (userAuth, postsServer) {
 
       const activityForThread = activeThreads[userId][threadKey]
       const timestampToMark = data.timestampReadUpTo
-      if (activityForThread && (timestampToMark === activityForThread.info.latestMessageSent)) {
+      if (activityForThread && (timestampToMark.getTime() === activityForThread.info.latestMessageSent.getTime())) {
         activityForThread.unreadMails = []
         resolve()
       } else {

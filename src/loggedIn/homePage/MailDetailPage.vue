@@ -60,6 +60,24 @@ export default {
     this.$store.dispatch('loggedin/threaddetails/getMailThread', mailThreadQuery)
     this.$store.dispatch('loggedin/threaddetailsusers/getUserInfo', [this.otherUserId])
   },
+  watch: {
+    mailItems (value) {
+      if (value.length > 0) {
+        const times = value.map(mail => mail.sent.getTime())
+        const maxTime = new Date()
+        const maxT = Math.max(...times)
+        maxTime.setTime(maxT)
+        console.log('maxTime = ', maxTime)
+        console.log('times = ', times)
+        const reqData = {
+          timestampReadUpTo: maxTime,
+          relatedToPostId: this.threadId.relatedToPostId,
+          threadAuthor: this.threadId.threadAuthor
+        }
+        this.$store.dispatch('loggedin/threaddetails/markThreadAsRead', reqData)
+      }
+    }
+  },
   components: {
     'mail-thread-container': MailThreadContainer
   }
