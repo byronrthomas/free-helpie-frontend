@@ -298,15 +298,30 @@ describe ('MailsServer', () => {
     }
 
     const threadToWorkWith = expectedMailThreads[0]
+    const makeReqFromUserWithUnread = req => makeReqFromUser(req, threadToWorkWith.userWithUnread)
+    const threadIdMatches = thrd => {
+      return thrd.threadId.relatedToPostId === threadToWorkWith.threadId.relatedToPostId
+        && thrd.threadId.threadAuthor === threadToWorkWith.threadId.threadAuthor
+    }
+    const getLatestWrittenForThread = () => {
+      let lastThreadActivity
+      onTest.getActiveThreads(
+        makeReqFromUserWithUnread({}),
+        res => {lastThreadActivity = res.data.find(threadIdMatches).latestMessageSent},
+        err => {throw err}
+      )
+      return lastThreadActivity
+    }
     it (`should be possible for ${threadToWorkWith.userWithUnread.username} to mark thread ${threadToWorkWith.threadName} as read`, () => {
-      const reqByUser = makeReqFromUser({data: {readMailId: 1, ...threadToWorkWith.threadId}}, threadToWorkWith.userWithUnread)
+
+      const reqByUser = makeReqFromUserWithUnread({data: {timestampReadUpTo: getLatestWrittenForThread(), ...threadToWorkWith.threadId}})
       shouldRunSuccessfully(onTest.postMarkAsRead, reqByUser)
     })
 
     describe(`after ${threadToWorkWith.userWithUnread.username} has read the thread`, () => {
       const userWhoStartsWithUnread = threadToWorkWith.userWithUnread
       beforeEach(() => {
-        const reqByUser = makeReqFromUser({data: {readMailId: 1, ...threadToWorkWith.threadId}}, userWhoStartsWithUnread)
+        const reqByUser = makeReqFromUser({data: {timestampReadUpTo: getLatestWrittenForThread(), ...threadToWorkWith.threadId}}, userWhoStartsWithUnread)
         shouldRunSuccessfully(onTest.postMarkAsRead, reqByUser)
       })
 

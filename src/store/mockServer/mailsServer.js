@@ -202,22 +202,22 @@ export function MailsServer (userAuth, postsServer) {
       const userId = req.userId
       if (!data.hasOwnProperty('relatedToPostId') ||
         !data.hasOwnProperty('threadAuthor') ||
-        !data.hasOwnProperty('readMailId')) {
-        reject(new Error('Cannot mark mail as read - data must contain relatedToPostId and threadAuthor and readMailId'))
+        !data.hasOwnProperty('timestampReadUpTo')) {
+        reject(new Error('Cannot mark mail as read - data must contain relatedToPostId and threadAuthor and timestampReadUpTo'))
         return
       }
       const threadKey = makeThreadKey({threadAuthor: data.threadAuthor, relatedToPostId: data.relatedToPostId})
 
       const activityForThread = activeThreads[userId][threadKey]
-      const idToMark = data.readMailId
-      if (activityForThread && activityForThread.unreadMails.includes(idToMark)) {
-        activityForThread.unreadMails = activityForThread.unreadMails.filter(x => x !== idToMark)
+      const timestampToMark = data.timestampReadUpTo
+      if (activityForThread && (timestampToMark === activityForThread.info.latestMessageSent)) {
+        activityForThread.unreadMails = []
         resolve()
       } else {
         if (!activityForThread) {
           reject(new Error('Cannot mark as read - thread not found'))
         } else {
-          reject(new Error(`Cannot mark as read - unread mails does not contain ID ${idToMark} only has ` + activityForThread.unreadMails.join()))
+          reject(new Error(`Cannot mark as read - latest message sent is ${activityForThread.info.latestMessageSent} but submitted latest read timestamp was ${timestampToMark}`))
         }
       }
     },
