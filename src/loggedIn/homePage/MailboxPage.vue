@@ -15,7 +15,7 @@ import {mapGetters} from 'vuex'
 
 function arrayDistinct (inputArray) {
   const outputSet = new Set(inputArray)
-  return new Array(outputSet.keys())
+  return Array.from(outputSet.keys())
 }
 
 export default {
