@@ -106,6 +106,19 @@ export default {
       }
     }
   },
+  watch: {
+    mailItems (updatedMails) {
+      if (updatedMails.length > 0) {
+        const times = updatedMails.map(mail => mail.sent.getTime())
+        const maxTime = new Date()
+        const maxT = Math.max(...times)
+        maxTime.setTime(maxT)
+        // console.log('maxTime = ', maxTime)
+        // console.log('times = ', times)
+        this.$emit('readUpToTimestamp', maxTime)
+      }
+    }
+  },
   components: {
     'mail-item': MailItem
   }

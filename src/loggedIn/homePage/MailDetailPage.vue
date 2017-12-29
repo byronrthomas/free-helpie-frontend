@@ -7,7 +7,8 @@
     :my-avatar="myAvatar"
     :other-avatar="otherAvatar"
     :user-id="userId"
-    @sendMail="sendMail($event)"/>
+    @sendMail="sendMail($event)"
+    @readUpToTimestamp="markAsRead"/>
   </div>
 </template>
 
@@ -28,6 +29,14 @@ export default {
   methods: {
     sendMail (mailText) {
       this.$store.dispatch('loggedin/threaddetail/newMail', {relatedToPostId: this.threadId.relatedToPostId, threadAuthor: this.threadId.threadAuthor, mailText: mailText})
+    },
+    markAsRead (latestReadTimestamp) {
+      const reqData = {
+        timestampReadUpTo: latestReadTimestamp,
+        relatedToPostId: this.threadId.relatedToPostId,
+        threadAuthor: this.threadId.threadAuthor
+      }
+      this.$store.dispatch('loggedin/threaddetails/markThreadAsRead', reqData)
     }
   },
   computed: {
@@ -59,24 +68,6 @@ export default {
     }
     this.$store.dispatch('loggedin/threaddetails/getMailThread', mailThreadQuery)
     this.$store.dispatch('loggedin/threaddetailsusers/getUserInfo', [this.otherUserId])
-  },
-  watch: {
-    mailItems (value) {
-      if (value.length > 0) {
-        const times = value.map(mail => mail.sent.getTime())
-        const maxTime = new Date()
-        const maxT = Math.max(...times)
-        maxTime.setTime(maxT)
-        console.log('maxTime = ', maxTime)
-        console.log('times = ', times)
-        const reqData = {
-          timestampReadUpTo: maxTime,
-          relatedToPostId: this.threadId.relatedToPostId,
-          threadAuthor: this.threadId.threadAuthor
-        }
-        this.$store.dispatch('loggedin/threaddetails/markThreadAsRead', reqData)
-      }
-    }
   },
   components: {
     'mail-thread-container': MailThreadContainer

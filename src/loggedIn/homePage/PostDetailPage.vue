@@ -20,7 +20,8 @@
         :my-avatar="myAvatar"
         :other-avatar="postersAvatar"
         :user-id="userId"
-        @sendMail="sendMail($event)"/>
+        @sendMail="sendMail($event)"
+        @readUpToTimestamp="markAsRead"/>
     </div>
     <div v-else>
       <h5>This is your post</h5>
@@ -141,6 +142,14 @@ export default {
     },
     sendMail (mailText) {
       this.$store.dispatch('loggedin/postthread/newMail', {relatedToPostId: this.postKey, threadAuthor: this.userId, mailText: mailText})
+    },
+    markAsRead (latestReadTimestamp) {
+      const reqData = {
+        timestampReadUpTo: latestReadTimestamp,
+        relatedToPostId: this.postKey,
+        threadAuthor: this.userId
+      }
+      this.$store.dispatch('loggedin/postthread/markThreadAsRead', reqData)
     }
   },
   components: {
