@@ -1,13 +1,20 @@
 <template>
-  <div class="row">
-    <div class="col-xs-2" :class="classForThread">{{ withName }}</div>
-    <div class="col-xs-8" :class="classForThread">{{ subject }}</div>
-    <div class="col-xs-2" :class="classForThread">{{ formattedDate }}</div>
+  <div class="row mail-thread-summary" :class="classForRow">
+    <div class="col-xs-3" :class="classForElement">
+      <strong-if-true :condition="unread" :text="withName"/>
+    </div>
+    <div class="col-xs-7" :class="classForElement">
+      <strong-if-true :condition="unread" :text="subject"/>
+    </div>
+    <div class="col-xs-2" :class="classForElement">
+      <strong-if-true :condition="unread" :text="formattedDate"/>
+    </div>
   </div>
 </template>
 
 <script>
-import {formatDateTime} from '../../../format-utils/formatDateTime'
+import {formatDateTime} from '../../formatUtils/formatDateTime'
+import StrongIfTrue from './shared/StrongIfTrue.vue'
 
 export default {
   props: {
@@ -17,21 +24,39 @@ export default {
     lastMessageSent: Date
   },
   computed: {
-    classForThread () {
-      return {'unread-thread' : this.unread, 'read-thread': !this.unread}
+    classForElement () {
+      return {'unread-thread': this.unread, 'read-thread': !this.unread}
+    },
+    classForRow () {
+      return {'read-thread-row': !this.unread}
     },
     formattedDate () {
       return formatDateTime(this.lastMessageSent)
     }
+  },
+  components: {
+    'strong-if-true': StrongIfTrue
   }
 }
 </script>
 
-<style scoped>
-  unread-thread {
-    color: red
-  }
-  read-thread {
+<style>
+  .unread-thread {
     color: black
+  }
+  .read-thread {
+    color: black;
+  }
+  .read-thread-row {
+    background-color: #eaeaea;
+  }
+  .mail-thread-summary {
+    border-top: 1px;
+    border-bottom: 0px;
+    border-left: 0px;
+    border-right: 0px;
+    border-style: solid;
+    border-color: lightgray;
+    padding: 5px
   }
 </style>

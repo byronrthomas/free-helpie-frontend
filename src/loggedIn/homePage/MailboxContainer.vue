@@ -1,14 +1,29 @@
 <template>
-  <div class="container">
-    <mail-thread-summary-item
-      v-for="summary in threadSummaries"
-      :key="makeKey(summary)"
-      :last-message-sent="getActivityDate(summary)"
-      :subject="getSubject(summary)"
-      :unread="getUnread(summary)"
-      :with-name="getConversationName(summary)">
-    </mail-thread-summary-item>
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h3 class="panel-title">Your conversations</h3>
+    </div>
+    <div class="container table">
+        <div class="row mailbox-header">
+          <div class="col-xs-3"><strong>With</strong></div>
+          <div class="col-xs-7"><strong>Subject</strong></div>
+          <div class="col-xs-2"><strong>Sent</strong></div>
+        </div>
+        <mail-thread-summary-item
+          v-for="summary in threadSummaries"
+          :key="makeKey(summary)"
+          :last-message-sent="getActivityDate(summary)"
+          :subject="getSubject(summary)"
+          :unread="getUnread(summary)"
+          :with-name="getConversationName(summary)"
+          role="button"
+          @click="loadThread(summary)">
+        </mail-thread-summary-item>
+      
+    </div>
   </div>
+
+
 </template>
 
 <script>
@@ -27,7 +42,7 @@ export default {
       return `${threadId.relatedToPostId}-${threadId.threadAuthor}`
     },
     getOtherUserId (summary) {
-      return this.authoredByUser(summary) 
+      return this.authoredByUser(summary)
         ? summary.postAuthor
         : summary.threadId.threadAuthor
     },
@@ -41,13 +56,13 @@ export default {
       return summary.unread
     },
     getConversationName (summary) {
-      const otherUserInfo = this.userInfos[this.getOtherUserId(summary)]
-        || {name: '[unknown]'}
+      const otherUserInfo = this.userInfos[this.getOtherUserId(summary)] ||
+        {name: '[unknown]'}
       return otherUserInfo.name
     },
     getSubject (summary) {
-      const postInfo = this.postInfos[summary.threadId.relatedToPostId]
-        || {title: '...'}
+      const postInfo = this.postInfos[summary.threadId.relatedToPostId] ||
+        {title: '...'}
       return postInfo.title
     }
   },
@@ -57,3 +72,13 @@ export default {
 }
 </script>
 
+<style>
+  .mailbox-header {
+    border-bottom: 1px;
+    border-color: darkblue;
+    border-left: 0px;
+    border-right: 0px;
+    border-style: solid;
+    padding: 5px
+  }
+</style>

@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import {formatDateTime} from '../../../format-utils/formatDateTime'
+import {formatDateTime} from './../../../formatUtils/formatDateTime'
 
 export default {
   props: {
