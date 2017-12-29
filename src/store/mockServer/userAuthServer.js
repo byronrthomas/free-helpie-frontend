@@ -17,11 +17,11 @@ function makeReversibleMap () {
 }
 
 export function UserAuthServer () {
-  let initialUserData = { 
+  let initialUserData = {
     'test@test.com': {password: 'secret', userId: 3},
     'jd@jd.com': {password: 'jd', userId: 0},
     'ws@ws.com': {password: 'ws', userId: 1},
-    'js@js.com': {password: 'js', userId: 2},
+    'js@js.com': {password: 'js', userId: 2}
   }
   const userData = {...initialUserData}
   let nextId = -1

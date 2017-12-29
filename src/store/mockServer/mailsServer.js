@@ -68,6 +68,24 @@ export function MailsServer (userAuth, postsServer) {
   }
 
   const srv = {
+    directPost (threadId, mailData, postAuthorId) {
+      const senderId = mailData.sender
+      const newMail = {...mailData, id: nextMailId++}
+      const threadInfo = {
+        threadId: threadId,
+        postAuthor: postAuthorId,
+        latestMessageSent: newMail.sent
+      }
+      const threadAuthor = threadId.threadAuthor
+      persistMail(makeThreadKey(threadId), newMail)
+      if (senderId === postAuthorId) {
+        recordThreadActivity(threadInfo, threadAuthor, [newMail.id])
+        recordThreadActivity(threadInfo, postAuthorId, [])
+      } else {
+        recordThreadActivity(threadInfo, threadAuthor, [])
+        recordThreadActivity(threadInfo, postAuthorId, [newMail.id])
+      }
+    },
     postWithoutAuth (authedUserId, reqData, resolve, reject) {
       if (!reqData.hasOwnProperty('data')) {
         reject(new Error('Cannot post a mail - empty data'))
@@ -98,22 +116,9 @@ export function MailsServer (userAuth, postsServer) {
         reject(new Error('Cannot start a thread about a post you wrote yourself - who would you email?'))
         return
       }
-
-      const newMail = {sender: authedUserId, sent: new Date(), text: data.mailText, id: nextMailId++}
       const threadId = {relatedToPostId: data.relatedToPostId, threadAuthor: threadAuthor}
-      const threadInfo = {
-        threadId: threadId,
-        postAuthor: postAuthorId,
-        latestMessageSent: newMail.sent
-      }
-      persistMail(makeThreadKey(threadId), newMail)
-      if (authedUserId === postAuthorId) {
-        recordThreadActivity(threadInfo, threadAuthor, [newMail.id])
-        recordThreadActivity(threadInfo, postAuthorId, [])
-      } else {
-        recordThreadActivity(threadInfo, threadAuthor, [])
-        recordThreadActivity(threadInfo, postAuthorId, [newMail.id])
-      }
+      const newMail = {sender: authedUserId, sent: new Date(), text: data.mailText}
+      srv.directPost(threadId, newMail, postAuthorId)
 
       // console.log('activeThreads', activeThreads)
       console.log('Posting mail succeeded')

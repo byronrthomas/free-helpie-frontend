@@ -2,7 +2,7 @@ const user1 = {id: 1, username: 'User1', authToken: Math.random()}
 const user2 = {id: 2, username: 'User2', authToken: Math.random()}
 const user3 = {id: 3, username: 'User3', authToken: Math.random()}
 
-export const INITIAL_MAIL_USERS = [user1, user2, user3]
+export const TEST_MAIL_USERS = [user1, user2, user3]
 
 const postByUser1 = {
   postId: 101,
@@ -13,11 +13,11 @@ const postByUser2 = {
   postedBy: user2
 }
 
-export const INITIAL_POSTS = [postByUser1, postByUser2]
+export const TEST_POSTS = [postByUser1, postByUser2]
 
 /// Want a setup where a poster (user1) has multiple threads for one post (postByUser1),
 /// and some user has started multiple threads about other posts (user3)
-export const INITIAL_MAILS = [
+export const TEST_MAILS = [
   {threadName: '1',
     postAuthor: user1,
     threadAuthor: user2,

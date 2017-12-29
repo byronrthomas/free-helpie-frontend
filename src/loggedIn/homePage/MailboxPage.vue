@@ -13,6 +13,11 @@
 import MailboxContainer from './MailboxContainer.vue'
 import {mapGetters} from 'vuex'
 
+function arrayDistinct (inputArray) {
+  const outputSet = new Set(inputArray)
+  return new Array(outputSet.keys())
+}
+
 export default {
   computed: {
     ...mapGetters({
@@ -25,6 +30,7 @@ export default {
   methods: {
     loadThread (threadInfo) {
       const route = `maildetail?post=${threadInfo.relatedToPostId}author=${threadInfo.threadAuthor}`
+      this.$router.push(route)
     }
   },
   created () {
@@ -32,11 +38,11 @@ export default {
   },
   watch: {
     activeThreads (newValue) {
-      const postIdsToFind = newValue.map(thread => thread.threadId.relatedToPostId).distinct()
-      const usersToFind = newValue.map(thread => thread.threadId.threadAuthor).distinct()
-      usersToFind.concat(newVaule.map(thread => thread.postAuthor).distinct())
+      const postIdsToFind = arrayDistinct(newValue.map(thread => thread.threadId.relatedToPostId))
+      const threadUsersToFind = arrayDistinct(newValue.map(thread => thread.threadId.threadAuthor))
+      const postUsersToFind = arrayDistinct(newValue.map(thread => thread.postAuthor))
       this.$store.dispatch('loggedin/mailboxposts/setPostIdsFilter', postIdsToFind)
-      this.$store.dispatch('loggedin/mailboxusers/getUserInfo', usersToFind)
+      this.$store.dispatch('loggedin/mailboxusers/getUserInfo', threadUsersToFind.concat(postUsersToFind))
     }
   },
   components: {

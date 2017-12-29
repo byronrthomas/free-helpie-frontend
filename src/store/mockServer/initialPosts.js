@@ -48,5 +48,37 @@ A small amount of time once a week or once a month should be fine. We can do it 
       },
       slots: ['Daytime', 'Weekday']
     }
+  },
+  {
+    postedBy: 0,
+    title: 'Cut my hedge',
+    interests: ['House'],
+    skills: ['Gardening'],
+    locations: ['North-west London'],
+    remote: false,
+    description: 'My hedge really needs cutting and I\'ve just had a hip operation - should only take a days',
+    timings: {
+      regularAmount: {
+        unit: '8hr',
+        frequency: 'One-off'
+      },
+      slots: ['Weekend']
+    }
+  },
+  {
+    postedBy: 3,
+    title: 'Can somebody give me some executive coaching please',
+    interests: [],
+    skills: ['Coaching'],
+    locations: ['South-west London'],
+    remote: true,
+    description: 'Hey looking to improve my leadership skills, could somebody coach me please',
+    timings: {
+      regularAmount: {
+        unit: '1hr',
+        frequency: 'Week'
+      },
+      slots: ['Weekend', 'Evening']
+    }
   }
 ]

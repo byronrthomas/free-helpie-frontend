@@ -1,6 +1,6 @@
 import {MailsServer} from '@/store/mockServer/mailsServer'
 import {runAll} from '@/store/mockServer/callbackTools'
-import {INITIAL_MAIL_USERS, INITIAL_MAILS, INITIAL_POSTS} from './initialMails'
+import {TEST_MAIL_USERS, TEST_MAILS, TEST_POSTS} from './testMails'
 
 
 const THREAD_AUTHOR_ID = {id: 0, username: 'UserRespondingToThePost', authToken: Math.random()}
@@ -28,7 +28,7 @@ const dummyAuther = {
     } if (token === POST_AUTHOR_ID.authToken) {
       return [POST_AUTHOR_ID.id]
     }
-    const userFromInitialMails = INITIAL_MAIL_USERS.find(x => token === x.authToken)
+    const userFromInitialMails = TEST_MAIL_USERS.find(x => token === x.authToken)
     return userFromInitialMails ? [userFromInitialMails.id] : []
   },
   syncGetUserCanReadMails (token, postId, threadAuthor) {
@@ -52,7 +52,7 @@ const TEST_MAIL_DATA = {
 }
 
 function findPostedBy (postId) {
-  const res = INITIAL_POSTS.find(post => post.postId === postId)
+  const res = TEST_POSTS.find(post => post.postId === postId)
   if (!res) {
     throw new Error("Cannot find any thread for postId " + postId)
   }
@@ -118,7 +118,7 @@ describe ('MailsServer', () => {
     const onSuccess = jest.fn()
 
     const onTest = new MailsServer(dummyAuther, dummyPostServer)
-    const anotherUser = INITIAL_MAIL_USERS[0]
+    const anotherUser = TEST_MAIL_USERS[0]
     const req = makeReqFromUser({data: TEST_MAIL_DATA}, anotherUser)
     onTest.post(req, onSuccess, onError)
 
@@ -255,7 +255,7 @@ describe ('MailsServer', () => {
 
   it('should be possible to post multiple mails on multiple threads', () => {
     const onTest = new MailsServer(dummyAuther, dummyPostServer)
-    runAll(onTest.post, arrayCollect(reqsForThread, INITIAL_MAILS))
+    runAll(onTest.post, arrayCollect(reqsForThread, TEST_MAILS))
   })
 
   const threadAppearsAsUnread = threadId => res => 
@@ -264,7 +264,7 @@ describe ('MailsServer', () => {
   const threadIsPresent = threadId => res => expectRespDataToEqual(expect.arrayContaining([threadId]))
       
   describe('after multiple mails have been posted on multiple threads', () => {
-    const expectedMailThreads = INITIAL_MAILS
+    const expectedMailThreads = TEST_MAILS
     const postedThreadIds = expectedMailThreads.map(thread => thread.threadId)
     let onTest
     beforeEach(() => {
