@@ -17,7 +17,7 @@
           :unread="getUnread(summary)"
           :with-name="getConversationName(summary)"
           role="button"
-          @click="loadThread(summary)">
+          @click.native="loadThread(summary)">
         </mail-thread-summary-item>
       
     </div>

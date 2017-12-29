@@ -12,7 +12,7 @@ function getMailDetailProps (route) {
     relatedToPostId: route.query.post,
     threadAuthor: route.query.author
   }
-  return threadId
+  return {threadId}
 }
 
 export const HOME_COMPONENT_ROUTES = [

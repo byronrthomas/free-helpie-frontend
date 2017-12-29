@@ -4,7 +4,7 @@
     :user-id="userId"
     :user-infos="userInfo"
     :post-infos="postInfo"
-    @loadThread="loadThread"
+    @loadThreadDetails="loadThread"
   />  
 
 </template>
@@ -29,7 +29,7 @@ export default {
   },
   methods: {
     loadThread (threadInfo) {
-      const route = `maildetail?post=${threadInfo.relatedToPostId}author=${threadInfo.threadAuthor}`
+      const route = `maildetail?post=${threadInfo.relatedToPostId}&author=${threadInfo.threadAuthor}`
       this.$router.push(route)
     }
   },
