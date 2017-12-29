@@ -7,13 +7,21 @@ import YourPostsPage from './YourPostsPage.vue'
 import EditPostPage from './EditPostPage.vue'
 import CreatePostPage from './CreatePostPage.vue'
 
+function getMailDetailProps (route) {
+  const threadId = {
+    relatedToPostId: route.query.post,
+    threadAuthor: route.query.author
+  }
+  return threadId
+}
+
 export const HOME_COMPONENT_ROUTES = [
   {path: 'latestPosts', component: LatestPostsPage, name: 'latestPosts'},
   {path: 'postDetail/:postId', component: PostDetailPage, name: 'postDetail', props: true},
   {path: 'savedPosts', component: SavedPostsPage, name: 'savedPosts'},
   {path: 'yourPosts', component: YourPostsPage, name: 'yourPosts'},
   {path: 'mailbox', component: MailboxPage, name: 'mailbox'},
-  {path: 'mailDetail/:mailId', component: MailDetailPage, name: 'mailDetail', props: true},
+  {path: 'mailDetail', component: MailDetailPage, name: 'mailDetail', props: getMailDetailProps},
   {path: 'createPost', component: CreatePostPage, name: 'createPost'},
   {path: 'editPost/:postId', component: EditPostPage, name: 'editPost', props: true}
 ]

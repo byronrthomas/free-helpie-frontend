@@ -64,6 +64,9 @@ export default {
       const postInfo = this.postInfos[summary.threadId.relatedToPostId] ||
         {title: '...'}
       return postInfo.title
+    },
+    loadThread (summary) {
+      this.$emit('loadThreadDetails', summary.threadId)
     }
   },
   components: {
