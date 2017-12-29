@@ -5,7 +5,7 @@ import { UserFavouritesServer } from './mockServer/userFavouritesServer'
 import { MailsServer } from './mockServer/mailsServer'
 import { INITIAL_POSTS } from './mockServer/initialPosts'
 import { INITIAL_USER_DATA } from './mockServer/initialUserData'
-import { INITIAL_MAILS } from './mockServer/initialMails'
+import { INITIAL_MAILS, INITIAL_READ_MAILS } from './mockServer/initialMails'
 import { runAll } from './mockServer/callbackTools'
 
 const MOCK_NETWORK_LATENCY = 500
@@ -103,6 +103,7 @@ function makeServer () {
   runAll(postsServer.postWithoutAuth, INITIAL_POSTS.map(post => { return { data: post } }))
   const mailsServer = new MailsServer(auther, postsServer)
   INITIAL_MAILS.forEach(mail => mailsServer.directPost(mail.threadId, mail.mailData, mail.postAuthor))
+  runAll(mailsServer.syncPostMarkAsRead, INITIAL_READ_MAILS)
   return new Server(
     auther,
     new UserDataServer(auther, INITIAL_USER_DATA),

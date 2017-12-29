@@ -197,22 +197,9 @@ export function MailsServer (userAuth, postsServer) {
 
       resolve({data: respData})
     },
-    postMarkAsRead (reqData, resolve, reject) {
-      if (!reqData.authToken || !userAuth.syncGetUserCanPostMails(reqData.authToken)) {
-        reject(new Error('Error: you must be authenticated to mark mails as read'))
-        return
-      }
-      const userIds = userAuth.syncGetAuthUsers(reqData.authToken)
-      if (userIds.length !== 1) {
-        reject(new Error('Error: can\'t work out your UserID from your auth token'))
-        return
-      }
-      const userId = userIds[0]
-      if (!reqData.hasOwnProperty('data')) {
-        reject(new Error('Cannot mark as read - empty data'))
-        return
-      }
-      const data = reqData.data
+    syncPostMarkAsRead (req, resolve, reject) {
+      const data = req.data
+      const userId = req.userId
       if (!data.hasOwnProperty('relatedToPostId') ||
         !data.hasOwnProperty('threadAuthor') ||
         !data.hasOwnProperty('readMailId')) {
@@ -233,6 +220,24 @@ export function MailsServer (userAuth, postsServer) {
           reject(new Error(`Cannot mark as read - unread mails does not contain ID ${idToMark} only has ` + activityForThread.unreadMails.join()))
         }
       }
+    },
+    postMarkAsRead (reqData, resolve, reject) {
+      if (!reqData.authToken || !userAuth.syncGetUserCanPostMails(reqData.authToken)) {
+        reject(new Error('Error: you must be authenticated to mark mails as read'))
+        return
+      }
+      const userIds = userAuth.syncGetAuthUsers(reqData.authToken)
+      if (userIds.length !== 1) {
+        reject(new Error('Error: can\'t work out your UserID from your auth token'))
+        return
+      }
+      const userId = userIds[0]
+      if (!reqData.hasOwnProperty('data')) {
+        reject(new Error('Cannot mark as read - empty data'))
+        return
+      }
+      const data = reqData.data
+      srv.syncPostMarkAsRead({userId, data}, resolve, reject)
     }
   }
   return srv
