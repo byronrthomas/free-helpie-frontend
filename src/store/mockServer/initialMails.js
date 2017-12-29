@@ -64,5 +64,5 @@ function makeReadReq (threadId, readMailId, userId) {
 export const INITIAL_READ_MAILS = [
   makeReadReq(THREAD_FROM_TEST_TO_JOHN_DOE, 1, TEST_USER),
   makeReadReq(THREAD_FROM_JANA_TO_TEST, 5, TEST_USER),
-  makeReadReq(THREAD_FROM_WENDY_TO_TEST, 6, TEST_USER),
+  makeReadReq(THREAD_FROM_WENDY_TO_TEST, 6, TEST_USER)
 ]

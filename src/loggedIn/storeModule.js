@@ -170,7 +170,11 @@ export function loggedInStore (server) {
       // mailbox
       activethreads: activeMailThreadStore(server),
       mailboxposts: postsStore(server),
-      mailboxusers: userInfoStore(server)
+      mailboxusers: userInfoStore(server),
+
+      // mail details
+      threaddetails: singleMailThreadStore(server),
+      threaddetailsusers: userInfoStore(server)
     }
   }
 }

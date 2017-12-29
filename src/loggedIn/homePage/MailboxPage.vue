@@ -29,7 +29,7 @@ export default {
   },
   methods: {
     loadThread (threadInfo) {
-      const route = `maildetail?post=${threadInfo.relatedToPostId}&author=${threadInfo.threadAuthor}`
+      const route = `maildetail?post=${threadInfo.relatedToPostId}&author=${threadInfo.threadAuthor}&poster=${threadInfo.postAuthor}`
       this.$router.push(route)
     }
   },

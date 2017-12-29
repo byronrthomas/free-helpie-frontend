@@ -66,7 +66,7 @@ export default {
       return postInfo.title
     },
     loadThread (summary) {
-      this.$emit('loadThreadDetails', summary.threadId)
+      this.$emit('loadThreadDetails', {...summary.threadId, postAuthor: summary.postAuthor})
     }
   },
   components: {

@@ -48,7 +48,6 @@ const REMOTE_LOCATION = 'REMOTE'
 export default {
   data () {
     return {
-      mailContent: '',
       myAvatar: {altText: 'You'}
     }
   },
