@@ -1,11 +1,6 @@
 export function UserDataServer (userAuth, initialUserData) {
   const userData = initialUserData || {}
-  let nextId = 0
-  for (const userId in userData) {
-    if (userData.hasOwnProperty(userId)) {
-      nextId = Math.max(nextId, parseInt(userId) + 1)
-    }
-  }
+
   return {
     get (reqData, resolve, reject) {
       console.log('GET userdata: Getting users authorised by token ' + reqData)
@@ -45,10 +40,9 @@ export function UserDataServer (userAuth, initialUserData) {
       const users = userAuth.syncGetAuthUsers(reqData.token)
       console.log('PUT userdata: Getting users authorised by token ' + reqData.token)
       let userId
-      if (users.length === 0) {
-        userId = nextId++
-        userAuth.syncPutAuthUsers(reqData.token, [userId])
-        console.log('PUT userdata: Generating new userID for token ' + userId)
+      if (users.length !== 1) {
+        reject(new Error('Cannot find logged in user for this token'))
+        return
       } else {
         userId = users[0]
       }

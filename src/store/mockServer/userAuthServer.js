@@ -17,18 +17,31 @@ function makeReversibleMap () {
 }
 
 export function UserAuthServer () {
-  let usersToPassword = { 'test@test.com': 'secret' }
+  let initialUserData = { 
+    'test@test.com': {password: 'secret', userId: 3},
+    'jd@jd.com': {password: 'jd', userId: 0},
+    'ws@ws.com': {password: 'ws', userId: 1},
+    'js@js.com': {password: 'js', userId: 2},
+  }
+  const userData = {...initialUserData}
+  let nextId = -1
+  for (const username in userData) {
+    if (userData.hasOwnProperty(username)) {
+      nextId = Math.max(nextId, userData[username].userId)
+    }
+  }
+  nextId = nextId + 1
   let usersToAuth = makeReversibleMap()
   let unverifiedUsers = {}
-  let authToUsers = {}
 
   return {
     get (reqData, resolve, reject) {
-      if (typeof (usersToPassword[reqData.username]) === 'string') {
-        if (usersToPassword[reqData.username] === reqData.password) {
+      if (userData[reqData.username]) {
+        const userRecord = userData[reqData.username]
+        if (userRecord.password === reqData.password) {
           if (!unverifiedUsers[reqData.username]) {
-            usersToAuth.put(reqData.username, Math.random().toString())
-            resolve({authData: usersToAuth.getByKey(reqData.username)})
+            usersToAuth.put(userRecord.userId, Math.random().toString())
+            resolve({authData: usersToAuth.getByKey(userRecord.userId)})
           } else {
             reject(new Error('You need to verify your email address, please check your email for the verification email.'))
           }
@@ -42,10 +55,10 @@ export function UserAuthServer () {
     postUser (reqData, resolve, reject) {
       if (typeof reqData.username !== 'string' || typeof reqData.password !== 'string') {
         reject(new Error('Should provide a username and password'))
-      } else if (typeof (usersToPassword[reqData.username]) === 'string') {
+      } else if (userData.hasOwnProperty(reqData.username)) {
         reject(new Error('This email address has already been registered'))
       } else {
-        usersToPassword[reqData.username] = reqData.password
+        userData[reqData.username] = {password: reqData.password, userId: nextId++}
         unverifiedUsers[reqData.username] = true
         resolve()
       }
@@ -61,19 +74,16 @@ export function UserAuthServer () {
     syncGetAuthUsers (token) {
       console.debug('Asking for token ' + token)
       console.debug('current auths = ')
-      console.debug(authToUsers)
-      if (authToUsers[token]) {
-        // TODO: add a check that this is a valid token!
+      const users = usersToAuth.getByValue(token)
+      console.debug(users)
+      if (users) {
         console.debug('Found users for token = ')
-        console.debug(authToUsers[token])
-        return authToUsers[token]
+        console.debug(users)
+        return [users]
       } else {
         console.debug('No auth found for token')
         return []
       }
-    },
-    syncPutAuthUsers (token, value) {
-      authToUsers[token] = value
     },
     syncGetUserCanSeeFullPosts (token, value) {
       return typeof usersToAuth.getByValue(token) !== 'undefined'

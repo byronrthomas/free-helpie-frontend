@@ -8,25 +8,25 @@ import { userInfoStore } from './homePage/userInfoStore'
 function userProfileIsComplete (profile) {
   return profile &&
     profile.personalInfo &&
-    profile.helperLocations &&
-    profile.helperLocationTypes &&
-    profile.helperSkills &&
-    profile.helperInterests &&
-    profile.helperTimings &&
-    profile.helperDescription &&
-    profile.helperAgreedToTsAndCs
+    profile.locations &&
+    profile.locationTypes &&
+    profile.skills &&
+    profile.interests &&
+    profile.description &&
+    profile.timings &&
+    profile.agreedToTsAndCs
 }
 
 // Within page, state is further split by resource types (REST endpoint paths)
 const EMPTY_USER_PROFILE = {
   personalInfo: null,
-  helperLocations: [],
-  helperLocationTypes: [],
-  helperSkills: [],
-  helperInterests: [],
-  helperDescription: null,
-  helperTimings: null,
-  helperAgreedToTsAndCs: false
+  locations: [],
+  locationTypes: [],
+  skills: [],
+  interests: [],
+  description: null,
+  timings: null,
+  agreedToTsAndCs: false
 }
 
 function extractUserData (resp) {
