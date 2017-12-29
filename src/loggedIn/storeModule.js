@@ -2,6 +2,8 @@ import { postsStore } from './homePage/postsStore'
 import { singlePostStore } from './homePage/singlePostStore'
 import { LOCATIONS, SKILLS, INTERESTS, PROFILE_TEXT_SUGGESTION } from './profileConstants'
 import { singleMailThreadStore } from './homePage/mailThreadStore'
+import { activeMailThreadStore } from './homePage/activeMailThreadStore'
+import { userInfoStore } from './homePage/userInfoStore'
 
 function userProfileIsComplete (profile) {
   return profile &&
@@ -163,7 +165,12 @@ export function loggedInStore (server) {
       editpost: singlePostStore(server),
 
       // Onto mail thread handling
-      postthread: singleMailThreadStore(server)
+      postthread: singleMailThreadStore(server),
+
+      // mailbox
+      activethreads: activeMailThreadStore(server),
+      mailboxposts: postsStore(server),
+      mailboxusers: userInfoStore(server)
     }
   }
 }
