@@ -23,7 +23,7 @@ export default {
   },
   props: {
     threadId: Object,
-    postAuthor: String
+    postAuthor: Number
   },
   methods: {
     sendMail (mailText) {

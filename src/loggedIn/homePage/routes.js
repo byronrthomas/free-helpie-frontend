@@ -9,10 +9,10 @@ import CreatePostPage from './CreatePostPage.vue'
 
 function getMailDetailProps (route) {
   const threadId = {
-    relatedToPostId: route.query.post,
-    threadAuthor: route.query.author
+    relatedToPostId: parseInt(route.query.post),
+    threadAuthor: parseInt(route.query.author)
   }
-  return {threadId, postAuthor: route.query.poster}
+  return {threadId, postAuthor: parseInt(route.query.poster)}
 }
 
 export const HOME_COMPONENT_ROUTES = [
