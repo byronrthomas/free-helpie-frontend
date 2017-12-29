@@ -45,7 +45,7 @@ export const INITIAL_MAILS = [
   makeEmail(THREAD_FROM_JANA_TO_TEST, 'Maybe - how many hours a week do you have spare?', TEST_USER),
   makeEmail(THREAD_FROM_JANA_TO_TEST, '10 hrs, I don\'t work much', JANA_SWISS),
   makeEmail(THREAD_FROM_WENDY_TO_TEST, 'Hey - I could maybe you mentor through this phase?', WENDY_SMALL),
-  makeEmail(THREAD_FROM_WENDY_TO_TEST, 'Hi, did you see my last email?'),
+  makeEmail(THREAD_FROM_WENDY_TO_TEST, 'Hi, did you see my last email?', WENDY_SMALL),
   makeEmail(THREAD_FROM_TEST_TO_JOHN_DOE, 'Chelsea', TEST_USER),
   makeEmail(THREAD_FROM_TEST_TO_JOHN_DOE, 'OK, yeah that could work', JOHN_DOE)
 ]
@@ -56,13 +56,11 @@ function makeReadReq (threadId, readMailId, userId) {
     data: {
       relatedToPostId: threadId.relatedToPostId,
       threadAuthor: threadId.threadAuthor,
-      readMailId: readMailId
+      timestampReadUpTo: INITIAL_MAILS[readMailId].mailData.sent
     }
   }
 }
 
 export const INITIAL_READ_MAILS = [
-  makeReadReq(THREAD_FROM_TEST_TO_JOHN_DOE, 1, TEST_USER),
-  makeReadReq(THREAD_FROM_JANA_TO_TEST, 5, TEST_USER),
-  makeReadReq(THREAD_FROM_WENDY_TO_TEST, 6, TEST_USER)
+  makeReadReq(THREAD_FROM_JANA_TO_TEST, 5, TEST_USER)
 ]
