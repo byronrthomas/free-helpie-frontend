@@ -23,33 +23,33 @@
                     type="checkbox"
                     id="locationHome"
                     value="LocationHome"
-                    v-model="helperLocationTypes"> From your home
+                    v-model="locationTypes"> From your home
         </label>
         <label class="checkbox-inline">
             <input
                     type="checkbox"
                     id="locationAway"
                     value="LocationAway"
-                    v-model="helperLocationTypes"> On location
+                    v-model="locationTypes"> On location
         </label>
       </div>
       <div class="form-group">
         <label>Where can you help?</label>
-        <multi-select-fixed-options v-model="helperLocations" :possibleOptions="possibleLocations"/>
+        <multi-select-fixed-options v-model="locations" :possibleOptions="possibleLocations"/>
       </div>
     </form-segment>
     <form-segment header-text="Experience &amp; skills">
         <div class="form-group">
           <label>What can you help with?</label>
-          <multi-select-fixed-options v-model="helperInterests" :possibleOptions="possibleInterests"/>
+          <multi-select-fixed-options v-model="interests" :possibleOptions="possibleInterests"/>
         </div>
         <div class="form-group">
           <label>What skills can you offer?</label>
-          <multi-select-fixed-options v-model="helperSkills" :possibleOptions="possibleSkills"/>
+          <multi-select-fixed-options v-model="skills" :possibleOptions="possibleSkills"/>
         </div>
         <div class="form-group">
           <label>Please tell us a bit about yourself:</label><br>
-          <textarea v-model="helperDescription" :placeholder="descriptionSuggestion"
+          <textarea v-model="description" :placeholder="descriptionSuggestion"
           rows="5"
           class="form-control"/>
         </div>        
@@ -59,7 +59,7 @@
       <div class="form-group">
         <select 
           id="timeAmount" 
-          v-model="helperTimings.regularAmount.unit">
+          v-model="timings.regularAmount.unit">
             <option>1hr</option>
             <option>2hr</option>
             <option>3hr</option>
@@ -71,7 +71,7 @@
         <span>per</span>
         <select 
           id="timeFrequency" 
-          v-model="helperTimings.regularAmount.frequency">
+          v-model="timings.regularAmount.frequency">
             <option>Week</option>
             <option>Month</option>
         </select>          
@@ -83,28 +83,28 @@
                     type="checkbox"
                     id="weekday"
                     value="Weekday"
-                    v-model="helperTimings.slots"> Weekday
+                    v-model="timings.slots"> Weekday
         </label>
         <label  class="checkbox-inline">
             <input
                     type="checkbox"
                     id="weekend"
                     value="Weekend"
-                    v-model="helperTimings.slots"> Weekend
+                    v-model="timings.slots"> Weekend
         </label>
         <label  class="checkbox-inline">
             <input
                     type="checkbox"
                     id="evening"
                     value="Evening"
-                    v-model="helperTimings.slots"> Evening
+                    v-model="timings.slots"> Evening
         </label>
         <label class="checkbox-inline">
             <input
                     type="checkbox"
                     id="daytime"
                     value="Daytime"
-                    v-model="helperTimings.slots"> Daytime
+                    v-model="timings.slots"> Daytime
         </label>
       </div>       
     </form-segment>
@@ -114,7 +114,7 @@
           <div class="col-xs-10 col-xs-offset-1">
             <div class="checkbox">
               <label for="name">
-              <input type="checkbox" id="tsAndCs" v-model="helperAgreedToTsAndCs" > I agree to the terms &amp; conditions
+              <input type="checkbox" id="tsAndCs" v-model="agreedToTsAndCs" > I agree to the terms &amp; conditions
               </label>
             </div>
             <p v-if="lastServerError">{{ lastServerError }}</p>    
@@ -144,18 +144,18 @@ function makeEmptyFormData () {
       name: '',
       photo: null
     },
-    helperLocations: [],
-    helperInterests: [],
-    helperSkills: [],
-    helperDescription: '',
-    helperLocationTypes: [],
-    helperTimings: {
+    locations: [],
+    interests: [],
+    skills: [],
+    description: '',
+    locationTypes: [],
+    timings: {
       regularAmount: {
         unit: '1hr',
         frequency: 'Week'},
       slots: []
     },
-    helperAgreedToTsAndCs: false
+    agreedToTsAndCs: false
   }
 }
 
@@ -165,13 +165,13 @@ export default {
       return {
         createOrUpdate: 'Update',
         personalInfo: this.initialFormValue.personalInfo,
-        helperLocations: this.initialFormValue.helperLocations,
-        helperLocationTypes: this.initialFormValue.helperLocationTypes,
-        helperInterests: this.initialFormValue.helperInterests,
-        helperSkills: this.initialFormValue.helperSkills,
-        helperDescription: this.initialFormValue.helperDescription,
-        helperTimings: this.initialFormValue.helperTimings,
-        helperAgreedToTsAndCs: this.initialFormValue.helperAgreedToTsAndCs}
+        locations: this.initialFormValue.locations,
+        locationTypes: this.initialFormValue.locationTypes,
+        interests: this.initialFormValue.interests,
+        skills: this.initialFormValue.skills,
+        description: this.initialFormValue.description,
+        timings: this.initialFormValue.timings,
+        agreedToTsAndCs: this.initialFormValue.agreedToTsAndCs}
     } else {
       return makeEmptyFormData()
     }
