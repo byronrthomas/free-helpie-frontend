@@ -2,7 +2,7 @@
   <div>
     <div class="row">
       <div class="col-xs-2">
-        <home-side-bar :unread-email-count="2"/>
+        <home-side-bar :unread-email-count="0"/>
       </div>
       <div class="col-xs-10">
         <router-view></router-view>

@@ -16,9 +16,9 @@ export default {
   computed: {
     mailboxHtml () {
       if (this.unreadEmailCount === 0) {
-        return 'Mailbox'
+        return 'Your conversations'
       } else {
-        return `<strong>Mailbox (${this.unreadEmailCount})</strong>`
+        return `<strong>Your conversations (${this.unreadEmailCount})</strong>`
       }
     }
   },
