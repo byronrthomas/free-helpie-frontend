@@ -45,7 +45,7 @@ export default {
     },
     getSubject (summary) {
       return summary.postSubject
-    },
+    }
   },
   components: {
     'connection-summary-item': ConnectionSummaryItem

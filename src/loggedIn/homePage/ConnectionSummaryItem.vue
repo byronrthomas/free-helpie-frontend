@@ -41,7 +41,7 @@ export default {
       } else if (this.nextAction === 'Cancel sharing') {
         alert('If you clicked this button, you would stop sharing your contact details with the other user (however they might have already seen yours). You would not be able to see their details any more.' +
         ' This connection would be deleted. However, this isn\'t implemented yet.')
-      } 
+      }
     }
   }
 }
