@@ -8,11 +8,11 @@
     <form-segment header-text="Personal Info">
         <div class="form-group">
           <label for="photo">Photo - PLACEHOLDER</label>
-          <input type="text" id="photo" disabled="true" v-model="personalInfo.photo" class="form-control">
+          <input type="text" id="photo" disabled="true" v-model="profileData.personalInfo.photo" class="form-control">
         </div>
         <div class="form-group">
           <label for="name">Name</label>
-          <input type="text" id="name" v-model="personalInfo.name" class="form-control">
+          <input type="text" id="name" v-model="profileData.personalInfo.name" class="form-control">
         </div>
     </form-segment>
     <form-segment header-text="Location">
@@ -23,33 +23,33 @@
                     type="checkbox"
                     id="locationHome"
                     value="LocationHome"
-                    v-model="locationTypes"> From your home
+                    v-model="profileData.locationTypes"> From your home
         </label>
         <label class="checkbox-inline">
             <input
                     type="checkbox"
                     id="locationAway"
                     value="LocationAway"
-                    v-model="locationTypes"> On location
+                    v-model="profileData.locationTypes"> On location
         </label>
       </div>
       <div class="form-group">
         <label>Where can you help?</label>
-        <multi-select-fixed-options v-model="locations" :possibleOptions="possibleLocations"/>
+        <multi-select-fixed-options v-model="profileData.locations" :possibleOptions="possibleLocations"/>
       </div>
     </form-segment>
     <form-segment header-text="Experience &amp; skills">
         <div class="form-group">
           <label>What can you help with?</label>
-          <multi-select-fixed-options v-model="interests" :possibleOptions="possibleInterests"/>
+          <multi-select-fixed-options v-model="profileData.interests" :possibleOptions="possibleInterests"/>
         </div>
         <div class="form-group">
           <label>What skills can you offer?</label>
-          <multi-select-fixed-options v-model="skills" :possibleOptions="possibleSkills"/>
+          <multi-select-fixed-options v-model="profileData.skills" :possibleOptions="possibleSkills"/>
         </div>
         <div class="form-group">
           <label>Please tell us a bit about yourself:</label><br>
-          <textarea v-model="description" :placeholder="descriptionSuggestion"
+          <textarea v-model="profileData.description" :placeholder="descriptionSuggestion"
           rows="5"
           class="form-control"/>
         </div>        
@@ -59,7 +59,7 @@
       <div class="form-group">
         <select 
           id="timeAmount" 
-          v-model="timings.regularAmount.unit">
+          v-model="profileData.timings.regularAmount.unit">
             <option>1hr</option>
             <option>2hr</option>
             <option>3hr</option>
@@ -71,7 +71,7 @@
         <span>per</span>
         <select 
           id="timeFrequency" 
-          v-model="timings.regularAmount.frequency">
+          v-model="profileData.timings.regularAmount.frequency">
             <option>Week</option>
             <option>Month</option>
         </select>          
@@ -83,28 +83,28 @@
                     type="checkbox"
                     id="weekday"
                     value="Weekday"
-                    v-model="timings.slots"> Weekday
+                    v-model="profileData.timings.slots"> Weekday
         </label>
         <label  class="checkbox-inline">
             <input
                     type="checkbox"
                     id="weekend"
                     value="Weekend"
-                    v-model="timings.slots"> Weekend
+                    v-model="profileData.timings.slots"> Weekend
         </label>
         <label  class="checkbox-inline">
             <input
                     type="checkbox"
                     id="evening"
                     value="Evening"
-                    v-model="timings.slots"> Evening
+                    v-model="profileData.timings.slots"> Evening
         </label>
         <label class="checkbox-inline">
             <input
                     type="checkbox"
                     id="daytime"
                     value="Daytime"
-                    v-model="timings.slots"> Daytime
+                    v-model="profileData.timings.slots"> Daytime
         </label>
       </div>       
     </form-segment>
@@ -114,7 +114,7 @@
           <div class="col-xs-10 col-xs-offset-1">
             <div class="checkbox">
               <label for="name">
-              <input type="checkbox" id="tsAndCs" v-model="agreedToTsAndCs" > I agree to the terms &amp; conditions
+              <input type="checkbox" id="tsAndCs" v-model="profileData.agreedToTsAndCs" > I agree to the terms &amp; conditions
               </label>
             </div>
             <p v-if="lastServerError">{{ lastServerError }}</p>    
@@ -139,7 +139,6 @@ import FormSegment from '../sharedComponents/FormSegment.vue'
 
 function makeEmptyFormData () {
   return {
-    createOrUpdate: 'Create',
     personalInfo: {
       name: '',
       photo: null
@@ -161,26 +160,30 @@ function makeEmptyFormData () {
 
 export default {
   data () {
-    if (this.initialFormValue) {
+    const initialFormValue = this.$store.getters['loggedin/userProfile']
+    if (initialFormValue) {
       return {
         createOrUpdate: 'Update',
-        personalInfo: this.initialFormValue.personalInfo,
-        locations: this.initialFormValue.locations,
-        locationTypes: this.initialFormValue.locationTypes,
-        interests: this.initialFormValue.interests,
-        skills: this.initialFormValue.skills,
-        description: this.initialFormValue.description,
-        timings: this.initialFormValue.timings,
-        agreedToTsAndCs: this.initialFormValue.agreedToTsAndCs}
-    } else {
-      return makeEmptyFormData()
+        profileData: {
+          personalInfo: initialFormValue.personalInfo,
+          locations: initialFormValue.locations,
+          locationTypes: initialFormValue.locationTypes,
+          interests: initialFormValue.interests,
+          skills: initialFormValue.skills,
+          description: initialFormValue.description,
+          timings: initialFormValue.timings,
+          agreedToTsAndCs: initialFormValue.agreedToTsAndCs
+        }
+      }
     }
+    return {
+      createOrUpdate: 'Create',
+      profileData: makeEmptyFormData()}
   },
   computed: {
     ...mapGetters({
       'lastServerError': 'lastServerError',
       'possibleLocations': 'loggedin/possibleLocations',
-      'initialFormValue': 'loggedin/initialFormValue',
       'possibleInterests': 'loggedin/possibleInterests',
       'possibleSkills': 'loggedin/possibleSkills',
       'descriptionSuggestion': 'loggedin/profileTextSuggestion'})
@@ -191,9 +194,8 @@ export default {
   },
   methods: {
     submitForm () {
-      console.log(this.$data)
-      const dataToPost = Object.assign({}, this.$data)
-      delete dataToPost.createOrUpdate
+      console.log(this.profileData)
+      const dataToPost = {...this.profileData}
       this.$store.dispatch('loggedin/updateUserProfile', dataToPost)
     }
   }

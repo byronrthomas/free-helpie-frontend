@@ -79,6 +79,9 @@ export function loggedInStore (server) {
       },
       userId (state) {
         return state.userId
+      },
+      userProfile (state) {
+        return state.userProfile
       }
     },
     mutations: {
