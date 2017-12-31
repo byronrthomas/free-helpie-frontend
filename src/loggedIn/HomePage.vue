@@ -14,13 +14,12 @@
 <script>
 import HomeSideBar from './homePage/HomeSideBar.vue'
 
-function defaultHomeLocation(to, from, next) {
+function defaultHomeLocation (to, from, next) {
   if (to.name === 'home') {
-      next({name: 'latestPosts'})
-    }
-    else {
-      next()
-    }
+    next({name: 'latestPosts'})
+  } else {
+    next()
+  }
 }
 
 export default {
