@@ -14,6 +14,15 @@
 <script>
 import HomeSideBar from './homePage/HomeSideBar.vue'
 
+function defaultHomeLocation(to, from, next) {
+  if (to.name === 'home') {
+      next({name: 'latestPosts'})
+    }
+    else {
+      next()
+    }
+}
+
 export default {
   components: {
     'home-side-bar': HomeSideBar
@@ -24,8 +33,11 @@ export default {
       this.$store.dispatch('loggedin/' + action, post)
     }
   },
-  created () {
-    this.$router.push({name: 'latestPosts'})
+  beforeRouteEnter (to, from, next) {
+    defaultHomeLocation(to, from, next)
+  },
+  beforeRouteUpdate (to, from, next) {
+    defaultHomeLocation(to, from, next)
   }
 }
 </script>

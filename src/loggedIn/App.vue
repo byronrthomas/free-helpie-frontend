@@ -4,11 +4,11 @@
       <div class="col-xs-12">
         <img src="../assets/FreeHelp2.png" alt="FreeHelp" height=100px>
         <div class="pull-right" style="margin-top: 45px">
-          <a class="topbar-link lead">Home</a>
-          <a class="topbar-link lead">Profile</a>
-          <a class="topbar-link lead">Account</a>
-          <a class="topbar-link lead">Invite</a>
-          <a class="topbar-link lead">Sign out</a>
+          <router-link class="topbar-link lead" :to="{name: 'home'}">Home</router-link>
+          <router-link class="topbar-link lead" :to="{name: 'profile'}">Profile</router-link>
+          <router-link class="topbar-link lead" :to="{name: 'account'}">Account</router-link>
+          <a class="topbar-link lead" @click="alertNotImplemented">Invite</a>
+          <a class="topbar-link lead" @click="alertNotImplemented">Sign out</a>
         </div>
       </div>
     </div>
@@ -22,6 +22,11 @@ import { mapGetters } from 'vuex'
 export default {
   computed: {
     ...mapGetters({'userProfileIsComplete': 'loggedin/userProfileIsComplete'})
+  },
+  methods: {
+    alertNotImplemented () {
+      alert('Sorry, this function is not implemented yet.')
+    }
   },
   watch: {
     userProfileIsComplete (val) {
