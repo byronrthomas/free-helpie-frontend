@@ -153,6 +153,12 @@ export function loggedInStore (server) {
           const newFavourites = state.favouritePostIds.filter(x => x !== postId)
           dispatch('updateFavourites', newFavourites)
         }
+      },
+      logout ({commit}) {
+        commit('setProfile', null)
+        commit('setUserId', null)
+        commit('setFavouritePosts', [])
+        commit('setInitialised', false)
       }
     },
     modules: {

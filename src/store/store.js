@@ -59,6 +59,10 @@ export function store (server) {
         server
           .post('/accountVerification', payload)
           .catch(err => alert(err))
+      },
+      logout ({commit}) {
+        commit('setUser', null)
+        commit('setLastServerError', '')
       }
     }
   })

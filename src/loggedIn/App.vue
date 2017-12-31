@@ -8,7 +8,7 @@
           <router-link class="topbar-link lead" :to="{name: 'profile'}">Profile</router-link>
           <router-link class="topbar-link lead" :to="{name: 'account'}">Account</router-link>
           <a class="topbar-link lead" @click="alertNotImplemented">Invite</a>
-          <a class="topbar-link lead" @click="alertNotImplemented">Sign out</a>
+          <a class="topbar-link lead" @click="signOut">Sign out</a>
         </div>
       </div>
     </div>
@@ -26,6 +26,11 @@ export default {
   methods: {
     alertNotImplemented () {
       alert('Sorry, this function is not implemented yet.')
+    },
+    signOut () {
+      this.$store.dispatch('loggedin/logout')
+      this.$store.dispatch('logout')
+      this.$router.push({name: 'notLoggedIn'})
     }
   },
   watch: {
