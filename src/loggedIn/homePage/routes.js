@@ -6,6 +6,7 @@ import MailDetailPage from './MailDetailPage.vue'
 import YourPostsPage from './YourPostsPage.vue'
 import EditPostPage from './EditPostPage.vue'
 import CreatePostPage from './CreatePostPage.vue'
+import YourConnectionsPage from './YourConnectionsPage.vue'
 
 function getMailDetailProps (route) {
   const threadId = {
@@ -23,5 +24,6 @@ export const HOME_COMPONENT_ROUTES = [
   {path: 'mailbox', component: MailboxPage, name: 'mailbox'},
   {path: 'mailDetail', component: MailDetailPage, name: 'mailDetail', props: getMailDetailProps},
   {path: 'createPost', component: CreatePostPage, name: 'createPost'},
-  {path: 'editPost/:postId', component: EditPostPage, name: 'editPost', props: true}
+  {path: 'editPost/:postId', component: EditPostPage, name: 'editPost', props: true},
+  {path: 'yourConnections', component: YourConnectionsPage, name: 'yourConnections'}
 ]
