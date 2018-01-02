@@ -3,7 +3,7 @@ export function UserAccountServer (userAuth, initialAccountData) {
 
   return {
     get (reqData, resolve, reject) {
-      console.log('GET useraccount: Getting users authorised by token ' + reqData)
+      console.log('GET useraccount: ', reqData)
       if (!reqData.hasOwnProperty('userId')) {
         reject(new Error('Cannot get user account details without a userId'))
         return
@@ -14,8 +14,8 @@ export function UserAccountServer (userAuth, initialAccountData) {
         return
       }
       if (!userData[reqData.userId]) {
-        console.log('GET useraccount: No account data found for this userId, returning empty')
-        resolve({data: {}})
+        console.log('GET useraccount: No account data found for this userId, returning null')
+        resolve({data: null})
         return
       }
       console.log('GET useraccount: successful get returning data')

@@ -105,6 +105,16 @@ export function UserAuthServer () {
     },
     syncGetUserCanSeeUserProfiles (token) {
       return typeof usersToAuth.getByValue(token) !== 'undefined'
+    },
+    syncCanPostAccountDetails (token, userId) {
+      const loggedInUserId = usersToAuth.getByValue(token)
+      // console.log('loggedInUserId = ', loggedInUserId)
+      return userId && userId === loggedInUserId
+    },
+    syncGetIsAllowedToSeeAccountDetails (token, userId) {
+      const loggedInUserId = usersToAuth.getByValue(token)
+      // console.log('loggedInUserId = ', loggedInUserId)
+      return userId && userId === loggedInUserId
     }
   }
 }

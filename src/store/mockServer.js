@@ -54,7 +54,7 @@ function Server (userAuth, userData, posts, userFavourites, mails, accountDetail
         return wrapAsPromise(mails.getMailThread, data)
       }
       if (resourcePath.startsWith('/accountDetails/')) {
-        const userId = resourcePath.substring('/accountDetails/'.length)
+        const userId = parseInt(resourcePath.substring('/accountDetails/'.length))
         return wrapAsPromise(accountDetails.get, {userId: userId, ...data})
       }
       throw new Error(`Unknown route: GET ${resourcePath}`)
@@ -85,7 +85,7 @@ function Server (userAuth, userData, posts, userFavourites, mails, accountDetail
         return wrapAsPromise(mails.postMarkAsRead, data)
       }
       if (resourcePath.startsWith('/accountDetails/')) {
-        const userId = resourcePath.substring('/accountDetails/'.length)
+        const userId = parseInt(resourcePath.substring('/accountDetails/'.length))
         return wrapAsPromise(accountDetails.post, {userId: userId, ...data})
       }
       throw new Error(`Unknown route: POST ${resourcePath}`)
@@ -96,7 +96,7 @@ function Server (userAuth, userData, posts, userFavourites, mails, accountDetail
         return wrapAsPromise(posts.put, {postId: postId, ...data})
       }
       if (resourcePath.startsWith('/accountDetails/')) {
-        const userId = resourcePath.substring('/accountDetails/'.length)
+        const userId = parseInt(resourcePath.substring('/accountDetails/'.length))
         return wrapAsPromise(accountDetails.put, {userId: userId, ...data})
       }
       throw new Error(`Unknown route: POST ${resourcePath}`)

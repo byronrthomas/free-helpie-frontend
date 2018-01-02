@@ -2,10 +2,10 @@
   <div style="background-color: #fffafa">
     <div class="row">
       <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
-        <h4 style="color:rgb(235, 113, 180); text-align: center">{{ createOrUpdate }} your profile</h4>
+        <h4 style="color:rgb(235, 113, 180); text-align: center">{{ createOrUpdate }} your acount details</h4>
       </div>
     </div>
-    <form-segment header-text="Personal Info">
+    <form-segment header-text="Contact details">
       <div class="form-group">
         <label for="email">Email</label>
         <input type="email" id="email" v-model="accountData.email" class="form-control">
@@ -19,15 +19,15 @@
         <input type="text" id="address" v-model="accountData.address" class="form-control">
       </div>
       <div class="form-group">
-        <label for="dateOfBirth">Address</label>
-        <input type="date" id="dateOfBirth" v-model="accountData.dateOfBirth" class="form-control">
+        <label for="dateOfBirth">Date of Birth</label>
+        <input type="text" id="dateOfBirth" v-model="accountData.dateOfBirth" class="form-control">
       </div>
     </form-segment>
     <div class="row">
       <div class="col-xs-12 col-sm-8 col-sm-offset-2">
         <div class="row">
           <div class="col-xs-10 col-xs-offset-1">
-            <p v-if="lastServerError">{{ lastServerError }}</p>    
+            <div class="alert alert-danger" v-if="lastServerError">{{ lastServerError }}</div>    
             <button 
               class="btn btn-primary" 
               style="width:100%; text-align:center"
@@ -57,7 +57,7 @@ function makeEmptyFormData () {
 
 export default {
   data () {
-    const initialFormValue = this.$store.getters['loggedin/userAccount']
+    const initialFormValue = this.$store.getters['loggedin/accountDetails']
     if (initialFormValue) {
       return {
         createOrUpdate: 'Update',
@@ -84,7 +84,7 @@ export default {
     submitForm () {
       console.log(this.accountData)
       const dataToPost = {...this.accountData}
-      this.$store.dispatch('loggedin/updateUserAccount', dataToPost)
+      this.$store.dispatch('loggedin/updateAccountDetails', dataToPost)
     }
   }
 }

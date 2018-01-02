@@ -51,6 +51,7 @@ export function loggedInStore (server) {
     state: {
       initialised: false,
       userProfile: null,
+      accountDetails: null,
       userId: null,
       favouritePostIds: [],
       possibleLocations: LOCATIONS,
@@ -82,6 +83,9 @@ export function loggedInStore (server) {
       },
       userProfile (state) {
         return state.userProfile
+      },
+      accountDetails (state) {
+        return state.accountDetails
       }
     },
     mutations: {
@@ -96,6 +100,9 @@ export function loggedInStore (server) {
       },
       setFavouritePosts (state, favourites) {
         state.favouritePostIds = favourites
+      },
+      setAccountDetails (state, newDetails) {
+        state.accountDetails = newDetails
       }
     },
     actions: {
@@ -110,6 +117,15 @@ export function loggedInStore (server) {
           })
           .catch(err => commit('setLastServerError', err.message, { root: true }))
       },
+      refreshAccountDetails ({commit, rootGetters, state}) {
+        const userId = state.userId
+        if (userId) {
+          commit('setLastServerError', '', { root: true })
+          server.get(`/accountDetails/${userId}`, {authToken: rootGetters.authToken})
+            .then(resp => commit('setAccountDetails', resp.data))
+            .catch(err => commit('setLastServerError', err.message, { root: true }))
+        }
+      },
       initialise ({ commit, getters, rootGetters, dispatch }) {
         commit('setLastServerError', '', { root: true })
         server.get('/users?token=' + rootGetters.authToken)
@@ -120,14 +136,21 @@ export function loggedInStore (server) {
             commit('setUserId', userId)
             dispatch('getUserFavourites', userId)
           })
+          .then(() => dispatch('refreshAccountDetails'))
           .then(() => commit('setInitialised'))
           .catch(err => commit('setLastServerError', err.message, { root: true }))
       },
       updateUserProfile ({ commit, dispatch, rootGetters }, userProfileData) {
         commit('setLastServerError', '', { root: true })
-        // Just simulate this one for now
         server.post('/users?token=' + rootGetters.authToken, userProfileData)
           .then(() => dispatch('initialise'))
+          .catch(err => commit('setLastServerError', err.message, { root: true }))
+      },
+      updateAccountDetails ({ commit, dispatch, state, rootGetters }, accountDetails) {
+        commit('setLastServerError', '', { root: true })
+        const userId = state.userId
+        server.post(`/accountDetails/${userId}`, {authToken: rootGetters.authToken, data: accountDetails})
+          .then(() => dispatch('refreshAccountDetails'))
           .catch(err => commit('setLastServerError', err.message, { root: true }))
       },
       updateFavourites ({ dispatch, commit, rootGetters, state }, newFavourites) {
