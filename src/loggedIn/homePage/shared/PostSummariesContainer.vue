@@ -10,7 +10,8 @@
           :key="postId"
           :is-saved="isSaved(postId)"
           @viewPost="viewPost(postId)"
-          @savePost="$emit('updateFavouritePosts', postId, !isSaved(postId))" />
+          @savePost="$emit('updateFavouritePosts', postId, !isSaved(postId))"
+          @viewUser="viewUser(post.postedBy)" />
       </div>
     </div>
   </div>
@@ -34,6 +35,9 @@ export default {
     },
     viewPost (postId) {
       this.$router.push({name: 'postDetail', params: {postId}})
+    },
+    viewUser (userId) {
+      this.$router.push({name: 'userDetail', params: {userId}})
     },
     getDisplayName (userId) {
       const userInfo = this.profileInfo[userId] || {name: '[unknown]'}

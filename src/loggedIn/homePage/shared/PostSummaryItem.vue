@@ -2,7 +2,7 @@
   <div class="post-summary-container">
     <div class="row" style="margin-right: 0px">
       <div class="col-xs-3">
-        <a href="unknown" @click.prevent="alertNotImplemented">{{ userDisplay }}</a>
+        <a href="unknown" @click.prevent="$emit('viewUser')">{{ userDisplay }}</a>
       </div>
       <div class="col-xs-3">
         <a href="unknown" @click.prevent="$emit('viewPost')">
