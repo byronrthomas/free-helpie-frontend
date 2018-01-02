@@ -7,6 +7,8 @@ import { INITIAL_POSTS } from './mockServer/initialPosts'
 import { INITIAL_USER_DATA } from './mockServer/initialUserData'
 import { INITIAL_MAILS, INITIAL_READ_MAILS } from './mockServer/initialMails'
 import { runAll } from './mockServer/callbackTools'
+import { UserAccountServer } from './mockServer/userAccountServer'
+import { INITIAL_ACCOUNT_DETAILS } from './mockServer/initialAccountDetails'
 
 const MOCK_NETWORK_LATENCY = 500
 function wrapAsPromise (func, data) {
@@ -19,7 +21,7 @@ function wrapAsPromise (func, data) {
 }
 
 const USER_PATH_REG_EXP = RegExp(/^\/users\/(\d+)\/favourites$/)
-function Server (userAuth, userData, posts, userFavourites, mails) {
+function Server (userAuth, userData, posts, userFavourites, mails, accountDetails) {
   return {
     get (resourcePath, data) {
       if (resourcePath === '/accounts') {
@@ -51,6 +53,10 @@ function Server (userAuth, userData, posts, userFavourites, mails) {
       if (resourcePath === '/mails') {
         return wrapAsPromise(mails.getMailThread, data)
       }
+      if (resourcePath.startsWith('/accountDetails/')) {
+        const userId = resourcePath.substring('/accountDetails/'.length)
+        return wrapAsPromise(accountDetails.get, {userId: userId, ...data})
+      }
       throw new Error(`Unknown route: GET ${resourcePath}`)
     },
     post (resourcePath, data) {
@@ -78,12 +84,20 @@ function Server (userAuth, userData, posts, userFavourites, mails) {
       if (resourcePath === '/mailReads') {
         return wrapAsPromise(mails.postMarkAsRead, data)
       }
+      if (resourcePath.startsWith('/accountDetails/')) {
+        const userId = resourcePath.substring('/accountDetails/'.length)
+        return wrapAsPromise(accountDetails.post, {userId: userId, ...data})
+      }
       throw new Error(`Unknown route: POST ${resourcePath}`)
     },
     put (resourcePath, data) {
       if (resourcePath.startsWith('/posts/')) {
         const postId = resourcePath.substring('/posts/'.length)
         return wrapAsPromise(posts.put, {postId: postId, ...data})
+      }
+      if (resourcePath.startsWith('/accountDetails/')) {
+        const userId = resourcePath.substring('/accountDetails/'.length)
+        return wrapAsPromise(accountDetails.put, {userId: userId, ...data})
       }
       throw new Error(`Unknown route: POST ${resourcePath}`)
     },
@@ -104,12 +118,14 @@ function makeServer () {
   const mailsServer = new MailsServer(auther, postsServer)
   INITIAL_MAILS.forEach(mail => mailsServer.directPost(mail.threadId, mail.mailData, mail.postAuthor))
   runAll(mailsServer.syncPostMarkAsRead, INITIAL_READ_MAILS)
+  const accountDeatilsServer = new UserAccountServer(auther, INITIAL_ACCOUNT_DETAILS)
   return new Server(
     auther,
     new UserDataServer(auther, INITIAL_USER_DATA),
     postsServer,
     new UserFavouritesServer(auther),
-    mailsServer)
+    mailsServer,
+    accountDeatilsServer)
 }
 
 export const mockServer = makeServer()
