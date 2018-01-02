@@ -1,6 +1,6 @@
 
 export function userDetailStore (server) {
-  return  {
+  return {
     namespaced: true,
     state: {
       profile: null,
@@ -20,12 +20,12 @@ export function userDetailStore (server) {
       }
     },
     actions: {
-      refreshProfile({commit, state, rootGetters}) {
+      refreshProfile ({commit, state, rootGetters}) {
         const userId = state.userId
         if (typeof userId !== 'undefined') {
           commit('setLastServerError', '', {root: true})
           server.get(`/users/${userId}/profile`, {authToken: rootGetters.authToken})
-            .then(resp => { commit('setProfile', resp.data)})
+            .then(resp => { commit('setProfile', resp.data) })
             .catch(err => commit('setLastServerError', err.message, { root: true }))
         }
       },

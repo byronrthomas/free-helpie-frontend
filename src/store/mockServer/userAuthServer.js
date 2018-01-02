@@ -126,7 +126,7 @@ export function UserAuthServer () {
       // console.log('loggedInUserId = ', loggedInUserId)
       // console.log('userId = ', userId)
       // Basically just "did they supply a userId and is their token valid"
-      return Boolean((typeof userId !== 'undefined') &&  (typeof loggedInUserId !== 'undefined'))
+      return Boolean((typeof userId !== 'undefined') && (typeof loggedInUserId !== 'undefined'))
     }
   }
 }
