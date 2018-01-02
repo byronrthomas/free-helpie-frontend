@@ -114,7 +114,7 @@ export default {
       'storedPost': 'loggedin/postdetails/post',
       'profileInfo': 'loggedin/postdetails/profileInfo',
       favouritePostIds: 'loggedin/favouritePostIds',
-      'userId': 'loggedin/userId',
+      'userId': 'userId',
       mailItems: 'loggedin/postthread/mailItems'})
   },
   created () {

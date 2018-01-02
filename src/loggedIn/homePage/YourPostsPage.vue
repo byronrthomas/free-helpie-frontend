@@ -18,7 +18,7 @@ export default {
       posts: 'loggedin/yourposts/getPosts',
       profileInfo: 'loggedin/yourposts/profileInfo',
       favouritePostIds: 'loggedin/favouritePostIds',
-      userId: 'loggedin/userId'})
+      userId: 'userId'})
   },
   methods: {
     updateFavouritePosts (post, shouldBeFavourited) {

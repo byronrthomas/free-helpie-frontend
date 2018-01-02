@@ -22,7 +22,7 @@ export default {
   computed: {
     ...mapGetters({
       'activeThreads': 'loggedin/activethreads/activeThreads',
-      'userId': 'loggedin/userId',
+      'userId': 'userId',
       'postInfo': 'loggedin/mailboxposts/getPosts',
       'userInfo': 'loggedin/mailboxusers/userInfo'
     })

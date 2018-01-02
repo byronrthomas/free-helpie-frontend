@@ -52,7 +52,6 @@ export function loggedInStore (server) {
       initialised: false,
       userProfile: null,
       accountDetails: null,
-      userId: null,
       favouritePostIds: [],
       possibleLocations: LOCATIONS,
       possibleSkills: SKILLS,
@@ -78,9 +77,6 @@ export function loggedInStore (server) {
       profileTextSuggestion (state) {
         return state.profileTextSuggestion
       },
-      userId (state) {
-        return state.userId
-      },
       userProfile (state) {
         return state.userProfile
       },
@@ -91,9 +87,6 @@ export function loggedInStore (server) {
     mutations: {
       setProfile (state, profileData) {
         state.userProfile = profileData
-      },
-      setUserId (state, userId) {
-        state.userId = userId
       },
       setInitialised (state) {
         state.initialised = true
@@ -118,7 +111,7 @@ export function loggedInStore (server) {
           .catch(err => commit('setLastServerError', err.message, { root: true }))
       },
       refreshAccountDetails ({commit, rootGetters, state}) {
-        const userId = state.userId
+        const userId = rootGetters.userId
         if (userId) {
           commit('setLastServerError', '', { root: true })
           server.get(`/accountDetails/${userId}`, {authToken: rootGetters.authToken})
@@ -178,7 +171,6 @@ export function loggedInStore (server) {
       },
       logout ({commit}) {
         commit('setProfile', null)
-        commit('setUserId', null)
         commit('setFavouritePosts', [])
         commit('setInitialised', false)
       }

@@ -38,7 +38,7 @@ export default {
     post () {
       return makeEmptyPost(this.userId)
     },
-    ...mapGetters({'userId': 'loggedin/userId'})
+    ...mapGetters({'userId': 'userId'})
   },
   components: {
     'post-edit-form': PostEditForm

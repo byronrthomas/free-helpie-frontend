@@ -56,7 +56,7 @@ export default {
     },
     ...mapGetters({
       'profileInfo': 'loggedin/threaddetailsusers/userInfo',
-      'userId': 'loggedin/userId',
+      'userId': 'userId',
       mailItems: 'loggedin/threaddetails/mailItems'})
   },
   created () {
