@@ -108,7 +108,12 @@ export function UserAuthServer () {
     },
     syncCanPostAccountDetails (token, userId) {
       const loggedInUserId = usersToAuth.getByValue(token)
-      // console.log('loggedInUserId = ', loggedInUserId)
+      // For now - are they loggedin and posting to their own userId?
+      return userId && userId === loggedInUserId
+    },
+    syncCanPostUserProfile (token, userId) {
+      const loggedInUserId = usersToAuth.getByValue(token)
+      // For now - are they loggedin and posting to their own userId?
       return userId && userId === loggedInUserId
     },
     syncGetIsAllowedToSeeAccountDetails (token, userId) {

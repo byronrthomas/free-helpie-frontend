@@ -117,7 +117,7 @@
               <input type="checkbox" id="tsAndCs" v-model="profileData.agreedToTsAndCs" > I agree to the terms &amp; conditions
               </label>
             </div>
-            <p v-if="lastServerError">{{ lastServerError }}</p>    
+            <div class="alert alert-danger" v-if="lastServerError">{{ lastServerError }}</div>    
             <button 
               class="btn btn-primary" 
               style="width:100%; text-align:center"

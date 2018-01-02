@@ -30,7 +30,7 @@ function Server (userAuth, userData, posts, userFavourites, mails, accountDetail
       }
       const matchToProfilePath = resourcePath.match(PROFILE_PATH_REG_EXP)
       if (matchToProfilePath != null) {
-        return wrapAsPromise(userData.get, {userId: matchToProfilePath[1], ...data})
+        return wrapAsPromise(userData.get, {userId: parseInt(matchToProfilePath[1]), ...data})
       }
       if (resourcePath === '/userDisplayInfos') {
         return wrapAsPromise(userData.getUserDisplayInfo, data)
@@ -68,10 +68,9 @@ function Server (userAuth, userData, posts, userFavourites, mails, accountDetail
       if (resourcePath === '/accountVerification') {
         return wrapAsPromise(userAuth.postVerification, data)
       }
-      if (resourcePath.startsWith('/users?token=')) {
-        return wrapAsPromise(
-          userData.post,
-          {token: resourcePath.substring('/users?token='.length), data: data})
+      const matchToProfilePath = resourcePath.match(PROFILE_PATH_REG_EXP)
+      if (matchToProfilePath != null) {
+        return wrapAsPromise(userData.post, {userId: parseInt(matchToProfilePath[1]), ...data})
       }
       if (resourcePath === '/posts') {
         return wrapAsPromise(posts.post, data)

@@ -38,17 +38,18 @@ export function UserDataServer (userAuth, initialUserData) {
       resolve({data: dataToReturn})
     },
     post (reqData, resolve, reject) {
-      const users = userAuth.syncGetAuthUsers(reqData.token)
-      console.log('PUT userdata: Getting users authorised by token ' + reqData.token)
-      let userId
-      if (users.length !== 1) {
-        reject(new Error('Cannot find logged in user for this token'))
+      console.log('POST userdata: req = ', reqData)
+      if (!reqData.hasOwnProperty('userId')) {
+        reject(new Error('Cannot post user profile without a userId'))
         return
-      } else {
-        userId = users[0]
       }
-
-      console.log('PUT userdata: Saving user data for userID ' + userId)
+      const userId = reqData.userId
+      if (!userAuth.syncCanPostUserProfile(reqData.authToken, userId)) {
+        reject(new Error('Not authorised to post details for userId - ' + userId))
+        return
+      }
+      
+      console.log('POST userdata: Saving user data for userID ' + userId)
       userData[userId] = reqData.data
       resolve()
     }

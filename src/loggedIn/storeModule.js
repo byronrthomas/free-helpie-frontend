@@ -133,8 +133,13 @@ export function loggedInStore (server) {
           .catch(err => commit('setLastServerError', err.message, { root: true }))
       },
       updateUserProfile ({ commit, dispatch, rootGetters }, userProfileData) {
+        const userId = rootGetters.userId
+        const postData = {
+          authToken: rootGetters.authToken,
+          data: userProfileData
+        }
         commit('setLastServerError', '', { root: true })
-        server.post('/users?token=' + rootGetters.authToken, userProfileData)
+        server.post(`/users/${userId}/profile`, postData)
           .then(() => dispatch('initialise'))
           .catch(err => commit('setLastServerError', err.message, { root: true }))
       },
