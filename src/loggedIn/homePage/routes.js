@@ -27,5 +27,5 @@ export const HOME_COMPONENT_ROUTES = [
   {path: 'createPost', component: CreatePostPage, name: 'createPost'},
   {path: 'editPost/:postId', component: EditPostPage, name: 'editPost', props: true},
   {path: 'yourConnections', component: YourConnectionsPage, name: 'yourConnections'},
-  {path: 'userDetail/:userId', component: UserDetailPage, name: 'userDetail', props: true},
+  {path: 'userDetail/:userId', component: UserDetailPage, name: 'userDetail', props: true}
 ]

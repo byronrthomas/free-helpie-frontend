@@ -18,31 +18,6 @@ function userProfileIsComplete (profile) {
 }
 
 // Within page, state is further split by resource types (REST endpoint paths)
-const EMPTY_USER_PROFILE = {
-  personalInfo: null,
-  locations: [],
-  locationTypes: [],
-  skills: [],
-  interests: [],
-  description: null,
-  timings: null,
-  agreedToTsAndCs: false
-}
-
-function extractUserData (resp) {
-  let users = []
-  for (let key in resp.data) {
-    if (resp.data.hasOwnProperty(key)) {
-      const user = {profile: resp.data[key], userId: parseInt(key)}
-      users.push(user)
-    }
-  }
-  if (users.length === 0) {
-    return EMPTY_USER_PROFILE
-  } else {
-    return users[0]
-  }
-}
 
 export function loggedInStore (server) {
   return {

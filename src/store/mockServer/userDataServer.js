@@ -48,7 +48,7 @@ export function UserDataServer (userAuth, initialUserData) {
         reject(new Error('Not authorised to post details for userId - ' + userId))
         return
       }
-      
+
       console.log('POST userdata: Saving user data for userID ' + userId)
       userData[userId] = reqData.data
       resolve()
