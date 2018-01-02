@@ -3,18 +3,19 @@ export function UserDataServer (userAuth, initialUserData) {
 
   return {
     get (reqData, resolve, reject) {
-      console.log('GET userdata: Getting users authorised by token ' + reqData)
-      const users = userAuth.syncGetAuthUsers(reqData)
-      if (users.length === 0) {
-        console.log('GET userdata: No users authorised by this token, returning empty')
+      console.log('GET userdata: req = ', reqData)
+      if (!reqData.hasOwnProperty('userId')) {
+        reject(new Error('Cannot get user profile without a userId'))
+        return
+      }
+      if (!userAuth.syncGetIsAllowedToSeeProfile(reqData.authToken, reqData.userId)) {
+        console.log('Not authorised to get details for userID, returning empty, userId: ', reqData.userId)
         resolve({data: {}})
         return
       }
-      const userIdForAuth = users[0]
-      console.log('GET userdata: User found as ' + userIdForAuth)
-      if (userData.hasOwnProperty(userIdForAuth)) {
-        let dataToReturn = {}
-        dataToReturn[userIdForAuth] = userData[userIdForAuth]
+      const userId = reqData.userId
+      if (userData.hasOwnProperty(userId)) {
+        const dataToReturn = userData[userId]
         resolve({data: dataToReturn})
         console.log('GET userdata: Data present for user - returning single user data')
       } else {

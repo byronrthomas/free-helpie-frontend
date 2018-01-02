@@ -22,6 +22,11 @@ export const rootGetters = {
     return state.userState == null
       ? ''
       : state.userState.authToken
+  },
+  userId: state => {
+    return state.userState == null
+      ? null
+      : state.userState.userId
   }
 }
 
@@ -49,7 +54,7 @@ export function store (server) {
         commit('setLastServerError', '')
         server
           .get('/accounts', payload)
-          .then(resp => commit('setUser', {authToken: resp.authData, username: payload.username}))
+          .then(resp => commit('setUser', {authToken: resp.authData, username: payload.username, userId: resp.userId}))
           .catch(err => commit('setLastServerError', err))
       },
       // TBH: this would have to be handled server-side

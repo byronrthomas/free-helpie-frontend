@@ -41,7 +41,7 @@ export function UserAuthServer () {
         if (userRecord.password === reqData.password) {
           if (!unverifiedUsers[reqData.username]) {
             usersToAuth.put(userRecord.userId, Math.random().toString())
-            resolve({authData: usersToAuth.getByKey(userRecord.userId)})
+            resolve({authData: usersToAuth.getByKey(userRecord.userId), userId: userRecord.userId})
           } else {
             reject(new Error('You need to verify your email address, please check your email for the verification email.'))
           }
@@ -115,6 +115,11 @@ export function UserAuthServer () {
       const loggedInUserId = usersToAuth.getByValue(token)
       // console.log('loggedInUserId = ', loggedInUserId)
       return userId && userId === loggedInUserId
+    },
+    syncGetIsAllowedToSeeProfile (token, userId) {
+      const loggedInUserId = usersToAuth.getByValue(token)
+      // Basically just "did they supply a userId and is their token valid"
+      return userId && loggedInUserId
     }
   }
 }

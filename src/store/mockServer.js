@@ -21,14 +21,16 @@ function wrapAsPromise (func, data) {
 }
 
 const FAVOURITES_PATH_REG_EXP = RegExp(/^\/users\/(\d+)\/favourites$/)
+const PROFILE_PATH_REG_EXP = RegExp(/^\/users\/(\d+)\/profile$/)
 function Server (userAuth, userData, posts, userFavourites, mails, accountDetails) {
   return {
     get (resourcePath, data) {
       if (resourcePath === '/accounts') {
         return wrapAsPromise(userAuth.get, data)
       }
-      if (resourcePath.startsWith('/users?token=')) {
-        return wrapAsPromise(userData.get, resourcePath.substring('/users?token='.length))
+      const matchToProfilePath = resourcePath.match(PROFILE_PATH_REG_EXP)
+      if (matchToProfilePath != null) {
+        return wrapAsPromise(userData.get, {userId: matchToProfilePath[1], ...data})
       }
       if (resourcePath === '/userDisplayInfos') {
         return wrapAsPromise(userData.getUserDisplayInfo, data)
@@ -40,9 +42,9 @@ function Server (userAuth, userData, posts, userFavourites, mails, accountDetail
       if (resourcePath === '/posts') {
         return wrapAsPromise(posts.get, data)
       }
-      const matchToUsersPath = resourcePath.match(FAVOURITES_PATH_REG_EXP)
-      if (matchToUsersPath != null) {
-        return wrapAsPromise(userFavourites.get, {userId: matchToUsersPath[1], ...data})
+      const matchToFavouritesPath = resourcePath.match(FAVOURITES_PATH_REG_EXP)
+      if (matchToFavouritesPath != null) {
+        return wrapAsPromise(userFavourites.get, {userId: matchToFavouritesPath[1], ...data})
       }
       if (resourcePath === '/activeMailThreads') {
         return wrapAsPromise(mails.getActiveThreads, data)

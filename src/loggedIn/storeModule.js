@@ -128,12 +128,11 @@ export function loggedInStore (server) {
       },
       initialise ({ commit, getters, rootGetters, dispatch }) {
         commit('setLastServerError', '', { root: true })
-        server.get('/users?token=' + rootGetters.authToken)
+        const userId = rootGetters.userId
+        server.get(`/users/${userId}/profile`, {authToken: rootGetters.authToken})
           .then(resp => {
             console.log(resp)
-            const {userId, profile} = extractUserData(resp)
-            commit('setProfile', profile)
-            commit('setUserId', userId)
+            commit('setProfile', resp.data)
             dispatch('getUserFavourites', userId)
           })
           .then(() => dispatch('refreshAccountDetails'))
@@ -148,14 +147,14 @@ export function loggedInStore (server) {
       },
       updateAccountDetails ({ commit, dispatch, state, rootGetters }, accountDetails) {
         commit('setLastServerError', '', { root: true })
-        const userId = state.userId
+        const userId = rootGetters.userId
         server.post(`/accountDetails/${userId}`, {authToken: rootGetters.authToken, data: accountDetails})
           .then(() => dispatch('refreshAccountDetails'))
           .catch(err => commit('setLastServerError', err.message, { root: true }))
       },
       updateFavourites ({ dispatch, commit, rootGetters, state }, newFavourites) {
         commit('setLastServerError', '', { root: true })
-        const userId = state.userId
+        const userId = rootGetters.userId
         const postData = {
           authToken: rootGetters.authToken,
           data: newFavourites
