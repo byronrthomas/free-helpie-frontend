@@ -20,7 +20,7 @@ function wrapAsPromise (func, data) {
     })
 }
 
-const USER_PATH_REG_EXP = RegExp(/^\/users\/(\d+)\/favourites$/)
+const FAVOURITES_PATH_REG_EXP = RegExp(/^\/users\/(\d+)\/favourites$/)
 function Server (userAuth, userData, posts, userFavourites, mails, accountDetails) {
   return {
     get (resourcePath, data) {
@@ -40,7 +40,7 @@ function Server (userAuth, userData, posts, userFavourites, mails, accountDetail
       if (resourcePath === '/posts') {
         return wrapAsPromise(posts.get, data)
       }
-      const matchToUsersPath = resourcePath.match(USER_PATH_REG_EXP)
+      const matchToUsersPath = resourcePath.match(FAVOURITES_PATH_REG_EXP)
       if (matchToUsersPath != null) {
         return wrapAsPromise(userFavourites.get, {userId: matchToUsersPath[1], ...data})
       }
@@ -74,7 +74,7 @@ function Server (userAuth, userData, posts, userFavourites, mails, accountDetail
       if (resourcePath === '/posts') {
         return wrapAsPromise(posts.post, data)
       }
-      const matchToUsersPath = resourcePath.match(USER_PATH_REG_EXP)
+      const matchToUsersPath = resourcePath.match(FAVOURITES_PATH_REG_EXP)
       if (matchToUsersPath != null) {
         return wrapAsPromise(userFavourites.post, {userId: matchToUsersPath[1], ...data})
       }
