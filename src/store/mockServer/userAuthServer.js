@@ -109,22 +109,24 @@ export function UserAuthServer () {
     syncCanPostAccountDetails (token, userId) {
       const loggedInUserId = usersToAuth.getByValue(token)
       // For now - are they loggedin and posting to their own userId?
-      return userId && userId === loggedInUserId
+      return (typeof userId !== 'undefined') && userId === loggedInUserId
     },
     syncCanPostUserProfile (token, userId) {
       const loggedInUserId = usersToAuth.getByValue(token)
       // For now - are they loggedin and posting to their own userId?
-      return userId && userId === loggedInUserId
+      return (typeof userId !== 'undefined') && userId === loggedInUserId
     },
     syncGetIsAllowedToSeeAccountDetails (token, userId) {
       const loggedInUserId = usersToAuth.getByValue(token)
       // console.log('loggedInUserId = ', loggedInUserId)
-      return userId && userId === loggedInUserId
+      return (typeof userId !== 'undefined') && userId === loggedInUserId
     },
     syncGetIsAllowedToSeeProfile (token, userId) {
       const loggedInUserId = usersToAuth.getByValue(token)
+      // console.log('loggedInUserId = ', loggedInUserId)
+      // console.log('userId = ', userId)
       // Basically just "did they supply a userId and is their token valid"
-      return userId && loggedInUserId
+      return Boolean((typeof userId !== 'undefined') &&  (typeof loggedInUserId !== 'undefined'))
     }
   }
 }

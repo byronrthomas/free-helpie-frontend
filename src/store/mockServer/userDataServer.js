@@ -9,8 +9,8 @@ export function UserDataServer (userAuth, initialUserData) {
         return
       }
       if (!userAuth.syncGetIsAllowedToSeeProfile(reqData.authToken, reqData.userId)) {
-        console.log('Not authorised to get details for userID, returning empty, userId: ', reqData.userId)
-        resolve({data: {}})
+        console.log('Not authorised to get details for userID, returning null, userId: ', reqData.userId)
+        resolve({data: null})
         return
       }
       const userId = reqData.userId

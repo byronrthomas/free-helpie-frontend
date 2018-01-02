@@ -4,6 +4,7 @@ import { LOCATIONS, SKILLS, INTERESTS, PROFILE_TEXT_SUGGESTION } from './profile
 import { singleMailThreadStore } from './homePage/mailThreadStore'
 import { activeMailThreadStore } from './homePage/activeMailThreadStore'
 import { userInfoStore } from './homePage/userInfoStore'
+import { userDetailStore } from './homePage/userDetailStore'
 
 function userProfileIsComplete (profile) {
   return profile &&
@@ -177,7 +178,9 @@ export function loggedInStore (server) {
 
       // mail details
       threaddetails: singleMailThreadStore(server),
-      threaddetailsusers: userInfoStore(server)
+      threaddetailsusers: userInfoStore(server),
+
+      userdetails: userDetailStore(server)
     }
   }
 }
