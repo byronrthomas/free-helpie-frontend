@@ -79,12 +79,14 @@ describe('PostDetailsPage', () => {
       newMail: jest.fn()
     }
     store = new Vuex.Store({
+      getters: {
+        userId (state) {return TEST_USER_ID}
+      },
       modules: {
         loggedin: {
           namespaced: true,
           getters: {
             favouritePostIds (state) {return []},
-            userId (state) {return TEST_USER_ID}
           },
           modules: {
             postdetails: {
