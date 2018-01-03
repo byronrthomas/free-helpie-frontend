@@ -24,6 +24,10 @@ const THREAD_FROM_WENDY_TO_TEST = {
   threadAuthor: WENDY_SMALL,
   postAuthor: TEST_USER}
 
+function randInt (maxInt) {
+  return Math.trunc(Math.random() * maxInt)
+}
+
 let mailSentDay = 1
 function makeEmail (threadId, text, sender) {
   return {
@@ -32,7 +36,7 @@ function makeEmail (threadId, text, sender) {
     mailData: {
       text: text,
       sender: sender,
-      sent: new Date(2000, 0, mailSentDay++)
+      sent: new Date(2000, 0, mailSentDay++, randInt(24), randInt(60), randInt(60), randInt(60))
     }
   }
 }

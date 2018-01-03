@@ -8,13 +8,13 @@
       :posters-name="postersName"
       @goToPostUser="gotToPostUser"/>
     <div v-if="!postedByCurrentUser">
-      <h5>Your conversation with {{ postersName }}</h5>
       <mail-thread-container
         :connect-or-cancel-allowed="cancelConnectAllowed"
         :mail-items="mailItems"
         :my-avatar="myAvatar"
         :other-avatar="postersAvatar"
         :user-id="userId"
+        :conversation-header-text="conversationHeaderText"
         @sendMail="sendMail($event)"
         @readUpToTimestamp="markAsRead"
         @makeConnection="makeConnection"
@@ -34,6 +34,7 @@
 import {mapGetters} from 'vuex'
 import MailThreadContainer from './shared/MailThreadContainer.vue'
 import PostDetailDisplay from './PostDetailDisplay.vue'
+import FormSegment from '../../sharedComponents/FormSegment.vue'
 
 // This probably exists, just can't find it right now
 function stringDotFormat (joiner, strings) {
@@ -81,6 +82,9 @@ export default {
           },
           id: -1}
       }
+    },
+    conversationHeaderText () {
+      return `Your conversation with ${this.postersName}`
     },
     formattedSkills () {
       return stringDotFormat(', ', this.post.skills)
@@ -181,7 +185,8 @@ export default {
   },
   components: {
     'mail-thread-container': MailThreadContainer,
-    'post-detail-display': PostDetailDisplay
+    'post-detail-display': PostDetailDisplay,
+    'form-segment': FormSegment
   }
 }
 </script>

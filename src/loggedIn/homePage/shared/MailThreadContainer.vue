@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <form-segment :header-text="conversationHeaderText">
     <mail-item
       v-for="mail in mailItems"
       :key="mail.id"
@@ -55,11 +55,12 @@
         Cancel connection with user</button>
       </div>
     </div>
-  </div>
+  </form-segment>
 </template>
 
 <script>
 import MailItem from './MailItem.vue'
+import FormSegment from '../../../sharedComponents/FormSegment.vue'
 
 export default {
   name: 'MailThreadContainer',
@@ -68,6 +69,7 @@ export default {
     userId: Number,
     myAvatar: Object,
     otherAvatar: Object,
+    conversationHeaderText: String,
     connectOrCancelAllowed: {
       type: String,
       default () {
@@ -120,7 +122,8 @@ export default {
     }
   },
   components: {
-    'mail-item': MailItem
+    'mail-item': MailItem,
+    'form-segment': FormSegment
   }
 }
 </script>

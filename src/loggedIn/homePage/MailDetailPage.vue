@@ -1,8 +1,8 @@
 <template>
   <div>
-  <h3>Your conversation with {{ otherName }}</h3>
   <mail-thread-container
     :connect-or-cancel-allowed="cancelConnectAllowed"
+    :conversation-header-text="conversationHeaderText"
     :mail-items="mailItems"
     :my-avatar="myAvatar"
     :other-avatar="otherAvatar"
@@ -54,6 +54,9 @@ export default {
     }
   },
   computed: {
+    conversationHeaderText () {
+      return `Your conversation with ${this.otherName}`
+    },
     amThreadAuthor () {
       return this.userId === this.threadId.threadAuthor
     },
