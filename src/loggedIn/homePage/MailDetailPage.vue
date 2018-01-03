@@ -2,13 +2,15 @@
   <div>
   <h3>Your conversation with {{ otherName }}</h3>
   <mail-thread-container
-    :connect-or-cancel-allowed="'disabled'"
+    :connect-or-cancel-allowed="cancelConnectAllowed"
     :mail-items="mailItems"
     :my-avatar="myAvatar"
     :other-avatar="otherAvatar"
     :user-id="userId"
     @sendMail="sendMail($event)"
-    @readUpToTimestamp="markAsRead"/>
+    @readUpToTimestamp="markAsRead"
+    @makeConnection="makeConnection"
+    @cancelConnection="cancelConnection"/>
   </div>
 </template>
 
@@ -37,11 +39,28 @@ export default {
         threadAuthor: this.threadId.threadAuthor
       }
       this.$store.dispatch('loggedin/threaddetails/markThreadAsRead', reqData)
+    },
+    makeConnection () {
+      const message = `You have asked to connect with ${this.otherName} - normally this ` +
+        'would mean that they get an invite to connect and can choose to connect with you (see' +
+        ' Your Connections for more info) to share contact details. This is not yet implemented.'
+      alert(message)
+    },
+    cancelConnection () {
+      const message = `You have asked to cancel your connection with ${this.otherName} - normally this` +
+        ' would mean that your invite to connect is withdrawn and you will not be sharing' +
+        ' contact details any more. This is not yet implemented.'
+      alert(message)
     }
   },
   computed: {
     amThreadAuthor () {
       return this.userId === this.threadId.threadAuthor
+    },
+    cancelConnectAllowed () {
+      return this.mailItems.length > 0
+        ? 'connectAllowed'
+        : 'disabled'
     },
     otherUserId () {
       const posterId = parseInt(this.postAuthor)
