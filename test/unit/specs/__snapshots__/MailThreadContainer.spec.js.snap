@@ -3,356 +3,572 @@
 exports[`Mail thread container should be rendered correctly when there are messages and the cancelConnect state is cancelAllowed 1`] = `
 <div>
   <div
-    class="panel panel-default"
+    class="row"
   >
     <div
-      class="panel-heading"
+      class="col-xs-12"
     >
       <div
-        class="row"
+        class="floatable-bordered"
       >
-        <div
-          class="col-sm-3"
+        <h2
+          style="text-align: center;"
         >
-          <strong>
-             Them 
-          </strong>
-        </div>
+          
+        </h2>
+         
+        <br />
+      </div>
+       
+      <div
+        class="floatable-bordered floatable-bordered-bottom"
+      >
+        <br />
          
         <div
-          class="col-sm-3 col-sm-offset-6"
+          class="row"
         >
-          <p
-            style="float: right;"
+          <div
+            class="col-xs-10 col-xs-offset-1"
           >
-            2014-11-10 00:00:01
-          </p>
-        </div>
-      </div>
-    </div>
-     
-    <div
-      class="panel-body"
-    >
-      
+            <div
+              class="panel panel-default"
+            >
+              <div
+                class="panel-heading"
+              >
+                <div
+                  class="row"
+                >
+                  <div
+                    class="col-sm-3"
+                  >
+                    <strong>
+                       Them 
+                    </strong>
+                  </div>
+                   
+                  <div
+                    class="col-sm-3 col-sm-offset-6"
+                  >
+                    <p
+                      style="float: right;"
+                    >
+                      2014-11-10 00:00:01
+                    </p>
+                  </div>
+                </div>
+              </div>
+               
+              <div
+                class="panel-body"
+              >
+                
     
   
-    </div>
-  </div>
-   
-  <div
-    class="panel panel-primary"
-  >
-    <div
-      class="panel-heading"
-    >
-      <h3
-        class="panel-title"
-      >
-        Send a message
-      </h3>
-    </div>
-     
-    <div
-      class="panel-body"
-    >
-      <textarea
-        class="fullsizeTextArea"
-        id="messageContents"
-        name="messageContents"
-      />
+              </div>
+            </div>
+             
+            <div
+              class="panel panel-primary"
+            >
+              <div
+                class="panel-heading"
+              >
+                <h3
+                  class="panel-title"
+                >
+                  Send a message
+                </h3>
+              </div>
+               
+              <div
+                class="panel-body"
+              >
+                <textarea
+                  class="fullsizeTextArea"
+                  id="messageContents"
+                  name="messageContents"
+                />
+                 
+                <button
+                  class="btn btn-primary"
+                  disabled="disabled"
+                  id="submitButton"
+                >
+                  Send
+                </button>
+              </div>
+            </div>
+             
+            <!---->
+             
+            <!---->
+          </div>
+        </div>
+      </div>
        
-      <button
-        class="btn btn-primary"
-        disabled="disabled"
-        id="submitButton"
-      >
-        Send
-      </button>
+      <br />
     </div>
   </div>
-   
-  <!---->
-   
-  <!---->
 </div>
 `;
 
 exports[`Mail thread container should be rendered correctly when there are messages and the cancelConnect state is connectAllowed 1`] = `
 <div>
   <div
-    class="panel panel-default"
+    class="row"
   >
     <div
-      class="panel-heading"
+      class="col-xs-12"
     >
       <div
-        class="row"
+        class="floatable-bordered"
       >
-        <div
-          class="col-sm-3"
+        <h2
+          style="text-align: center;"
         >
-          <strong>
-             Them 
-          </strong>
-        </div>
+          
+        </h2>
+         
+        <br />
+      </div>
+       
+      <div
+        class="floatable-bordered floatable-bordered-bottom"
+      >
+        <br />
          
         <div
-          class="col-sm-3 col-sm-offset-6"
+          class="row"
         >
-          <p
-            style="float: right;"
+          <div
+            class="col-xs-10 col-xs-offset-1"
           >
-            2014-11-10 00:00:01
-          </p>
-        </div>
-      </div>
-    </div>
-     
-    <div
-      class="panel-body"
-    >
-      
+            <div
+              class="panel panel-default"
+            >
+              <div
+                class="panel-heading"
+              >
+                <div
+                  class="row"
+                >
+                  <div
+                    class="col-sm-3"
+                  >
+                    <strong>
+                       Them 
+                    </strong>
+                  </div>
+                   
+                  <div
+                    class="col-sm-3 col-sm-offset-6"
+                  >
+                    <p
+                      style="float: right;"
+                    >
+                      2014-11-10 00:00:01
+                    </p>
+                  </div>
+                </div>
+              </div>
+               
+              <div
+                class="panel-body"
+              >
+                
     
   
-    </div>
-  </div>
-   
-  <div
-    class="panel panel-primary"
-  >
-    <div
-      class="panel-heading"
-    >
-      <h3
-        class="panel-title"
-      >
-        Send a message
-      </h3>
-    </div>
-     
-    <div
-      class="panel-body"
-    >
-      <textarea
-        class="fullsizeTextArea"
-        id="messageContents"
-        name="messageContents"
-      />
+              </div>
+            </div>
+             
+            <div
+              class="panel panel-primary"
+            >
+              <div
+                class="panel-heading"
+              >
+                <h3
+                  class="panel-title"
+                >
+                  Send a message
+                </h3>
+              </div>
+               
+              <div
+                class="panel-body"
+              >
+                <textarea
+                  class="fullsizeTextArea"
+                  id="messageContents"
+                  name="messageContents"
+                />
+                 
+                <button
+                  class="btn btn-primary"
+                  disabled="disabled"
+                  id="submitButton"
+                >
+                  Send
+                </button>
+              </div>
+            </div>
+             
+            <!---->
+             
+            <!---->
+          </div>
+        </div>
+      </div>
        
-      <button
-        class="btn btn-primary"
-        disabled="disabled"
-        id="submitButton"
-      >
-        Send
-      </button>
+      <br />
     </div>
   </div>
-   
-  <!---->
-   
-  <!---->
 </div>
 `;
 
 exports[`Mail thread container should be rendered correctly when there are messages and the cancelConnect state is disabled 1`] = `
 <div>
   <div
-    class="panel panel-default"
+    class="row"
   >
     <div
-      class="panel-heading"
+      class="col-xs-12"
     >
       <div
-        class="row"
+        class="floatable-bordered"
       >
-        <div
-          class="col-sm-3"
+        <h2
+          style="text-align: center;"
         >
-          <strong>
-             Them 
-          </strong>
-        </div>
+          
+        </h2>
+         
+        <br />
+      </div>
+       
+      <div
+        class="floatable-bordered floatable-bordered-bottom"
+      >
+        <br />
          
         <div
-          class="col-sm-3 col-sm-offset-6"
+          class="row"
         >
-          <p
-            style="float: right;"
+          <div
+            class="col-xs-10 col-xs-offset-1"
           >
-            2014-11-10 00:00:01
-          </p>
-        </div>
-      </div>
-    </div>
-     
-    <div
-      class="panel-body"
-    >
-      
+            <div
+              class="panel panel-default"
+            >
+              <div
+                class="panel-heading"
+              >
+                <div
+                  class="row"
+                >
+                  <div
+                    class="col-sm-3"
+                  >
+                    <strong>
+                       Them 
+                    </strong>
+                  </div>
+                   
+                  <div
+                    class="col-sm-3 col-sm-offset-6"
+                  >
+                    <p
+                      style="float: right;"
+                    >
+                      2014-11-10 00:00:01
+                    </p>
+                  </div>
+                </div>
+              </div>
+               
+              <div
+                class="panel-body"
+              >
+                
     
   
-    </div>
-  </div>
-   
-  <div
-    class="panel panel-primary"
-  >
-    <div
-      class="panel-heading"
-    >
-      <h3
-        class="panel-title"
-      >
-        Send a message
-      </h3>
-    </div>
-     
-    <div
-      class="panel-body"
-    >
-      <textarea
-        class="fullsizeTextArea"
-        id="messageContents"
-        name="messageContents"
-      />
+              </div>
+            </div>
+             
+            <div
+              class="panel panel-primary"
+            >
+              <div
+                class="panel-heading"
+              >
+                <h3
+                  class="panel-title"
+                >
+                  Send a message
+                </h3>
+              </div>
+               
+              <div
+                class="panel-body"
+              >
+                <textarea
+                  class="fullsizeTextArea"
+                  id="messageContents"
+                  name="messageContents"
+                />
+                 
+                <button
+                  class="btn btn-primary"
+                  disabled="disabled"
+                  id="submitButton"
+                >
+                  Send
+                </button>
+              </div>
+            </div>
+             
+            <!---->
+             
+            <!---->
+          </div>
+        </div>
+      </div>
        
-      <button
-        class="btn btn-primary"
-        disabled="disabled"
-        id="submitButton"
-      >
-        Send
-      </button>
+      <br />
     </div>
   </div>
-   
-  <!---->
-   
-  <!---->
 </div>
 `;
 
 exports[`Mail thread container should be rendered correctly when there are no messages and the cancelConnect state is cancelAllowed 1`] = `
 <div>
-   
   <div
-    class="panel panel-primary"
+    class="row"
   >
     <div
-      class="panel-heading"
+      class="col-xs-12"
     >
-      <h3
-        class="panel-title"
+      <div
+        class="floatable-bordered"
       >
-        Send a message
-      </h3>
-    </div>
-     
-    <div
-      class="panel-body"
-    >
-      <textarea
-        class="fullsizeTextArea"
-        id="messageContents"
-        name="messageContents"
-      />
+        <h2
+          style="text-align: center;"
+        >
+          
+        </h2>
+         
+        <br />
+      </div>
        
-      <button
-        class="btn btn-primary"
-        disabled="disabled"
-        id="submitButton"
+      <div
+        class="floatable-bordered floatable-bordered-bottom"
       >
-        Send
-      </button>
+        <br />
+         
+        <div
+          class="row"
+        >
+          <div
+            class="col-xs-10 col-xs-offset-1"
+          >
+             
+            <div
+              class="panel panel-primary"
+            >
+              <div
+                class="panel-heading"
+              >
+                <h3
+                  class="panel-title"
+                >
+                  Send a message
+                </h3>
+              </div>
+               
+              <div
+                class="panel-body"
+              >
+                <textarea
+                  class="fullsizeTextArea"
+                  id="messageContents"
+                  name="messageContents"
+                />
+                 
+                <button
+                  class="btn btn-primary"
+                  disabled="disabled"
+                  id="submitButton"
+                >
+                  Send
+                </button>
+              </div>
+            </div>
+             
+            <!---->
+             
+            <!---->
+          </div>
+        </div>
+      </div>
+       
+      <br />
     </div>
   </div>
-   
-  <!---->
-   
-  <!---->
 </div>
 `;
 
 exports[`Mail thread container should be rendered correctly when there are no messages and the cancelConnect state is connectAllowed 1`] = `
 <div>
-   
   <div
-    class="panel panel-primary"
+    class="row"
   >
     <div
-      class="panel-heading"
+      class="col-xs-12"
     >
-      <h3
-        class="panel-title"
+      <div
+        class="floatable-bordered"
       >
-        Send a message
-      </h3>
-    </div>
-     
-    <div
-      class="panel-body"
-    >
-      <textarea
-        class="fullsizeTextArea"
-        id="messageContents"
-        name="messageContents"
-      />
+        <h2
+          style="text-align: center;"
+        >
+          
+        </h2>
+         
+        <br />
+      </div>
        
-      <button
-        class="btn btn-primary"
-        disabled="disabled"
-        id="submitButton"
+      <div
+        class="floatable-bordered floatable-bordered-bottom"
       >
-        Send
-      </button>
+        <br />
+         
+        <div
+          class="row"
+        >
+          <div
+            class="col-xs-10 col-xs-offset-1"
+          >
+             
+            <div
+              class="panel panel-primary"
+            >
+              <div
+                class="panel-heading"
+              >
+                <h3
+                  class="panel-title"
+                >
+                  Send a message
+                </h3>
+              </div>
+               
+              <div
+                class="panel-body"
+              >
+                <textarea
+                  class="fullsizeTextArea"
+                  id="messageContents"
+                  name="messageContents"
+                />
+                 
+                <button
+                  class="btn btn-primary"
+                  disabled="disabled"
+                  id="submitButton"
+                >
+                  Send
+                </button>
+              </div>
+            </div>
+             
+            <!---->
+             
+            <!---->
+          </div>
+        </div>
+      </div>
+       
+      <br />
     </div>
   </div>
-   
-  <!---->
-   
-  <!---->
 </div>
 `;
 
 exports[`Mail thread container should be rendered correctly when there are no messages and the cancelConnect state is disabled 1`] = `
 <div>
-   
   <div
-    class="panel panel-primary"
+    class="row"
   >
     <div
-      class="panel-heading"
+      class="col-xs-12"
     >
-      <h3
-        class="panel-title"
+      <div
+        class="floatable-bordered"
       >
-        Send a message
-      </h3>
-    </div>
-     
-    <div
-      class="panel-body"
-    >
-      <textarea
-        class="fullsizeTextArea"
-        id="messageContents"
-        name="messageContents"
-      />
+        <h2
+          style="text-align: center;"
+        >
+          
+        </h2>
+         
+        <br />
+      </div>
        
-      <button
-        class="btn btn-primary"
-        disabled="disabled"
-        id="submitButton"
+      <div
+        class="floatable-bordered floatable-bordered-bottom"
       >
-        Send
-      </button>
+        <br />
+         
+        <div
+          class="row"
+        >
+          <div
+            class="col-xs-10 col-xs-offset-1"
+          >
+             
+            <div
+              class="panel panel-primary"
+            >
+              <div
+                class="panel-heading"
+              >
+                <h3
+                  class="panel-title"
+                >
+                  Send a message
+                </h3>
+              </div>
+               
+              <div
+                class="panel-body"
+              >
+                <textarea
+                  class="fullsizeTextArea"
+                  id="messageContents"
+                  name="messageContents"
+                />
+                 
+                <button
+                  class="btn btn-primary"
+                  disabled="disabled"
+                  id="submitButton"
+                >
+                  Send
+                </button>
+              </div>
+            </div>
+             
+            <!---->
+             
+            <!---->
+          </div>
+        </div>
+      </div>
+       
+      <br />
     </div>
   </div>
-   
-  <!---->
-   
-  <!---->
 </div>
 `;

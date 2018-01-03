@@ -23,7 +23,7 @@ exports[`post edit form has the expected HTML when all checks are inactive (i.e.
       class="row"
     >
       <div
-        class="col-xs-12 col-sm-8 col-sm-offset-2"
+        class="col-xs-12"
       >
         <div
           class="floatable-bordered"
@@ -101,7 +101,7 @@ exports[`post edit form has the expected HTML when all checks are inactive (i.e.
       class="row"
     >
       <div
-        class="col-xs-12 col-sm-8 col-sm-offset-2"
+        class="col-xs-12"
       >
         <div
           class="floatable-bordered"
@@ -207,7 +207,7 @@ exports[`post edit form has the expected HTML when all checks are inactive (i.e.
       class="row"
     >
       <div
-        class="col-xs-12 col-sm-8 col-sm-offset-2"
+        class="col-xs-12"
       >
         <div
           class="floatable-bordered"
@@ -339,7 +339,7 @@ exports[`post edit form has the expected HTML when all checks are inactive (i.e.
       class="row"
     >
       <div
-        class="col-xs-12 col-sm-8 col-sm-offset-2"
+        class="col-xs-12"
       >
         <div
           class="floatable-bordered"
@@ -558,7 +558,7 @@ exports[`post edit form has the expected HTML when all checks are triggered (i.e
       class="row"
     >
       <div
-        class="col-xs-12 col-sm-8 col-sm-offset-2"
+        class="col-xs-12"
       >
         <div
           class="floatable-bordered"
@@ -650,7 +650,7 @@ exports[`post edit form has the expected HTML when all checks are triggered (i.e
       class="row"
     >
       <div
-        class="col-xs-12 col-sm-8 col-sm-offset-2"
+        class="col-xs-12"
       >
         <div
           class="floatable-bordered"
@@ -747,7 +747,7 @@ exports[`post edit form has the expected HTML when all checks are triggered (i.e
       class="row"
     >
       <div
-        class="col-xs-12 col-sm-8 col-sm-offset-2"
+        class="col-xs-12"
       >
         <div
           class="floatable-bordered"
@@ -850,7 +850,7 @@ exports[`post edit form has the expected HTML when all checks are triggered (i.e
       class="row"
     >
       <div
-        class="col-xs-12 col-sm-8 col-sm-offset-2"
+        class="col-xs-12"
       >
         <div
           class="floatable-bordered"
