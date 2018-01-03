@@ -29,6 +29,17 @@
         </button>
       </div>
     </div>
+    <div class="row" v-if="isFiltered">
+      <div class="col-xs-12">
+        <div class="alert alert-info">        
+          <strong>Filtering by:</strong>
+          <p v-if="filteringBySkills"> {{skillsFilterDescription}} </p>
+          <p v-if="filteringByInterests"> {{interestsFilterDescription}} </p>
+          <p v-if="filteringByLocations"> {{locationsFilterDescription}} </p>
+        </div>
+        </div>
+    </div>
+      
     </post-summaries-container>
 </template>
 
@@ -36,16 +47,40 @@
 import { mapGetters } from 'vuex'
 import PostSummariesContainer from './shared/PostSummariesContainer.vue'
 
+function formatFilterList(filterType, list) {
+  return list.length === 0 
+    ? `${filterType}: NONE - will return no results`
+    : `${filterType}: ${list.join(' OR ')}`
+}
+
 export default {
-  data () {
-    return {
-      // TODO: all of these should come from central state
-      // need to set up some test user profile data first
-      userSkills: ['Executive coaching'],
-      userLocations: ['North-west London'],
-      userInterests: ['Smoking pot']}
-  },
   computed: {
+    userSkills () {
+      return this.userProfile.skills
+    },
+    userLocations () {
+      // TODO: should handle remote correctly here
+      return this.userProfile.locations
+    },
+    userInterests () {
+      return this.userProfile.interests
+    },
+    skillsFilterDescription () {
+      return formatFilterList('Skills', this.userSkills)
+    },
+    interestsFilterDescription () {
+      return formatFilterList('Interests', this.userInterests)
+    },
+    locationsFilterDescription () {
+      const listOfLocations = [...this.userLocations]
+      if (this.userProfile.locationTypes.includes['Remote']) {
+        listOfLocations.push('REMOTE')  
+      }
+      return formatFilterList('Locations', listOfLocations)
+    },        
+    isFiltered () {
+      return this.filteringBySkills || this.filteringByLocations || this.filteringByInterests
+    },
     ...mapGetters({
       filteringBySkills: 'loggedin/latestposts/isFilteredBySkills',
       filteringByLocations: 'loggedin/latestposts/isFilteredByLocations',
@@ -53,7 +88,8 @@ export default {
       posts: 'loggedin/latestposts/getPosts',
       profileInfo: 'loggedin/latestposts/profileInfo',
       favouritePostIds: 'loggedin/favouritePostIds',
-      userId: 'userId'})
+      userId: 'userId',
+      userProfile: 'loggedin/userProfile'})
   },
   methods: {
     toggleSkillsFilter () {
