@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="row">
-      <div class="col-xs-12 col-sm-8 col-sm-offset-2">
+      <div class="col-xs-12">
         <div class="floatable-bordered">
           <h2 style="text-align: center">{{ headerText }}</h2>
           <br>
