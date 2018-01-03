@@ -1,13 +1,5 @@
 <template>
   <div style="background-color: #fffafa">
-    <div class="row">
-      <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
-        <p style="color:rgb(235, 113, 180); text-align: center" class="h2">
-          Posted by: 
-          <a href="#" style="color:rgb(235, 113, 180)" @click.prevent="$emit('goToPostUser')">{{postersName}}</a>
-        </p>
-      </div>
-    </div>
     <form-segment header-text="What do you need">
         <div class="form-group">
           <label for="title">Title</label>

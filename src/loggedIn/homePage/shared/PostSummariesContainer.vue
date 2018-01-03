@@ -4,13 +4,13 @@
     <div class="row">
       <div class="col-xs-12">
         <post-summary-item 
-          v-for="(post, postId) in posts" 
+          v-for="(post, postIdKey) in posts" 
           :post="post" 
           :user-display="getDisplayName(post.postedBy)"
-          :key="postId"
-          :is-saved="isSaved(postId)"
-          @viewPost="viewPost(postId)"
-          @savePost="$emit('updateFavouritePosts', postId, !isSaved(postId))"
+          :key="postIdKey"
+          :is-saved="isSaved(postId(postIdKey))"
+          @viewPost="viewPost(postId(postIdKey))"
+          @savePost="$emit('updateFavouritePosts', postId(postIdKey), !isSaved(postIdKey))"
           @viewUser="viewUser(post.postedBy)" />
       </div>
     </div>
@@ -31,8 +31,11 @@ export default {
     loggedInUserId: Number
   },
   methods: {
-    isSaved (postId) {
-      return this.favouritePostIds.includes(postId)
+    postId (postIdKey) {
+      return parseInt(postIdKey)
+    },
+    isSaved (postIdKey) {
+      return this.favouritePostIds.includes(this.postId(postIdKey))
     },
     viewPost (postId) {
       this.$router.push({name: 'postDetail', params: {postId}})

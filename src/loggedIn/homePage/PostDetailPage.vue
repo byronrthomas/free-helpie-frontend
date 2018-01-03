@@ -1,12 +1,31 @@
 <template>
   <div>
-    <button class="btn btn-primary" @click="toggleFavourite">{{ toggleSaveText }}</button>
-    <router-link tag="button" :to="{name: 'editPost', params: {postId: postKey}}" v-if="ableToEdit" class="btn btn-primary">Edit</router-link>
-    <button v-if="ableToEdit" class="btn btn-primary" @click="deletePost">Delete</button>
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="floatable-bordered">
+          <p style="color:rgb(235, 113, 180); text-align: center" class="h2">Posted by:
+            <a href="#" style="color:rgb(235, 113, 180)" @click.prevent="gotoPostUser">
+              {{postersName}}
+            </a>
+          </p>
+          <br>
+        </div>
+        <div class="floatable-bordered floatable-bordered-bottom">
+          <br>
+          <div class="row">
+            <div class="col-xs-6 col-xs-offset-3">
+              <button class="btn btn-primary btn-block" @click="toggleFavourite">{{ toggleSaveText }}</button>
+            </div>
+          </div>
+          <br>
+        </div>
+        <br>
+      </div>
+    </div>
     <post-detail-display 
       :post="post" 
       :posters-name="postersName"
-      @goToPostUser="gotToPostUser"/>
+      @goToPostUser="gotoPostUser"/>
     <div v-if="!postedByCurrentUser">
       <mail-thread-container
         :connect-or-cancel-allowed="cancelConnectAllowed"
@@ -53,10 +72,7 @@ export default {
     }
   },
   props: {
-    postId: String,
-    validator (value) {
-      return !isNaN(parseInt(value))
-    }
+    postId: Number,
   },
   computed: {
     postKey () {
@@ -113,7 +129,7 @@ export default {
       return this.favouritePostIds.includes(this.postKey)
     },
     toggleSaveText () {
-      return this.isFavourited ? 'Unfavourite' : 'Favourite'
+      return this.isFavourited ? 'Remove this from saved posts' : 'Save this post for later'
     },
     postersName () {
       const userData = this.profileInfo[this.post.postedBy] || {name: '[unknown]'}
@@ -148,7 +164,7 @@ export default {
     onDeleted () {
       this.$router.push({name: 'latestPosts'})
     },
-    gotToPostUser () {
+    gotoPostUser () {
       this.$router.push({name: 'userDetail', params: {userId: this.post.postedBy}})
     },
     deletePost () {
