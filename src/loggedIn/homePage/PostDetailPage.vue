@@ -3,15 +3,10 @@
     <button class="btn btn-primary" @click="toggleFavourite">{{ toggleSaveText }}</button>
     <router-link tag="button" :to="{name: 'editPost', params: {postId: postKey}}" v-if="ableToEdit" class="btn btn-primary">Edit</router-link>
     <button v-if="ableToEdit" class="btn btn-primary" @click="deletePost">Delete</button>
-    <h3>{{ post.title }}</h3>
-    <p><strong>Requested by</strong> {{ postersName }} </p>
-    <br>
-    <p><strong>Location:</strong> {{ formattedLocation }}</p>
-    <br>
-    <p>{{ formattedSkills }} {{ formattedInterests }}</p>
-    <br>
-    <h5>Description</h5>
-    <div> {{ post.description }}</div>
+    <post-detail-display 
+      :post="post" 
+      :posters-name="postersName"
+      @goToPostUser="gotToPostUser"/>
     <div v-if="!postedByCurrentUser">
       <h5>Your conversation with {{ postersName }}</h5>
       <mail-thread-container
@@ -38,6 +33,7 @@
 <script>
 import {mapGetters} from 'vuex'
 import MailThreadContainer from './shared/MailThreadContainer.vue'
+import PostDetailDisplay from './PostDetailDisplay.vue'
 
 // This probably exists, just can't find it right now
 function stringDotFormat (joiner, strings) {
@@ -76,6 +72,13 @@ export default {
           interests: [],
           location: '',
           remote: false,
+          timings: {
+            regularAmount: {
+              unit: '',
+              frequency: ''
+            },
+            slots: []
+          },
           id: -1}
       }
     },
@@ -140,6 +143,9 @@ export default {
     onDeleted () {
       this.$router.push({name: 'latestPosts'})
     },
+    gotToPostUser () {
+      this.$router.push({name: 'userDetail', params: {userId: this.post.postedBy}})
+    },
     deletePost () {
       if (confirm('You are about to delete this post - are you sure?')) {
         this.$store.dispatch('loggedin/postdetails/deletePost', {postId: this.postKey, successCallback: this.onDeleted})
@@ -174,7 +180,8 @@ export default {
     }
   },
   components: {
-    'mail-thread-container': MailThreadContainer
+    'mail-thread-container': MailThreadContainer,
+    'post-detail-display': PostDetailDisplay
   }
 }
 </script>

@@ -2,7 +2,10 @@
   <div style="background-color: #fffafa">
     <div class="row">
       <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
-        <h4 style="color:rgb(235, 113, 180); text-align: center">{{postersName}}</h4>
+        <p style="color:rgb(235, 113, 180); text-align: center" class="h2">
+          Posted by: 
+          <a href="#" style="color:rgb(235, 113, 180)" @click.prevent="$emit('goToPostUser')">{{postersName}}</a>
+        </p>
       </div>
     </div>
     <form-segment header-text="What do you need">
@@ -12,7 +15,7 @@
         </div>
         <div class="form-group">
           <label>Give some more details</label><br>
-          <textarea disabled="true" v-model="post.description" :placeholder="descriptionSuggestion"
+          <textarea disabled="true" v-model="post.description"
           rows="5"
           class="form-control"/>
         </div>      
@@ -30,17 +33,17 @@
       </div>
       <div class="form-group">
         <label>At specific locations:</label>
-        <multi-select-display :selected-items="post.locations" :possibleOptions="possibleLocations"/>
+        <multi-select-display :selected-items="post.locations"/>
       </div>
     </form-segment>
     <form-segment header-text="Interests &amp; skills"> 
         <div class="form-group">
           <label>People might want to help if they are interested in:</label>
-          <multi-select-display :selected-items="post.interests" :possibleOptions="possibleInterests"/>
+          <multi-select-display :selected-items="post.interests"/>
         </div>
         <div class="form-group">
           <label>Skills that your helpers will need:</label>
-          <multi-select-display :selected-items="post.skills" :possibleOptions="possibleSkills"/>
+          <multi-select-display :selected-items="post.skills"/>
         </div>
     </form-segment>
     <form-segment header-text="Time required">
