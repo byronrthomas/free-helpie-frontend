@@ -20,13 +20,14 @@
         @makeConnection="makeConnection"
         @cancelConnection="cancelConnection"/>
     </div>
-    <div v-else>
-      <h5>This is your post</h5>
-      <p>You cannot start a conversation about your own post - somebody needs
-        to start a conversation with you.</p>
-      <br>
-      <p>To view conversations from others about your posts, view <router-link :to="{name: 'mailbox'}" id="linkToMailbox">your mailbox</router-link></p>
-    </div>
+    <form-segment :header-text="'NOTE: this is your post'">
+      <div class="alert alert-warning">
+        <p>You cannot start a conversation about your own post - somebody needs
+          to start a conversation with you.</p>
+        <br>
+        <p>To view conversations from others about your posts, view <router-link :to="{name: 'mailbox'}" id="linkToMailbox">your mailbox</router-link></p>
+      </div>
+    </form-segment>
   </div>
 </template>
 
@@ -101,7 +102,7 @@ export default {
     },
     ableToEdit () {
       // TODO: this should really be based on asking userAuth (is userXXX allowed to edit postYYY)
-      return this.post.postedBy === this.username
+      return this.post.postedBy === this.userId
     },
     cancelConnectAllowed () {
       return this.mailItems.length > 0
