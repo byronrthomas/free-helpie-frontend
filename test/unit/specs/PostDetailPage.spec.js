@@ -69,6 +69,47 @@ function updatePostStore(postId) {
   }
 }
 
+function storeConfig (emails, actions) {
+  return {
+    getters: {
+      userId (state) {return TEST_USER_ID}
+    },
+    modules: {
+      loggedin: {
+        namespaced: true,
+        getters: {
+          favouritePostIds (state) {return []},
+        },
+        modules: {
+          postdetails: {
+            namespaced: true,
+            getters: {
+              post (state) { return postStore.post },
+              profileInfo (state) {
+                return USER_DISPLAY_INFOS
+              }
+            },
+            actions: {
+              getPost ({state}, postId) {
+                updatePostStore(postId)
+              }
+            }
+          },
+          postthread: {
+            namespaced: true,
+            actions: actions,
+            getters: {
+              mailItems (state) {
+                return emails
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 describe('PostDetailsPage', () => {
   let actions
   let store
@@ -78,44 +119,7 @@ describe('PostDetailsPage', () => {
       getMailThread: jest.fn(),
       newMail: jest.fn()
     }
-    store = new Vuex.Store({
-      getters: {
-        userId (state) {return TEST_USER_ID}
-      },
-      modules: {
-        loggedin: {
-          namespaced: true,
-          getters: {
-            favouritePostIds (state) {return []},
-          },
-          modules: {
-            postdetails: {
-              namespaced: true,
-              getters: {
-                post (state) { return postStore.post },
-                profileInfo (state) {
-                  return USER_DISPLAY_INFOS
-                }
-              },
-              actions: {
-                getPost ({state}, postId) {
-                  updatePostStore(postId)
-                }
-              }
-            },
-            postthread: {
-              namespaced: true,
-              actions: actions,
-              getters: {
-                mailItems (state) {
-                  return testEmails
-                }
-              }
-            }
-          }
-        }
-      }
-    })
+    store = new Vuex.Store(storeConfig(testEmails, actions))
   })
 
   it('should dispatch getMailThread(thread_id, sent_date ASC) if post.postedBy !== currentUser', () => {
@@ -158,5 +162,18 @@ describe('PostDetailsPage', () => {
     const onTest = mount(PostDetailPage, {localVue, store, propsData: {postId: `${otherUserPostId}`}})
     
     expect(onTest.find(MailThreadContainer).vm.mailItems).toEqual(testEmails)
+  })
+
+  it('should pass cancelConnectState as disabled to its MailThreadContainer component if there are no emails', () => {
+    const noEmailsStore = new Vuex.Store(storeConfig([], actions))
+    const onTest = mount(PostDetailPage, {localVue, store: noEmailsStore, propsData: {postId: `${otherUserPostId}`}})
+    
+    expect(onTest.find(MailThreadContainer).vm.connectOrCancelAllowed).toEqual('disabled')
+  })
+
+  it('should pass cancelConnectState as connectAllowed to its MailThreadContainer component if there are no emails', () => {
+    const onTest = mount(PostDetailPage, {localVue, store, propsData: {postId: `${otherUserPostId}`}})
+    
+    expect(onTest.find(MailThreadContainer).vm.connectOrCancelAllowed).toEqual('connectAllowed')
   })
 })

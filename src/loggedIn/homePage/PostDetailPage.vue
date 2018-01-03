@@ -15,7 +15,7 @@
     <div v-if="!postedByCurrentUser">
       <h5>Your conversation with {{ postersName }}</h5>
       <mail-thread-container
-        :connect-or-cancel-allowed="'disabled'"
+        :connect-or-cancel-allowed="cancelConnectAllowed"
         :mail-items="mailItems"
         :my-avatar="myAvatar"
         :other-avatar="postersAvatar"
@@ -93,6 +93,11 @@ export default {
     ableToEdit () {
       // TODO: this should really be based on asking userAuth (is userXXX allowed to edit postYYY)
       return this.post.postedBy === this.username
+    },
+    cancelConnectAllowed () {
+      return this.mailItems.length > 0 
+        ? 'connectAllowed'
+        : 'disabled'
     },
     isFavourited () {
       return this.favouritePostIds.includes(this.postKey)
