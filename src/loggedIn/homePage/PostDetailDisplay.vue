@@ -10,7 +10,7 @@
           <textarea disabled="true" v-model="post.description"
           rows="5"
           class="form-control"/>
-        </div>      
+        </div>
     </form-segment>
     <form-segment header-text="Location">
       <label>Where do you need help?</label>
@@ -28,7 +28,7 @@
         <multi-select-display :selected-items="post.locations"/>
       </div>
     </form-segment>
-    <form-segment header-text="Interests &amp; skills"> 
+    <form-segment header-text="Interests &amp; skills">
         <div class="form-group">
           <label>People might want to help if they are interested in:</label>
           <multi-select-display :selected-items="post.interests"/>
@@ -41,8 +41,8 @@
     <form-segment header-text="Time required">
       <label>How much time is required?</label>
       <div class="form-group">
-        <select 
-          id="timeAmount" 
+        <select
+          id="timeAmount"
           disabled="true" v-model="post.timings.regularAmount.unit">
             <option disabled value=""></option>
             <option>1hr</option>
@@ -54,13 +54,13 @@
             <option>3days</option>
         </select>
         <span>per</span>
-        <select 
-          id="timeFrequency" 
+        <select
+          id="timeFrequency"
           disabled="true" v-model="post.timings.regularAmount.frequency">
             <option disabled value=""></option>
             <option>Week</option>
             <option>Month</option>
-        </select>          
+        </select>
       </div>
       <div class="form-group">
         <label class="checkbox">What slots can people help with?</label>
@@ -92,7 +92,7 @@
                     value="Daytime"
                     disabled="true" v-model="post.timings.slots"> Daytime
         </label>
-      </div>       
+      </div>
     </form-segment>
   </div>
 </template>
@@ -101,18 +101,10 @@
 import MultiselectDisplay from '../../sharedComponents/MultiselectDisplay.vue'
 import FormSegment from '../../sharedComponents/FormSegment.vue'
 
-function clonePost (input) {
-  const result = {...input}
-  result.locations = [...input.locations]
-  result.skills = [...input.skills]
-  result.interests = [...input.interests]
-  return result
-}
-
 export default {
   props: {
     post: {
-      type: Object, 
+      type: Object,
       required: true
     },
     postersName: {

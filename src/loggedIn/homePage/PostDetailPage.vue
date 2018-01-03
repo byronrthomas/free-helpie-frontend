@@ -72,7 +72,7 @@ export default {
     }
   },
   props: {
-    postId: Number,
+    postId: Number
   },
   computed: {
     postKey () {
