@@ -109,7 +109,9 @@ export default {
     },
     postersName () {
       const userData = this.profileInfo[this.post.postedBy] || {name: '[unknown]'}
-      return userData.name
+      return this.postedByCurrentUser
+        ? `You (${userData.name})`
+        : userData.name
     },
     postersAvatar () {
       return {altText: this.postersName}
