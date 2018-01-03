@@ -21,7 +21,9 @@
         :other-avatar="postersAvatar"
         :user-id="userId"
         @sendMail="sendMail($event)"
-        @readUpToTimestamp="markAsRead"/>
+        @readUpToTimestamp="markAsRead"
+        @makeConnection="makeConnection"
+        @cancelConnection="cancelConnection"/>
     </div>
     <div v-else>
       <h5>This is your post</h5>
@@ -95,7 +97,7 @@ export default {
       return this.post.postedBy === this.username
     },
     cancelConnectAllowed () {
-      return this.mailItems.length > 0 
+      return this.mailItems.length > 0
         ? 'connectAllowed'
         : 'disabled'
     },
@@ -155,6 +157,18 @@ export default {
         threadAuthor: this.userId
       }
       this.$store.dispatch('loggedin/postthread/markThreadAsRead', reqData)
+    },
+    makeConnection () {
+      const message = `You have asked to connect with ${this.postersName} - normally this ` +
+        'would mean that they get an invite to connect and can choose to connect with you (see' +
+        ' Your Connections for more info) to share contact details. This is not yet implemented.'
+      alert(message)
+    },
+    cancelConnection () {
+      const message = `You have asked to cancel your connection with ${this.postersName} - normally this` +
+        ' would mean that your invite to connect is withdrawn and you will not be sharing' +
+        ' contact details any more. This is not yet implemented.'
+      alert(message)
     }
   },
   components: {
