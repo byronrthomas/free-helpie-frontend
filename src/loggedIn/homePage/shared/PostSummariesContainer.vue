@@ -42,7 +42,7 @@ export default {
     },
     getDisplayName (userId) {
       const userInfo = this.profileInfo[userId] || {name: '[unknown]'}
-      return userId === this.loggedInUserId 
+      return userId === this.loggedInUserId
         ? `You (${userInfo.name})`
         : userInfo.name
     }
