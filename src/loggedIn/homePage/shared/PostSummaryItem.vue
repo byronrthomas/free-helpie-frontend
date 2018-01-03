@@ -12,9 +12,9 @@
       <div class="col-xs-3">{{ formattedSkills }}</div>
       <div class="col-xs-2">{{ post.location }}</div>
       <div class="col-xs-1">
-        <button class="btn btn-default save-button" @click="$emit('savePost')">
-          <img src='../../../assets/starInactive.png' alt="Unsave" :hidden="isSaved"  style="width=14px;height=14px" width="36px" height="36px">
-          <img src='../../../assets/starActive.png' alt="Save" style="width=14px;height=14px" :hidden="!isSaved"  width="36px" height="36px">
+        <button class="btn btn-lg btn-default save-button" @click="$emit('savePost')">
+          <span class="glyphicon glyphicon-star" aria-hidden="true" v-if="isSaved"></span>
+          <span class="glyphicon glyphicon-star-empty" aria-hidden="true" v-else></span>
         </button>
       </div>
     </div>

@@ -3,6 +3,7 @@
       :posts="posts" 
       :favourite-post-ids="favouritePostIds"
       :profile-info="profileInfo"
+      :logged-in-user-id="userId"
       @viewPost="$emit('viewPost', $event)"
       @updateFavouritePosts="updateFavouritePosts">
       <div class="row" style="margin-bottom: 10px">
@@ -51,7 +52,8 @@ export default {
       filteringByInterests: 'loggedin/latestposts/isFilteredByInterests',
       posts: 'loggedin/latestposts/getPosts',
       profileInfo: 'loggedin/latestposts/profileInfo',
-      favouritePostIds: 'loggedin/favouritePostIds'})
+      favouritePostIds: 'loggedin/favouritePostIds',
+      userId: 'userId'})
   },
   methods: {
     toggleSkillsFilter () {

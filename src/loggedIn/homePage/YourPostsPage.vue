@@ -3,6 +3,7 @@
       :posts="posts" 
       :favourite-post-ids="favouritePostIds"
       :profile-info="profileInfo"
+      :logged-in-user-id="userId"
       @viewPost="$emit('viewPost', $event)"
       @updateFavouritePosts="updateFavouritePosts">
     </post-summaries-container>

@@ -27,7 +27,8 @@ export default {
     profileInfo: {
       type: Object,
       required: true
-    }
+    },
+    loggedInUserId: Number
   },
   methods: {
     isSaved (postId) {
@@ -41,7 +42,9 @@ export default {
     },
     getDisplayName (userId) {
       const userInfo = this.profileInfo[userId] || {name: '[unknown]'}
-      return userInfo.name
+      return userId === this.loggedInUserId 
+        ? `You (${userInfo.name})`
+        : userInfo.name
     }
   },
   components: {

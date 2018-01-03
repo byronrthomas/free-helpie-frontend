@@ -3,6 +3,7 @@
       :posts="posts" 
       :favourite-post-ids="favouritePostIds"
       :profile-info="profileInfo"
+      :logged-in-user-id="userId"
       @viewPost="$emit('viewPost', $event)"
       @updateFavouritePosts="updateFavouritePosts">
     </post-summaries-container>
@@ -17,7 +18,8 @@ export default {
     ...mapGetters({
       posts: 'loggedin/savedposts/getPosts',
       profileInfo: 'loggedin/savedposts/profileInfo',
-      favouritePostIds: 'loggedin/favouritePostIds'})
+      favouritePostIds: 'loggedin/favouritePostIds',
+      userId: 'userId'})
   },
   methods: {
     updateFavouritePosts (post, shouldBeFavourited) {
