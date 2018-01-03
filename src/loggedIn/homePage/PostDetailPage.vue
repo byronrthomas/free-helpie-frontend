@@ -39,7 +39,7 @@
         @makeConnection="makeConnection"
         @cancelConnection="cancelConnection"/>
     </div>
-    <form-segment :header-text="'NOTE: this is your post'">
+    <form-segment v-else :header-text="'NOTE: this is your post'">
       <div class="alert alert-warning">
         <p>You cannot start a conversation about your own post - somebody needs
           to start a conversation with you.</p>
