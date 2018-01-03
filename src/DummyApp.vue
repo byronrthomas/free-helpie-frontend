@@ -1,20 +1,23 @@
 <template>
-  <user-detail-container
-    :profile-data="profileData"
+  <post-detail-display
+    :post="post",
+    :posters-name="postersName"
   />  
 </template>
 
 <script>
-import UserDetailContainer from './loggedIn/homePage/UserDetailContainer.vue'
-import {INITIAL_USER_DATA} from './store/mockServer/initialUserData'
+import PostDetailDisplay from './loggedIn/homePage/PostDetailDisplay.vue'
+import {INITIAL_POSTS} from './store/mockServer/initialPosts'
 
 export default {
   data () {
     return {
-      profileData: INITIAL_USER_DATA['0']}
+      post: INITIAL_POSTS[0],
+      postersName: 'John Doe'
+    }
   },
   components: {
-    'user-detail-container': UserDetailContainer
+    'post-detail-display': PostDetailDisplay
   }
 }
 </script>
