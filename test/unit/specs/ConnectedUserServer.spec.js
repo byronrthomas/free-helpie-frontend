@@ -20,17 +20,38 @@ function lookupMethod (getMethod, onTest) {
 }
 const ALL_USERS = [USER_WHO_POSTS_INVITE, USER_RECEIVING_INVITE]
 
-const DUMMY_AUTHER = {}
+function inferUserId (token) {
+  return token === USER_WHO_POSTS_INVITE.authToken
+    ? USER_WHO_POSTS_INVITE.id
+    : (token === USER_RECEIVING_INVITE.authToken
+      ? USER_RECEIVING_INVITE.id 
+      : null)
+}
+
+const DUMMY_AUTHER = {
+  syncCanPostConnectionInvite (token, userId) {
+    const loggedInUserId = inferUserId(token)
+    // For now - are they loggedin and posting to their own userId?
+    return (typeof userId !== 'undefined') && userId === loggedInUserId
+  },
+  syncGetIsAllowedToSeeConnections (token, userId) {
+    const loggedInUserId = inferUserId(token)
+    // For now - are they loggedin and posting to their own userId?
+    return (typeof userId !== 'undefined') && userId === loggedInUserId
+  }
+
+}
 
 function expectToSucceed(method, req) {
   const resolve = jest.fn()
   const reject = jest.fn()
   method(req, resolve, reject)
+  if (reject.mock.calls.length > 0) {
+    throw reject.mock.calls[0][0]
+  }
   expect(resolve.mock.calls).toHaveLength(1)
-  expect(reject.mock.calls).toHaveLength(0)
-  const respData = resolve.mock.calls[0][0].data
   return {andRespData () {
-    return expect(respData)
+    return expect(resolve.mock.calls[0][0].data)
   }}
 }
 
@@ -47,11 +68,11 @@ function reqFromUser(userId) {
 }
 
 function fillReqDataForUsers({fromUser, toUser}) {
-  return {data: {userId: fromUser, invitedUserId: toUser}}
+  return {userId: fromUser.id, data: {invitedUserId: toUser.id}}
 }
 
 function fillReqDataForUser(fromUser) {
-  return {data: {userId: fromUser}}
+  return {userId: fromUser.id}
 }
 
 function displayName(user) {
@@ -61,14 +82,14 @@ function displayPair(pair) {
   return `(${displayName(pair.fromUser)}, ${displayName(pair.toUser)})`
 }
 
-function checkBothPairsForResult(onTest, expectedResult) {
+function checkBothPairsForResult(cell, expectedResult) {
   const bothPairs = [
     {fromUser: ALL_USERS[0], toUser: ALL_USERS[1]},
     {fromUser: ALL_USERS[1], toUser: ALL_USERS[0]}
   ]
   for (const pair of bothPairs) {
     it(`GET-CONNECTION-ACTIVE on pair ${displayPair(pair)} should return ${expectedResult}`, () => {
-      expect(onTest.syncGetUsersMayConnect(pair.fromUser, pair.toUser)).toEqual(expectedResult)
+      expect(cell.onTest.syncGetUsersMayConnect(pair.fromUser.id, pair.toUser.id)).toEqual(expectedResult)
     })
   }
 }
@@ -122,27 +143,33 @@ describe('connectedUserServer', () => {
   })
 
   describe('when no posts have been made', () => {
-    const onTest = new ConnectedUserServer(DUMMY_AUTHER)
+    let onTest
+    const refCell = {onTest: null}
+    beforeEach(() => {
+      onTest = new ConnectedUserServer(DUMMY_AUTHER)
+      refCell.onTest = onTest
+    })
     for (const getMethod of GET_METHODS) {
       for (const user of ALL_USERS) {
-        const methodToRun = lookupMethod(getMethod, onTest)
         it(`GET should give an empty list for ${getMethod} when asked about ${displayName(user)}`, () => {
           const req = {...fillReqDataForUser(user), ...reqFromUser(user)}
-          expectToSucceed(methodToRun, req)
+          expectToSucceed(lookupMethod(getMethod, onTest), req)
             .andRespData().toEqual([])
         })
       }
     }
   
-    itShouldReportThatNoConnectionBetweenUsersIsActive(onTest)
+    itShouldReportThatNoConnectionBetweenUsersIsActive(refCell)
   })
 
   describe('after a post has been made', () => {
     let onTest
     const reqData = fillReqDataForUsers(A_INVITES_B)
     const fromUser = A_INVITES_B.fromUser
+    const refCell = {onTest: null}
     beforeEach(() => {
       onTest = new ConnectedUserServer(DUMMY_AUTHER)
+      refCell.onTest = onTest
       const req = {...reqData, ...reqFromUser(fromUser)}
       expectToSucceed(onTest.postAllowedConnection, req)
     })
@@ -154,43 +181,42 @@ describe('connectedUserServer', () => {
 
     for (const getMethod of GET_METHODS) {
       const subjects = getSubjects(getMethod) 
-      const methodToRun = lookupMethod(getMethod)
       it(`GET should contain the invite in ${getMethod} when asking about ${displayName(subjects.correctUser)}`, () => {
         const req = getReqForUserLoggedIn(subjects.correctUser)
-        expectToSucceed(getMethod, req).andRespData().toEqual(
-          expect.arrayContaining([expect.objectContaining({userId: subjects.otherUser})])
+        expectToSucceed(lookupMethod(getMethod, onTest), req).andRespData().toEqual(
+          expect.arrayContaining([expect.objectContaining({otherUser: subjects.otherUser.id})])
         )
       })
       it(`and the invite from GET should contain a timestamp (${getMethod} when asking about ${displayName(subjects.correctUser)})`, () => {
         const req = getReqForUserLoggedIn(subjects.correctUser)
-        expectToSucceed(getMethod, req).andRespData().toEqual(
+        expectToSucceed(lookupMethod(getMethod, onTest), req).andRespData().toEqual(
           expect.arrayContaining([expect.objectContaining({inviteSent: expect.any(Date)})])
         )
       })
       it(`GET should not contain the invite in ${getMethod} when asking about ${displayName(subjects.otherUser)}`, () => {
         const req = getReqForUserLoggedIn(subjects.otherUser)
-        expectToSucceed(methodToRun, req)
+        expectToSucceed(lookupMethod(getMethod, onTest), req)
           .andRespData().toEqual([])
       })
     }
-    itShouldReportThatNoConnectionBetweenUsersIsActive(onTest)
+    itShouldReportThatNoConnectionBetweenUsersIsActive(refCell)
 
-    after('the post has been deleted', () => {
+    describe('after the post has been deleted', () => {
       beforeEach(() => {
         const req = {...reqData, ...reqFromUser(fromUser)}
         expectToSucceed(onTest.deleteAllowedConnection, req)
       })
 
-      const subjects = getSubjects(getMethod) 
       for (const getMethod of GET_METHODS) {
-        it(`GET should not contain the invite in ${getMethod} when asking about ${displayName(subject.otherUser)}`, () => {
+        const subjects = getSubjects(getMethod) 
+        it(`GET should not contain the invite in ${getMethod} when asking about ${displayName(subjects.otherUser)}`, () => {
           const req = getReqForUserLoggedIn(subjects.otherUser)
-          expectToSucceed(methodToRun, req)
+          expectToSucceed(lookupMethod(getMethod, onTest), req)
             .andRespData().toEqual([])
         })
-        it(`GET should not contain the invite in ${getMethod} when asking about ${displayName(subject.correctUser)}`, () => {
+        it(`GET should not contain the invite in ${getMethod} when asking about ${displayName(subjects.correctUser)}`, () => {
           const req = getReqForUserLoggedIn(subjects.correctUser)
-          expectToSucceed(methodToRun, req)
+          expectToSucceed(lookupMethod(getMethod, onTest), req)
             .andRespData().toEqual([])
         })
       }
@@ -205,13 +231,15 @@ describe('connectedUserServer', () => {
     }
     const REQA = {...fillReqDataForUsers(A_INVITES_B), ...reqFromUser(A_INVITES_B.fromUser)}
     const REQB = {...fillReqDataForUsers(B_INVITES_A), ...reqFromUser(B_INVITES_A.fromUser)}
+    const refCell = {onTest: null}
     beforeEach(() => {
       onTest = new ConnectedUserServer(DUMMY_AUTHER)
+      refCell.onTest = onTest
       expectToSucceed(onTest.postAllowedConnection, REQA)
       expectToSucceed(onTest.postAllowedConnection, REQB)
     })
 
-    itShouldReportThatConnectionBetweenUsersIsActive(onTest)
+    itShouldReportThatConnectionBetweenUsersIsActive(refCell)
 
     for (const user of ALL_USERS) {
       describe(`if ${user.username} deletes their invite`, () => {
@@ -223,7 +251,7 @@ describe('connectedUserServer', () => {
           expectToSucceed(onTest.deleteAllowedConnection, deleteReq)
         })
 
-        itShouldReportThatNoConnectionBetweenUsersIsActive(onTest)
+        itShouldReportThatNoConnectionBetweenUsersIsActive(refCell)
       })
     }
   })

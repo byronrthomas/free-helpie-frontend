@@ -127,6 +127,16 @@ export function UserAuthServer () {
       // console.log('userId = ', userId)
       // Basically just "did they supply a userId and is their token valid"
       return Boolean((typeof userId !== 'undefined') && (typeof loggedInUserId !== 'undefined'))
+    },
+    syncCanPostConnectionInvite (token, userId) {
+      const loggedInUserId = usersToAuth.getByValue(token)
+      // For now - are they loggedin and posting to their own userId?
+      return (typeof userId !== 'undefined') && userId === loggedInUserId
+    },
+    syncGetIsAllowedToSeeConnections (token, userId) {
+      const loggedInUserId = usersToAuth.getByValue(token)
+      // For now - are they loggedin and posting to their own userId?
+      return (typeof userId !== 'undefined') && userId === loggedInUserId
     }
   }
 }

@@ -1,93 +1,122 @@
+function recordTimestamp(inMap, userA, userB, timestamp) {
+  if (!inMap.has(userA)) {
+    inMap.set(userA, new Map())
+  }
+  const innerMap = inMap.get(userA)
+  innerMap.set(userB, timestamp)
+}
+
+function makeConnectionRecord(keyAndValue) {
+  return {otherUser: keyAndValue[0], inviteSent: keyAndValue[1]}
+}
+
+function getConnectionRecords(map, userId) {
+  if (!map.has(userId)) {
+    return []
+  } else {
+    return Array.from(map.get(userId).entries(), makeConnectionRecord)
+  }
+}
+
 export function ConnectedUserServer (userAuth, initialData) {
-  const userData = initialData || {}
+  const invitesFromUser = new Map()
+  const invitesToUser = new Map()
+
+  const recordInvite = (fromUser, toUser, atTime) => {
+    recordTimestamp(invitesFromUser, fromUser, toUser, atTime)
+    recordTimestamp(invitesToUser, toUser, fromUser, atTime)
+  }
+  if (initialData && initialData.length > 0) {
+    for (const pair of initialData) {
+      recordInvite(pair.fromUser, pair.toUser, pair.timestamp)
+    }
+  }
+
+  const invitedFrom = (userA, userB) => {
+    return invitesFromUser.has(userA) 
+      && invitesFromUser.get(userA).has(userB)
+  }
+  const deleteInvite = (fromUser, toUser) => {
+    invitesFromUser.get(fromUser).delete(toUser)
+    invitesToUser.get(toUser).delete(fromUser)
+  }
 
   return {
     getAllowedConnections (reqData, resolve, reject) {
-      console.log('GET userdata: req = ', reqData)
+      console.log('GET connectionsFromUser: req = ', reqData)
       if (!reqData.hasOwnProperty('userId')) {
         reject(new Error('Cannot get user profile without a userId'))
         return
       }
-      if (!userAuth.syncGetIsAllowedToSeeProfile(reqData.authToken, reqData.userId)) {
+      if (!userAuth.syncGetIsAllowedToSeeConnections(reqData.authToken, reqData.userId)) {
         console.log('Not authorised to get details for userID, returning null, userId: ', reqData.userId)
-        resolve({data: null})
+        reject(new Error(`Not allowed to see connections of user `, reqData.userId))
         return
       }
       const userId = reqData.userId
-      if (userData.hasOwnProperty(userId)) {
-        const dataToReturn = userData[userId]
-        resolve({data: dataToReturn})
-        console.log('GET userdata: Data present for user - returning single user data')
-      } else {
-        resolve({data: {}})
-        console.log('GET userdata: No data present for user - returning empty')
-      }
+      const respData = getConnectionRecords(invitesFromUser, userId)
+      resolve({data: respData})
     },
     getInvitedConnections (reqData, resolve, reject) {
-      console.log('GET userdata: req = ', reqData)
+      console.log('GET connectionsToUser: req = ', reqData)
       if (!reqData.hasOwnProperty('userId')) {
         reject(new Error('Cannot get user profile without a userId'))
         return
       }
-      if (!userAuth.syncGetIsAllowedToSeeProfile(reqData.authToken, reqData.userId)) {
+      if (!userAuth.syncGetIsAllowedToSeeConnections(reqData.authToken, reqData.userId)) {
         console.log('Not authorised to get details for userID, returning null, userId: ', reqData.userId)
-        resolve({data: null})
+        reject(new Error(`Not allowed to see connections of user `, reqData.userId))
         return
       }
       const userId = reqData.userId
-      if (userData.hasOwnProperty(userId)) {
-        const dataToReturn = userData[userId]
-        resolve({data: dataToReturn})
-        console.log('GET userdata: Data present for user - returning single user data')
-      } else {
-        resolve({data: {}})
-        console.log('GET userdata: No data present for user - returning empty')
-      }
+      const respData = getConnectionRecords(invitesToUser, userId)
+      resolve({data: respData})
     },
-    syncGetUsersMayConnect (reqData, resolve, reject) {
-      console.log('GET user display info: ', reqData)
-      if (!userAuth.syncGetUserCanSeeUserProfiles(reqData.authToken)) {
-        reject(new Error('Cannot get user display info, current user not authorized to do so'))
-        return
-      }
-      let dataToReturn = {}
-      for (const userId of reqData.data.userIds) {
-        if (userData.hasOwnProperty(userId)) {
-          dataToReturn[userId] = userData[userId].personalInfo
-        }
-      }
-      resolve({data: dataToReturn})
+    syncGetUsersMayConnect (userA, userB) {
+      return invitedFrom(userA, userB) && invitedFrom(userB, userA)
     },
     postAllowedConnection (reqData, resolve, reject) {
-      console.log('POST userdata: req = ', reqData)
+      console.log('POST connection invite: req = ', reqData)
       if (!reqData.hasOwnProperty('userId')) {
         reject(new Error('Cannot post user profile without a userId'))
         return
       }
       const userId = reqData.userId
-      if (!userAuth.syncCanPostUserProfile(reqData.authToken, userId)) {
+      if (!userAuth.syncCanPostConnectionInvite(reqData.authToken, userId)) {
         reject(new Error('Not authorised to post details for userId - ' + userId))
         return
       }
 
-      console.log('POST userdata: Saving user data for userID ' + userId)
-      userData[userId] = reqData.data
+      if (!reqData.hasOwnProperty('data') || !reqData.data.hasOwnProperty('invitedUserId')) {
+        reject(new Error('Cannot post invite, request must contain a data field with an invitedUserId field on it'))
+        return
+      }
+
+      console.log('POST connection invite: Saving user data for userID ' + userId)
+      const otherUserId = reqData.data.invitedUserId
+      recordInvite(userId, otherUserId, new Date())
       resolve()
     },
     deleteAllowedConnection (reqData, resolve, reject) {
-      console.log('POST userdata: req = ', reqData)
+      console.log('DELETE connection invite: req = ', reqData)
       if (!reqData.hasOwnProperty('userId')) {
-        reject(new Error('Cannot post user profile without a userId'))
+        reject(new Error('Cannot delete connection invite without a userId'))
         return
       }
       const userId = reqData.userId
-      if (!userAuth.syncCanPostUserProfile(reqData.authToken, userId)) {
-        reject(new Error('Not authorised to post details for userId - ' + userId))
+      if (!userAuth.syncCanPostConnectionInvite(reqData.authToken, userId)) {
+        reject(new Error('Not authorised to delete connection invite for userId - ' + userId))
         return
       }
 
-      console.log('POST userdata: Saving user data for userID ' + userId)
-      userData[userId] = reqData.data
+      if (!reqData.hasOwnProperty('data') || !reqData.data.hasOwnProperty('invitedUserId')) {
+        reject(new Error('Cannot delete invite, request must contain a data field with an invitedUserId field on it'))
+        return
+      }
+
+      console.log('DELETE connection invite: Saving user data for userID ' + userId)
+      const otherUserId = reqData.data.invitedUserId
+      deleteInvite(userId, otherUserId)
       resolve()
     }
   }
