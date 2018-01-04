@@ -3,12 +3,12 @@
   <connections-container
     :header-text="'Requests from other users to connect'"
     :next-action="'Accept invite'"
-    :summaries="connectionRequests" />
+    :summaries="pendingInvitesToMe" />
   <hr>
   <connections-container
     :header-text="'Pending invites you have made to connect with others'"
     :next-action="'Cancel invite'"
-    :summaries="pendingInvites" />
+    :summaries="pendingInvitesFromMe" />
   <hr>
   <connections-container
     :header-text="'Users you are already connected with'"
@@ -19,6 +19,7 @@
 
 <script>
 import ConnectionsContainer from './ConnectionsContainer.vue'
+import {mapGetters} from 'vuex'
 
 const CONNECTION_REQUESTS = [
   {
@@ -60,12 +61,22 @@ const ACTIVE_CONNECTIONS = [
 ]
 
 export default {
-  data () {
-    return {
-      connectionRequests: CONNECTION_REQUESTS,
-      activeConnections: ACTIVE_CONNECTIONS,
-      pendingInvites: PENDING_INVITES
-    }
+  // data () {
+  //   return {
+  //     connectionRequests: CONNECTION_REQUESTS,
+  //     activeConnections: ACTIVE_CONNECTIONS,
+  //     pendingInvites: PENDING_INVITES
+  //   }
+  // },
+  computed: {
+    ...mapGetters({
+      'pendingInvitesToMe': 'loggedin/userconnections/pendingInvitesToMe',
+      'pendingInvitesFromMe': 'loggedin/userconnections/pendingInvitesFromMe',
+      'activeConnections': 'loggedin/userconnections/activeConnections',
+      'userId': 'userId'})
+  },
+  created () {
+    this.$store.dispatch('loggedin/userconnections/getConnections', this.userId)
   },
   components: {
     'connections-container': ConnectionsContainer

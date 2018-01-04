@@ -23,9 +23,9 @@ function wrapAsPromise (func, data) {
 
 const FAVOURITES_PATH_REG_EXP = RegExp(/^\/users\/(\d+)\/favourites$/)
 const PROFILE_PATH_REG_EXP = RegExp(/^\/users\/(\d+)\/profile$/)
-const FROM_CONNECTIONS_PATH_REG_EXP = RegExp(/^\/users\/(\d+)\/connectionsStartedByMe$/)
-const TO_CONNECTIONS_PATH_REG_EXP = RegExp(/^\/users\/(\d+)\/connectionsStartedToMe$/)
-const EDIT_CONNECTION_PATH_REG_EXP = RegExp(/^\/users\/(\d+)\/connectionsStartedByMe\/(\d+)$/)
+const FROM_CONNECTIONS_PATH_REG_EXP = RegExp(/^\/users\/(\d+)\/connectionInvitesFromMe$/)
+const TO_CONNECTIONS_PATH_REG_EXP = RegExp(/^\/users\/(\d+)\/connectionInvitesToMe$/)
+const EDIT_CONNECTION_PATH_REG_EXP = RegExp(/^\/users\/(\d+)\/connectionInvitesFromMe\/(\d+)$/)
 function Server (config) {
   const userAuth = config.authServer 
   const userData = config.profileServer 
