@@ -9,6 +9,7 @@ import { INITIAL_MAILS, INITIAL_READ_MAILS } from './mockServer/initialMails'
 import { runAll } from './mockServer/callbackTools'
 import { UserAccountServer } from './mockServer/userAccountServer'
 import { INITIAL_ACCOUNT_DETAILS } from './mockServer/initialAccountDetails'
+import { ConnectedUserServer } from './mockServer/connectedUserServer';
 
 const MOCK_NETWORK_LATENCY = 500
 function wrapAsPromise (func, data) {
@@ -22,7 +23,18 @@ function wrapAsPromise (func, data) {
 
 const FAVOURITES_PATH_REG_EXP = RegExp(/^\/users\/(\d+)\/favourites$/)
 const PROFILE_PATH_REG_EXP = RegExp(/^\/users\/(\d+)\/profile$/)
-function Server (userAuth, userData, posts, userFavourites, mails, accountDetails) {
+const FROM_CONNECTIONS_PATH_REG_EXP = RegExp(/^\/users\/(\d+)\/connectionsStartedByMe$/)
+const TO_CONNECTIONS_PATH_REG_EXP = RegExp(/^\/users\/(\d+)\/connectionsStartedToMe$/)
+const EDIT_CONNECTION_PATH_REG_EXP = RegExp(/^\/users\/(\d+)\/connectionsStartedByMe\/(\d+)$/)
+function Server (config) {
+  const userAuth = config.authServer 
+  const userData = config.profileServer 
+  const posts = config.postsServer 
+  const userFavourites = config.postFavouritesServer
+  const mails = config.mailsServer 
+  const accountDetails = config.accountDeatilsServer
+  const connections = config.connectionRequestsServer
+
   return {
     get (resourcePath, data) {
       if (resourcePath === '/accounts') {
@@ -59,6 +71,16 @@ function Server (userAuth, userData, posts, userFavourites, mails, accountDetail
         const userId = parseInt(resourcePath.substring('/accountDetails/'.length))
         return wrapAsPromise(accountDetails.get, {userId: userId, ...data})
       }
+      const matchToConnectionsToPath = resourcePath.match(TO_CONNECTIONS_PATH_REG_EXP)
+      if (matchToConnectionsToPath != null) {
+        const userId = parseInt(matchToConnectionsToPath[1])
+        return wrapAsPromise(connections.getConnectionsTo, {userId, ...data})
+      }
+      const matchToConnectionsFromPath = resourcePath.match(FROM_CONNECTIONS_PATH_REG_EXP)
+      if (matchToConnectionsFromPath != null) {
+        const userId = parseInt(matchToConnectionsFromPath[1])
+        return wrapAsPromise(connections.getConnectionsFrom, {userId, ...data})
+      }
       throw new Error(`Unknown route: GET ${resourcePath}`)
     },
     post (resourcePath, data) {
@@ -89,6 +111,11 @@ function Server (userAuth, userData, posts, userFavourites, mails, accountDetail
         const userId = parseInt(resourcePath.substring('/accountDetails/'.length))
         return wrapAsPromise(accountDetails.post, {userId: userId, ...data})
       }
+      const matchToConnectionsFromPath = resourcePath.match(FROM_CONNECTIONS_PATH_REG_EXP)
+      if (matchToConnectionsFromPath != null) {
+        const userId = parseInt(matchToConnectionsFromPath[1])
+        return wrapAsPromise(connections.postConnectionRequest, {userId, ...data})
+      }
       throw new Error(`Unknown route: POST ${resourcePath}`)
     },
     put (resourcePath, data) {
@@ -107,6 +134,12 @@ function Server (userAuth, userData, posts, userFavourites, mails, accountDetail
         const postId = resourcePath.substring('/posts/'.length)
         return wrapAsPromise(posts.delete, {postId: postId, ...data})
       }
+      const matchToConnectionsEditPath = resourcePath.match(EDIT_CONNECTIONS_PATH_REG_EXP)
+      if (matchToConnectionsEditPath != null) {
+        const userId = parseInt(matchToConnectionsEditPath[1])
+        const otherUserId = parseInt(matchToConnectionsEditPath[2])
+        return wrapAsPromise(connections.postConnectionRequest, {userId, data: {invitedUserId: otherUserId}})
+      }
       throw new Error(`Unknown route: POST ${resourcePath}`)
     }
   }
@@ -120,13 +153,17 @@ function makeServer () {
   INITIAL_MAILS.forEach(mail => mailsServer.directPost(mail.threadId, mail.mailData, mail.postAuthor))
   runAll(mailsServer.syncPostMarkAsRead, INITIAL_READ_MAILS)
   const accountDeatilsServer = new UserAccountServer(auther, INITIAL_ACCOUNT_DETAILS)
-  return new Server(
-    auther,
-    new UserDataServer(auther, INITIAL_USER_DATA),
+
+  const config = {
+    authServer: auther,
+    profileServer: new UserDataServer(auther, INITIAL_USER_DATA),
     postsServer,
-    new UserFavouritesServer(auther),
+    postFavouritesServer: new UserFavouritesServer(auther),
     mailsServer,
-    accountDeatilsServer)
+    accountDeatilsServer,
+    connectionRequestsServer: new ConnectedUserServer(auther)
+  }
+  return new Server(config)
 }
 
 export const mockServer = makeServer()

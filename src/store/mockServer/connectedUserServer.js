@@ -42,7 +42,7 @@ export function ConnectedUserServer (userAuth, initialData) {
   }
 
   return {
-    getAllowedConnections (reqData, resolve, reject) {
+    getConnectionsFrom (reqData, resolve, reject) {
       console.log('GET connectionsFromUser: req = ', reqData)
       if (!reqData.hasOwnProperty('userId')) {
         reject(new Error('Cannot get user profile without a userId'))
@@ -57,7 +57,7 @@ export function ConnectedUserServer (userAuth, initialData) {
       const respData = getConnectionRecords(invitesFromUser, userId)
       resolve({data: respData})
     },
-    getInvitedConnections (reqData, resolve, reject) {
+    getConnectionsTo (reqData, resolve, reject) {
       console.log('GET connectionsToUser: req = ', reqData)
       if (!reqData.hasOwnProperty('userId')) {
         reject(new Error('Cannot get user profile without a userId'))
@@ -75,7 +75,7 @@ export function ConnectedUserServer (userAuth, initialData) {
     syncGetUsersMayConnect (userA, userB) {
       return invitedFrom(userA, userB) && invitedFrom(userB, userA)
     },
-    postAllowedConnection (reqData, resolve, reject) {
+    postConnectionRequest (reqData, resolve, reject) {
       console.log('POST connection invite: req = ', reqData)
       if (!reqData.hasOwnProperty('userId')) {
         reject(new Error('Cannot post user profile without a userId'))
@@ -97,7 +97,7 @@ export function ConnectedUserServer (userAuth, initialData) {
       recordInvite(userId, otherUserId, new Date())
       resolve()
     },
-    deleteAllowedConnection (reqData, resolve, reject) {
+    deleteConnectionRequest (reqData, resolve, reject) {
       console.log('DELETE connection invite: req = ', reqData)
       if (!reqData.hasOwnProperty('userId')) {
         reject(new Error('Cannot delete connection invite without a userId'))

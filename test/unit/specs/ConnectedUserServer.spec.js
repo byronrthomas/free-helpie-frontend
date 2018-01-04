@@ -15,8 +15,8 @@ function getSubjects (getMethod) {
 } 
 function lookupMethod (getMethod, onTest) {
   return getMethod === ACCEPTED_CONNECTIONS
-    ? onTest.getAllowedConnections
-    : onTest.getInvitedConnections
+    ? onTest.getConnectionsFrom
+    : onTest.getConnectionsTo
 }
 const ALL_USERS = [USER_WHO_POSTS_INVITE, USER_RECEIVING_INVITE]
 
@@ -115,31 +115,31 @@ describe('connectedUserServer', () => {
   it('should be possible to post an accept connection for the logged in user', () => {
     const onTest = new ConnectedUserServer(DUMMY_AUTHER)
     const req = {...fillReqDataForUsers(A_INVITES_B), ...reqFromUser(A_INVITES_B.fromUser)}
-    expectToSucceed(onTest.postAllowedConnection, req)
+    expectToSucceed(onTest.postConnectionRequest, req)
   })
 
   it('should refuse a post for a user that the token doesn\'t currently authorise', () => {
     const onTest = new ConnectedUserServer(DUMMY_AUTHER)
     const req = {...fillReqDataForUsers(A_INVITES_B), ...reqFromUser(A_INVITES_B.toUser)}
-    expectToFail(onTest.postAllowedConnection, req)
+    expectToFail(onTest.postConnectionRequest, req)
   })
 
   it('should refuse a delete for an accept connection that doesn\'t exist', () => {
     const onTest = new ConnectedUserServer(DUMMY_AUTHER)
     const req = {...fillReqDataForUsers(A_INVITES_B), ...reqFromUser(A_INVITES_B.toUser)}
-    expectToFail(onTest.deleteAllowedConnection, req)
+    expectToFail(onTest.deleteConnectionRequest, req)
   })
 
   it('should refuse a get for a userId that is not the logged in user', () => {
     const onTest = new ConnectedUserServer(DUMMY_AUTHER)
     const req = {...fillReqDataForUser(USER_RECEIVING_INVITE), ...reqFromUser(USER_WHO_POSTS_INVITE)}
-    expectToFail(onTest.getAllowedConnections, req)
+    expectToFail(onTest.getConnectionsFrom, req)
   })
 
   it('should refuse a get invites for a userId that is not the logged in user', () => {
     const onTest = new ConnectedUserServer(DUMMY_AUTHER)
     const req = {...fillReqDataForUser(USER_RECEIVING_INVITE), ...reqFromUser(USER_WHO_POSTS_INVITE)}
-    expectToFail(onTest.getInvitedConnections, req)
+    expectToFail(onTest.getConnectionsTo, req)
   })
 
   describe('when no posts have been made', () => {
@@ -171,12 +171,12 @@ describe('connectedUserServer', () => {
       onTest = new ConnectedUserServer(DUMMY_AUTHER)
       refCell.onTest = onTest
       const req = {...reqData, ...reqFromUser(fromUser)}
-      expectToSucceed(onTest.postAllowedConnection, req)
+      expectToSucceed(onTest.postConnectionRequest, req)
     })
 
     it('should be possible to delete it', () => {
       const req = {...reqData, ...reqFromUser(fromUser)}
-      expectToSucceed(onTest.deleteAllowedConnection, req)
+      expectToSucceed(onTest.deleteConnectionRequest, req)
     })
 
     for (const getMethod of GET_METHODS) {
@@ -204,7 +204,7 @@ describe('connectedUserServer', () => {
     describe('after the post has been deleted', () => {
       beforeEach(() => {
         const req = {...reqData, ...reqFromUser(fromUser)}
-        expectToSucceed(onTest.deleteAllowedConnection, req)
+        expectToSucceed(onTest.deleteConnectionRequest, req)
       })
 
       for (const getMethod of GET_METHODS) {
@@ -235,8 +235,8 @@ describe('connectedUserServer', () => {
     beforeEach(() => {
       onTest = new ConnectedUserServer(DUMMY_AUTHER)
       refCell.onTest = onTest
-      expectToSucceed(onTest.postAllowedConnection, REQA)
-      expectToSucceed(onTest.postAllowedConnection, REQB)
+      expectToSucceed(onTest.postConnectionRequest, REQA)
+      expectToSucceed(onTest.postConnectionRequest, REQB)
     })
 
     itShouldReportThatConnectionBetweenUsersIsActive(refCell)
@@ -248,7 +248,7 @@ describe('connectedUserServer', () => {
           ? REQA
           : REQB
         beforeEach(() => {
-          expectToSucceed(onTest.deleteAllowedConnection, deleteReq)
+          expectToSucceed(onTest.deleteConnectionRequest, deleteReq)
         })
 
         itShouldReportThatNoConnectionBetweenUsersIsActive(refCell)
