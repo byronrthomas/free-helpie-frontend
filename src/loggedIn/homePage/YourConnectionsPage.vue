@@ -21,53 +21,7 @@
 import ConnectionsContainer from './ConnectionsContainer.vue'
 import {mapGetters} from 'vuex'
 
-const CONNECTION_REQUESTS = [
-  {
-    id: 0,
-    postSubject: 'Can somebody give me some executive coaching please',
-    connectionName: 'Jana Swiss',
-    inviteSent: new Date(2000, 3, 1, 19, 10, 15)
-  },
-  {
-    id: 1,
-    postSubject: 'Can somebody give me some executive coaching please',
-    connectionName: 'A.N.Other',
-    inviteSent: new Date(2000, 3, 1, 16, 17, 4)
-  }
-]
-
-const PENDING_INVITES = [
-  {
-    id: 2,
-    postSubject: 'Help around Garden',
-    connectionName: 'John Doe',
-    inviteSent: new Date(2000, 4, 1, 9, 34, 47)
-  },
-  {
-    id: 3,
-    postSubject: 'Some other post',
-    connectionName: 'A.N.Other',
-    inviteSent: new Date(2000, 5, 1, 16, 17, 4)
-  }
-]
-
-const ACTIVE_CONNECTIONS = [
-  {
-    id: 4,
-    postSubject: '',
-    connectionName: 'Wendy Small',
-    inviteSent: new Date(2000, 1, 1, 17, 0, 4)
-  }
-]
-
 export default {
-  // data () {
-  //   return {
-  //     connectionRequests: CONNECTION_REQUESTS,
-  //     activeConnections: ACTIVE_CONNECTIONS,
-  //     pendingInvites: PENDING_INVITES
-  //   }
-  // },
   computed: {
     ...mapGetters({
       'pendingInvitesToMe': 'loggedin/userconnections/pendingInvitesToMe',
