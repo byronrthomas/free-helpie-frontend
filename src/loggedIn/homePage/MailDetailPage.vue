@@ -41,16 +41,13 @@ export default {
       this.$store.dispatch('loggedin/threaddetails/markThreadAsRead', reqData)
     },
     makeConnection () {
-      const message = `You have asked to connect with ${this.otherName} - normally this ` +
-        'would mean that they get an invite to connect and can choose to connect with you (see' +
-        ' Your Connections for more info) to share contact details. This is not yet implemented.'
-      alert(message)
+      this.$store.dispatch('loggedin/userconnections/inviteConnection', {
+        otherUser: this.otherUserId,
+        relatedToPostId: this.threadId.relatedToPostId
+      })
     },
     cancelConnection () {
-      const message = `You have asked to cancel your connection with ${this.otherName} - normally this` +
-        ' would mean that your invite to connect is withdrawn and you will not be sharing' +
-        ' contact details any more. This is not yet implemented.'
-      alert(message)
+      this.$store.dispatch('loggedin/userconnections/cancelConnection', this.otherUserId)
     }
   },
   computed: {
@@ -61,9 +58,11 @@ export default {
       return this.userId === this.threadId.threadAuthor
     },
     cancelConnectAllowed () {
-      return this.mailItems.length > 0
-        ? 'connectAllowed'
-        : 'disabled'
+      return this.connectionInvitesFromMe.find(invite => invite.otherUser === this.otherUserId)
+        ? 'cancelAllowed'
+        : (this.mailItems.length > 0
+          ? 'connectAllowed'
+          : 'disabled')
     },
     otherUserId () {
       const posterId = parseInt(this.postAuthor)
@@ -79,7 +78,8 @@ export default {
     ...mapGetters({
       'profileInfo': 'loggedin/threaddetailsusers/userInfo',
       'userId': 'userId',
-      mailItems: 'loggedin/threaddetails/mailItems'})
+      mailItems: 'loggedin/threaddetails/mailItems',
+      connectionInvitesFromMe: 'loggedin/userconnections/connectionInvitesFromMe'})
   },
   created () {
     const mailThreadQuery = {
