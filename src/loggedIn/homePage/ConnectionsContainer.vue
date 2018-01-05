@@ -10,8 +10,8 @@
           <div class="col-xs-2"><strong>Invite sent</strong></div>
         </div>
         <connection-summary-item
-          v-for="summary in summaries"
-          :key="makeKey(summary)"
+          v-for="(summary, index) in summaries"
+          :key="index"
           :invite-sent="getActivityDate(summary)"
           :post-subject="getSubject(summary)"
           :next-action="nextAction"
@@ -34,14 +34,11 @@ export default {
     nextAction: String
   },
   methods: {
-    makeKey (summary) {
-      return summary.id
-    },
     getActivityDate (summary) {
       return summary.inviteSent
     },
     getConversationName (summary) {
-      return summary.connectionName
+      return summary.withName
     },
     getSubject (summary) {
       return summary.postSubject

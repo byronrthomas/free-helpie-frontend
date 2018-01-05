@@ -183,7 +183,10 @@ export function loggedInStore (server) {
 
       userdetails: userDetailStore(server),
 
-      userconnections: userConnectionsStore(server)
+      // your connections
+      userconnections: userConnectionsStore(server),
+      userconnectionsposts: postsStore(server),
+      userconnectionsusers: userInfoStore(server)
     }
   }
 }

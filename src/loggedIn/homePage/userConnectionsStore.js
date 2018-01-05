@@ -26,11 +26,16 @@ export function userConnectionsStore (server) {
         return state.connectionInvitesToMe
       },
       activeConnections (state) {
-        const to = new Set(state.connectionInvitesToMe.map(rec => rec.otherUser))
+        const to = new Map(state.connectionInvitesToMe.map(rec => [rec.otherUser, rec]))
         const result = []
         for (const fromMe of state.connectionInvitesFromMe) {
           if (to.has(fromMe.otherUser)) {
-            result.push(fromMe)
+            const toMe = to.get(fromMe.otherUser)
+            const latest = 
+              toMe.inviteSent.getTime() > fromMe.inviteSent.getTime()
+              ? toMe
+              : fromMe
+            result.push(latest)
           }
         }
         return result

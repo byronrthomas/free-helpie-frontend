@@ -21,13 +21,61 @@
 import ConnectionsContainer from './ConnectionsContainer.vue'
 import {mapGetters} from 'vuex'
 
+function getPostSubject (postInfo, postId) {
+  const post = postInfo[postId] || {subject: ''}
+  return post.title
+}
+
+function getDisplayName (userInfo, userId) {
+  const user = userInfo[userId] || {name: '[Unknown]'}
+  return user.name
+}
+
+function makeSummary (invite, postInfo, userInfo) {
+  return {
+    withName: getDisplayName(userInfo, invite.otherUser),
+    postSubject: getPostSubject(postInfo, invite.relatedToPostId),
+    inviteSent: invite.inviteSent
+  }
+}
+
 export default {
   computed: {
+    // Create an extra property to make the watch be on a single property
+    allPostIds () {
+      return this.rawPendingInvitesToMe.concat(
+        this.rawPendingInvitesFromMe, this.rawActiveConnections)
+        .map(invite => invite.relatedToPostId)
+    },
+    allUserIds () {
+      return this.rawPendingInvitesToMe.concat(
+        this.rawActiveConnections, this.rawPendingInvitesFromMe)
+        .map(invite => invite.otherUser)
+    },
+    pendingInvitesFromMe () {
+      return this.rawPendingInvitesFromMe.map(invite => makeSummary(invite, this.postInfo, this.userInfo))
+    },
+    pendingInvitesToMe () {
+      return this.rawPendingInvitesToMe.map(invite => makeSummary(invite, this.postInfo, this.userInfo))
+    },
+    activeConnections () {
+      return this.rawActiveConnections.map(invite => makeSummary(invite, this.postInfo, this.userInfo))
+    },
     ...mapGetters({
-      'pendingInvitesToMe': 'loggedin/userconnections/pendingInvitesToMe',
-      'pendingInvitesFromMe': 'loggedin/userconnections/pendingInvitesFromMe',
-      'activeConnections': 'loggedin/userconnections/activeConnections',
+      'rawPendingInvitesToMe': 'loggedin/userconnections/pendingInvitesToMe',
+      'rawPendingInvitesFromMe': 'loggedin/userconnections/pendingInvitesFromMe',
+      'rawActiveConnections': 'loggedin/userconnections/activeConnections',
+      'postInfo': 'loggedin/userconnectionsposts/getPosts',
+      'userInfo': 'loggedin/userconnectionsusers/userInfo',
       'userId': 'userId'})
+  },
+  watch: {
+    allPostIds (newValue) {
+      this.$store.dispatch('loggedin/userconnectionsposts/setPostIdsFilter', newValue)
+    },
+    allUserIds (newValue) {
+      this.$store.dispatch('loggedin/userconnectionsusers/getUserInfo', newValue)
+    }
   },
   created () {
     this.$store.dispatch('loggedin/userconnections/getConnections', this.userId)
