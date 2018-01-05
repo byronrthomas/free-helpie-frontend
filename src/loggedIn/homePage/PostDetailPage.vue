@@ -193,16 +193,13 @@ export default {
       this.$store.dispatch('loggedin/postthread/markThreadAsRead', reqData)
     },
     makeConnection () {
-      const message = `You have asked to connect with ${this.postersName} - normally this ` +
-        'would mean that they get an invite to connect and can choose to connect with you (see' +
-        ' Your Connections for more info) to share contact details. This is not yet implemented.'
-      alert(message)
+      this.$store.dispatch('loggedin/userconnections/inviteConnection', {
+        otherUser: this.post.postedBy,
+        relatedToPostId: this.post.id
+      })
     },
     cancelConnection () {
-      const message = `You have asked to cancel your connection with ${this.postersName} - normally this` +
-        ' would mean that your invite to connect is withdrawn and you will not be sharing' +
-        ' contact details any more. This is not yet implemented.'
-      alert(message)
+      this.$store.dispatch('loggedin/userconnections/cancelConnection', this.post.postedBy)
     }
   },
   components: {

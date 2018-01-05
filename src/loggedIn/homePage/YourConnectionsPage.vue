@@ -74,7 +74,9 @@ export default {
   },
   methods: {
     makeInvite (otherUserId) {
-      this.$store.dispatch('loggedin/userconnections/inviteConnection', otherUserId)
+      this.$store.dispatch('loggedin/userconnections/inviteConnection', {
+        otherUser: otherUserId
+      })
     },
     cancelInvite (otherUserId) {
       this.$store.dispatch('loggedin/userconnections/cancelConnection', otherUserId)

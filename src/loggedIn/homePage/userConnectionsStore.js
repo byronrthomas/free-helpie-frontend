@@ -101,10 +101,11 @@ export function userConnectionsStore (server) {
           .then(() => dispatch('refreshFromMe'))
           .catch(err => commit('setLastServerError', err.message, { root: true }))
       },
-      inviteConnection ({commit, dispatch, rootGetters, state}, invitedUserId) {
+      inviteConnection ({commit, dispatch, rootGetters, state}, payload) {
         commit('setLastServerError', '', {root: true})
         const userId = rootGetters.userId
-        const req = {authToken: rootGetters.authToken, data: {invitedUserId}}
+        const data = {invitedUserId: payload.otherUser, relatedToPostId: payload.relatedToPostId}
+        const req = {authToken: rootGetters.authToken, data}
         server.post(`/users/${userId}/connectionInvitesFromMe`, req)
           .then(() => dispatch('refreshFromMe'))
           .catch(err => commit('setLastServerError', err.message, { root: true }))
