@@ -62,7 +62,7 @@ export const INITIAL_CONNECTION_INVITES = [
   inviteToTestUser(A_N_OTHER1, TEST_USER_POST, new Date(2000, 3, 1, 16, 17, 4)),
 
   // Invites sent from TEST_USER
-  inviteFromTestUser(JOHN_DOE, JOHN_DOE_POST, Date(2000, 4, 1, 9, 34, 47)),
+  inviteFromTestUser(JOHN_DOE, JOHN_DOE_POST, new Date(2000, 4, 1, 9, 34, 47)),
   inviteFromTestUser(A_N_OTHER2, A_N_OTHER2_POST, new Date(2000, 5, 1, 16, 17, 4)),
 
   // Active, invite both ways
