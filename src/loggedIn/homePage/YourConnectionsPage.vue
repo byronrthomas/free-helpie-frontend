@@ -70,8 +70,7 @@ export default {
       'rawPendingInvitesFromMe': 'loggedin/userconnections/pendingInvitesFromMe',
       'rawActiveConnections': 'loggedin/userconnections/activeConnections',
       'postInfo': 'loggedin/userconnectionsposts/getPosts',
-      'userInfo': 'loggedin/userconnectionsusers/userInfo',
-      'userId': 'userId'})
+      'userInfo': 'loggedin/userconnectionsusers/userInfo'})
   },
   methods: {
     makeInvite (otherUserId) {
@@ -90,7 +89,7 @@ export default {
     }
   },
   created () {
-    this.$store.dispatch('loggedin/userconnections/getConnections', this.userId)
+    this.$store.dispatch('loggedin/userconnections/ensureInitialised')
   },
   components: {
     'connections-container': ConnectionsContainer

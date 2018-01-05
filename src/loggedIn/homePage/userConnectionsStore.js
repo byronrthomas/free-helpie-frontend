@@ -18,7 +18,8 @@ export function userConnectionsStore (server) {
     state: {
       connectionInvitesFromMe: [],
       connectionInvitesToMe: [],
-      userId: null
+      userId: null,
+      initailised: false
     },
     getters: {
       connectionInvitesFromMe (state) {
@@ -62,11 +63,14 @@ export function userConnectionsStore (server) {
       },
       setConnectionsInvitesToMe (state, connectionInvitesToMe) {
         state.connectionInvitesToMe = connectionInvitesToMe
+      },
+      setInitialised (state, newValue) {
+        state.initailised = newValue
       }
     },
     actions: {
       refreshFromMe ({commit, state, rootGetters}) {
-        const userId = state.userId
+        const userId = rootGetters.userId
         if (typeof userId !== 'undefined') {
           commit('setLastServerError', '', {root: true})
           server.get(`/users/${userId}/connectionInvitesFromMe`, {authToken: rootGetters.authToken})
@@ -75,7 +79,7 @@ export function userConnectionsStore (server) {
         }
       },
       refreshToMe ({commit, state, rootGetters}) {
-        const userId = state.userId
+        const userId = rootGetters.userId
         if (typeof userId !== 'undefined') {
           commit('setLastServerError', '', {root: true})
           server.get(`/users/${userId}/connectionInvitesToMe`, {authToken: rootGetters.authToken})
@@ -83,21 +87,25 @@ export function userConnectionsStore (server) {
             .catch(err => commit('setLastServerError', err.message, { root: true }))
         }
       },
-      getConnections ({commit, dispatch}, userId) {
-        commit('setUserId', userId)
-        dispatch('refreshFromMe')
-        dispatch('refreshToMe')
+      ensureInitialised ({commit, dispatch, state}) {
+        if (!state.initailised) {
+          dispatch('refreshFromMe')
+          .then(() => dispatch('refreshToMe'))
+          .then(() => commit('setInitialised', true))
+        }
       },
       cancelConnection ({commit, dispatch, rootGetters, state}, invitedUserId) {
         commit('setLastServerError', '', {root: true})
-        server.delete(`/users/${state.userId}/connectionInvitesFromMe/${invitedUserId}`, {authToken: rootGetters.authToken})
+        const userId = rootGetters.userId
+        server.delete(`/users/${userId}/connectionInvitesFromMe/${invitedUserId}`, {authToken: rootGetters.authToken})
           .then(() => dispatch('refreshFromMe'))
           .catch(err => commit('setLastServerError', err.message, { root: true }))
       },
       inviteConnection ({commit, dispatch, rootGetters, state}, invitedUserId) {
         commit('setLastServerError', '', {root: true})
+        const userId = rootGetters.userId
         const req = {authToken: rootGetters.authToken, data: {invitedUserId}}
-        server.post(`/users/${state.userId}/connectionInvitesFromMe`, req)
+        server.post(`/users/${userId}/connectionInvitesFromMe`, req)
           .then(() => dispatch('refreshFromMe'))
           .catch(err => commit('setLastServerError', err.message, { root: true }))
       }
