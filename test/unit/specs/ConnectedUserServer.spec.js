@@ -4,6 +4,7 @@ import {runAll} from '@/store/mockServer/callbackTools'
 
 const USER_WHO_POSTS_INVITE = {id: 0, username: 'UserWhoInvitesConnection', authToken: Math.random()}
 const USER_RECEIVING_INVITE = {id: 55, username: 'UserWhoGetsInvite', authToken: Math.random()}
+const TEST_POST_ID = 777
 const startTime = new Date()
 
 const ACCEPTED_CONNECTIONS = 'accepted connections'
@@ -67,8 +68,13 @@ function reqFromUser(userId) {
   return {authToken: userId.authToken}
 }
 
-function fillReqDataForUsers({fromUser, toUser}) {
-  return {userId: fromUser.id, data: {invitedUserId: toUser.id}}
+/// WithPostId is optional as it's only for information purposes
+function fillReqDataForUsers({fromUser, toUser}, withPostId) {
+  const data = 
+    withPostId
+    ? {invitedUserId: toUser.id, relatedToPostId: TEST_POST_ID}
+    : {invitedUserId: toUser.id}
+  return {userId: fromUser.id, data}
 }
 
 function fillReqDataForUser(fromUser) {
@@ -170,7 +176,7 @@ describe('connectedUserServer', () => {
     beforeEach(() => {
       onTest = new ConnectedUserServer(DUMMY_AUTHER)
       refCell.onTest = onTest
-      const req = {...reqData, ...reqFromUser(fromUser)}
+      const req = {...fillReqDataForUsers(A_INVITES_B, true), ...reqFromUser(fromUser)}
       expectToSucceed(onTest.postConnectionRequest, req)
     })
 
@@ -193,6 +199,12 @@ describe('connectedUserServer', () => {
           expect.arrayContaining([expect.objectContaining({inviteSent: expect.any(Date)})])
         )
       })
+      it(`and the invite from GET should contain a postId (${getMethod} when asking about ${displayName(subjects.correctUser)})`, () => {
+        const req = getReqForUserLoggedIn(subjects.correctUser)
+        expectToSucceed(lookupMethod(getMethod, onTest), req).andRespData().toEqual(
+          expect.arrayContaining([expect.objectContaining({relatedToPostId: TEST_POST_ID})])
+        )
+      })      
       it(`GET should not contain the invite in ${getMethod} when asking about ${displayName(subjects.otherUser)}`, () => {
         const req = getReqForUserLoggedIn(subjects.otherUser)
         expectToSucceed(lookupMethod(getMethod, onTest), req)

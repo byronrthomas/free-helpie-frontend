@@ -10,6 +10,8 @@ import { runAll } from './mockServer/callbackTools'
 import { UserAccountServer } from './mockServer/userAccountServer'
 import { INITIAL_ACCOUNT_DETAILS } from './mockServer/initialAccountDetails'
 import { ConnectedUserServer } from './mockServer/connectedUserServer';
+import { INITIAL_CONNECTION_INVITES } from './mockServer/initialConnectionInvites'
+
 
 const MOCK_NETWORK_LATENCY = 500
 function wrapAsPromise (func, data) {
@@ -161,7 +163,7 @@ function makeServer () {
     postFavouritesServer: new UserFavouritesServer(auther),
     mailsServer,
     accountDeatilsServer,
-    connectionRequestsServer: new ConnectedUserServer(auther)
+    connectionRequestsServer: new ConnectedUserServer(auther, INITIAL_CONNECTION_INVITES)
   }
   return new Server(config)
 }

@@ -70,10 +70,48 @@ export const TEST_USER = {
   },
   agreedToTsAndCs: true
 }
+export const A_N_OTHER_USER1 = {
+  personalInfo: {
+    name: 'Andrew Norman Other',
+    photo: null
+  },
+  locations: ['North West London'],
+  interests: ['Pets'],
+  skills: ['IT Software'],
+  description: 'Something something.',
+  locationTypes: ['Remote'],
+  timings: {
+    regularAmount: {
+      unit: '1hr',
+      frequency: 'Week'},
+    slots: ['Weekends']
+  },
+  agreedToTsAndCs: true
+}
+export const A_N_OTHER_USER2 = {
+  personalInfo: {
+    name: 'Alan Nigel Other',
+    photo: null
+  },
+  locations: ['South West London'],
+  interests: ['House'],
+  skills: ['IT Hardware'],
+  description: 'Something something else.',
+  locationTypes: ['Remote'],
+  timings: {
+    regularAmount: {
+      unit: '1hr',
+      frequency: 'Week'},
+    slots: ['Weekends']
+  },
+  agreedToTsAndCs: true
+}
 
 export const INITIAL_USER_DATA = {
   '0': JOHN_DOE,
   '1': WENDY_SMALL,
   '2': JANA_SWISS,
-  '3': TEST_USER
+  '3': TEST_USER,
+  '4': A_N_OTHER_USER1,
+  '5': A_N_OTHER_USER2
 }

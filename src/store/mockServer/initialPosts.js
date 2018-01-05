@@ -80,5 +80,21 @@ A small amount of time once a week or once a month should be fine. We can do it 
       },
       slots: ['Weekend', 'Evening']
     }
+  },
+  {
+    postedBy: 5,
+    title: 'Some other post',
+    interests: [],
+    skills: ['Coaching'],
+    locations: ['North-west London'],
+    remote: true,
+    description: 'This is not very interesting',
+    timings: {
+      regularAmount: {
+        unit: '1hr',
+        frequency: 'Week'
+      },
+      slots: ['Weekend', 'Evening']
+    }
   }
 ]

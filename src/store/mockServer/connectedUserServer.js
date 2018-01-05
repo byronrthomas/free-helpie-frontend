@@ -1,13 +1,16 @@
-function recordTimestamp(inMap, userA, userB, timestamp) {
+function recordInviteOneWay(inMap, userA, userB, toRecord) {
   if (!inMap.has(userA)) {
     inMap.set(userA, new Map())
   }
   const innerMap = inMap.get(userA)
-  innerMap.set(userB, timestamp)
+  innerMap.set(userB, toRecord)
 }
 
 function makeConnectionRecord(keyAndValue) {
-  return {otherUser: keyAndValue[0], inviteSent: keyAndValue[1]}
+  return {
+    otherUser: keyAndValue[0], 
+    relatedToPostId: keyAndValue[1].relatedToPostId, 
+    inviteSent: keyAndValue[1].timestamp}
 }
 
 function getConnectionRecords(map, userId) {
@@ -22,13 +25,14 @@ export function ConnectedUserServer (userAuth, initialData) {
   const invitesFromUser = new Map()
   const invitesToUser = new Map()
 
-  const recordInvite = (fromUser, toUser, atTime) => {
-    recordTimestamp(invitesFromUser, fromUser, toUser, atTime)
-    recordTimestamp(invitesToUser, toUser, fromUser, atTime)
+  const recordInvite = (fromUser, toUser, postId, atTime) => {
+    const toRecord = {relatedToPostId: postId, timestamp: atTime}
+    recordInviteOneWay(invitesFromUser, fromUser, toUser, toRecord)
+    recordInviteOneWay(invitesToUser, toUser, fromUser, toRecord)
   }
   if (initialData && initialData.length > 0) {
-    for (const pair of initialData) {
-      recordInvite(pair.fromUser, pair.toUser, pair.timestamp)
+    for (const invite of initialData) {
+      recordInvite(invite.fromUser, invite.toUser, invite.relatedToPostId, invite.timestamp)
     }
   }
 
@@ -94,7 +98,7 @@ export function ConnectedUserServer (userAuth, initialData) {
 
       console.log('POST connection invite: Saving user data for userID ' + userId)
       const otherUserId = reqData.data.invitedUserId
-      recordInvite(userId, otherUserId, new Date())
+      recordInvite(userId, otherUserId, reqData.data.relatedToPostId, new Date())
       resolve()
     },
     deleteConnectionRequest (reqData, resolve, reject) {
