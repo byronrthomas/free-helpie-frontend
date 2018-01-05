@@ -121,9 +121,11 @@ export default {
       return this.post.postedBy === this.userId
     },
     cancelConnectAllowed () {
-      return this.mailItems.length > 0
-        ? 'connectAllowed'
-        : 'disabled'
+      return this.connectionInvitesFromMe.find(invite => invite.otherUser === this.post.postedBy)
+        ? 'cancelAllowed'
+        : (this.mailItems.length > 0
+          ? 'connectAllowed'
+          : 'disabled')
     },
     isFavourited () {
       return this.favouritePostIds.includes(this.postKey)
@@ -148,7 +150,8 @@ export default {
       'profileInfo': 'loggedin/postdetails/profileInfo',
       favouritePostIds: 'loggedin/favouritePostIds',
       'userId': 'userId',
-      mailItems: 'loggedin/postthread/mailItems'})
+      mailItems: 'loggedin/postthread/mailItems',
+      connectionInvitesFromMe: 'loggedin/userconnections/connectionInvitesFromMe'})
   },
   created () {
     this.$store.dispatch('loggedin/postdetails/getPost', this.postKey)
@@ -159,6 +162,8 @@ export default {
       sortOrderAsc: true
     }
     this.$store.dispatch('loggedin/postthread/getMailThread', mailThreadQuery)
+    // We make use of userconnections for this page
+    this.$store.dispatch('loggedin/userconnections/ensureInitialised')
   },
   methods: {
     onDeleted () {

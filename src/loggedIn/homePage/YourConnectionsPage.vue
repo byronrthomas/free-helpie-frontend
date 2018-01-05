@@ -90,6 +90,8 @@ export default {
   },
   created () {
     this.$store.dispatch('loggedin/userconnections/ensureInitialised')
+    this.$store.dispatch('loggedin/userconnectionsposts/setPostIdsFilter', this.allPostIds)
+    this.$store.dispatch('loggedin/userconnectionsusers/getUserInfo', this.allUserIds)
   },
   components: {
     'connections-container': ConnectionsContainer
