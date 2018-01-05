@@ -31,7 +31,7 @@ export function userConnectionsStore (server) {
         for (const fromMe of state.connectionInvitesFromMe) {
           if (to.has(fromMe.otherUser)) {
             const toMe = to.get(fromMe.otherUser)
-            const latest = 
+            const latest =
               toMe.inviteSent.getTime() > fromMe.inviteSent.getTime()
               ? toMe
               : fromMe
