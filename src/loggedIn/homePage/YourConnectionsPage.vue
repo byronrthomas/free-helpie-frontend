@@ -3,17 +3,20 @@
   <connections-container
     :header-text="'Requests from other users to connect'"
     :next-action="'Accept invite'"
-    :summaries="pendingInvitesToMe" />
+    :summaries="pendingInvitesToMe"
+    @summaryActionClicked="makeInvite" />
   <hr>
   <connections-container
     :header-text="'Pending invites you have made to connect with others'"
     :next-action="'Cancel invite'"
-    :summaries="pendingInvitesFromMe" />
+    :summaries="pendingInvitesFromMe"
+    @summaryActionClicked="cancelInvite" />
   <hr>
   <connections-container
     :header-text="'Users you are already connected with'"
     :next-action="'Cancel sharing'"
-    :summaries="activeConnections" />
+    :summaries="activeConnections"
+    @summaryActionClicked="cancelInvite" />
 </div>
 </template>
 
@@ -35,7 +38,8 @@ function makeSummary (invite, postInfo, userInfo) {
   return {
     withName: getDisplayName(userInfo, invite.otherUser),
     postSubject: getPostSubject(postInfo, invite.relatedToPostId),
-    inviteSent: invite.inviteSent
+    inviteSent: invite.inviteSent,
+    otherUserId: invite.otherUser
   }
 }
 
@@ -68,6 +72,14 @@ export default {
       'postInfo': 'loggedin/userconnectionsposts/getPosts',
       'userInfo': 'loggedin/userconnectionsusers/userInfo',
       'userId': 'userId'})
+  },
+  methods: {
+    makeInvite (otherUserId) {
+      alert('Connect with user was clicked')
+    },
+    cancelInvite (otherUserId) {
+      this.$store.dispatch('loggedin/userconnections/cancelConnection', otherUserId)
+    }
   },
   watch: {
     allPostIds (newValue) {

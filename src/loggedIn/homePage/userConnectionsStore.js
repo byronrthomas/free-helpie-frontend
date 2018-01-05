@@ -1,3 +1,5 @@
+import { rootGetters } from "../../store/store";
+
 
 function recordsDiff (input, toRemove) {
   const toRem = new Set(toRemove.map(rec => rec.otherUser))
@@ -81,6 +83,12 @@ export function userConnectionsStore (server) {
         commit('setUserId', userId)
         dispatch('refreshFromMe')
         dispatch('refreshToMe')
+      },
+      cancelConnection ({commit, dispatch, rootGetters, state}, invitedUserId) {
+        commit('setLastServerError', '', {root: true})
+        server.delete(`/users/${state.userId}/connectionInvitesFromMe/${invitedUserId}`, {authToken: rootGetters.authToken})
+          .then(() => dispatch('refreshFromMe'))
+          .catch(err => commit('setLastServerError', err.message, { root: true }))
       }
     }
   }

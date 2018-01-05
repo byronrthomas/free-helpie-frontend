@@ -139,7 +139,8 @@ function Server (config) {
       if (matchToConnectionsEditPath != null) {
         const userId = parseInt(matchToConnectionsEditPath[1])
         const otherUserId = parseInt(matchToConnectionsEditPath[2])
-        return wrapAsPromise(connections.postConnectionRequest, {userId, data: {invitedUserId: otherUserId}})
+        const reqData = {...data, userId, data: {invitedUserId: otherUserId}}
+        return wrapAsPromise(connections.deleteConnectionRequest, reqData)
       }
       throw new Error(`Unknown route: POST ${resourcePath}`)
     }

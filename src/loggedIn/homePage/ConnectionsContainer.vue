@@ -15,7 +15,8 @@
           :invite-sent="getActivityDate(summary)"
           :post-subject="getSubject(summary)"
           :next-action="nextAction"
-          :with-name="getConversationName(summary)">
+          :with-name="getConversationName(summary)"
+          @actionClicked="actionClicked(summary)">
         </connection-summary-item>
       
     </div>
@@ -42,6 +43,9 @@ export default {
     },
     getSubject (summary) {
       return summary.postSubject
+    },
+    actionClicked (summary) {
+      this.$emit('summaryActionClicked', summary.otherUserId)
     }
   },
   components: {
