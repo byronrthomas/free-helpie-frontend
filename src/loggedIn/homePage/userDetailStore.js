@@ -4,11 +4,15 @@ export function userDetailStore (server) {
     namespaced: true,
     state: {
       profile: null,
-      userId: null
+      userId: null,
+      details: null
     },
     getters: {
       profile (state) {
         return state.profile
+      },
+      details (state) {
+        return state.details
       }
     },
     mutations: {
@@ -17,6 +21,9 @@ export function userDetailStore (server) {
       },
       setProfile (state, profile) {
         state.profile = profile
+      },
+      setDetails (state, details) {
+        state.details = details
       }
     },
     actions: {
@@ -29,9 +36,17 @@ export function userDetailStore (server) {
             .catch(err => commit('setLastServerError', err.message, { root: true }))
         }
       },
+      refreshDetails ({commit, state, rootGetters}) {
+        const userId = state.userId
+        if (typeof userId !== 'undefined') {
+          commit('setLastServerError', '', {root: true})
+          server.get(`/accountDetails/${userId}`, {authToken: rootGetters.authToken})
+            .then(resp => { commit('setDetails', resp.data) })
+        }
+      },
       getUser ({commit, dispatch}, userId) {
         commit('setUserId', userId)
-        dispatch('refreshProfile')
+        dispatch('refreshProfile').then(dispatch('refreshDetails'))
       }
     }
   }

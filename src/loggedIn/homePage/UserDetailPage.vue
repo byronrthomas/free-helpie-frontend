@@ -1,5 +1,7 @@
 <template>
-  <user-detail-container :profile-data="profileData"/>
+  <user-detail-container
+   :profile-data="profileData"
+   :contact-details="contactDetails"/>
 </template>
 
 <script>
@@ -37,7 +39,9 @@ export default {
     profileData () {
       return this.profile || makeEmptyFormData()
     },
-    ...mapGetters({'profile': 'loggedin/userdetails/profile'})
+    ...mapGetters({
+      'profile': 'loggedin/userdetails/profile',
+      'contactDetails': 'loggedin/userdetails/details'})
   },
   created () {
     this.$store.dispatch('loggedin/userdetails/getUser', this.userId)

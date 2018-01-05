@@ -6,7 +6,25 @@
       </div>
     </div>
     <form-segment header-text="Contact details">
-      <div class="alert alert-warning">
+      <template v-if="contactDetailsAvailable">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" disabled="true" v-model="contactDetails.email" class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone</label>
+          <input type="tel" id="phone" disabled="true" v-model="contactDetails.phone" class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="address">Address</label>
+          <input type="text" id="address" disabled="true" v-model="contactDetails.address" class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="dateOfBirth">Date of Birth</label>
+          <input type="text" id="dateOfBirth" disabled="true" v-model="contactDetails.dateOfBirth" class="form-control">
+        </div>
+      </template>
+      <div class="alert alert-warning" v-else>
         You are not currently connected with {{profileData.personalInfo.name}} - so you cannot see their
         contact details. You can invite them to connect once you have started a conversation about one of
         their posts (or they have started a conversation with you). See Your Connections for more info.
@@ -120,7 +138,13 @@ import FormSegment from '../../sharedComponents/FormSegment.vue'
 
 export default {
   props: {
-    profileData: Object
+    profileData: Object,
+    contactDetails: Object
+  },
+  computed: {
+    contactDetailsAvailable () {
+      return Boolean(this.contactDetails)
+    }
   },
   components: {
     'multi-select-display': MultiselectDisplay,
