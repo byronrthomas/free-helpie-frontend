@@ -37,6 +37,10 @@ export function userConnectionsStore (server) {
               toMe.inviteSent.getTime() > fromMe.inviteSent.getTime()
               ? toMe
               : fromMe
+            latest.relatedToPostId =
+              typeof latest.relatedToPostId === 'undefined'
+                ? (toMe.relatedToPostId || fromMe.relatedToPostId)
+                : latest.relatedToPostId
             result.push(latest)
           }
         }
@@ -87,6 +91,13 @@ export function userConnectionsStore (server) {
       cancelConnection ({commit, dispatch, rootGetters, state}, invitedUserId) {
         commit('setLastServerError', '', {root: true})
         server.delete(`/users/${state.userId}/connectionInvitesFromMe/${invitedUserId}`, {authToken: rootGetters.authToken})
+          .then(() => dispatch('refreshFromMe'))
+          .catch(err => commit('setLastServerError', err.message, { root: true }))
+      },
+      inviteConnection ({commit, dispatch, rootGetters, state}, invitedUserId) {
+        commit('setLastServerError', '', {root: true})
+        const req = {authToken: rootGetters.authToken, data: {invitedUserId}}
+        server.post(`/users/${state.userId}/connectionInvitesFromMe`, req)
           .then(() => dispatch('refreshFromMe'))
           .catch(err => commit('setLastServerError', err.message, { root: true }))
       }

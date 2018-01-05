@@ -75,7 +75,7 @@ export default {
   },
   methods: {
     makeInvite (otherUserId) {
-      alert('Connect with user was clicked')
+      this.$store.dispatch('loggedin/userconnections/inviteConnection', otherUserId)
     },
     cancelInvite (otherUserId) {
       this.$store.dispatch('loggedin/userconnections/cancelConnection', otherUserId)
