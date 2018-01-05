@@ -86,7 +86,7 @@ export default {
     },
     viewUser (userId) {
       this.$router.push({name: 'userDetail', params: {userId}})
-    },
+    }
   },
   watch: {
     allPostIds (newValue) {
