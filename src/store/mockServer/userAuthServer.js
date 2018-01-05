@@ -31,8 +31,14 @@ export function UserAuthServer () {
     }
   }
   nextId = nextId + 1
-  let usersToAuth = makeReversibleMap()
-  let unverifiedUsers = {}
+  const usersToAuth = makeReversibleMap()
+  const unverifiedUsers = {}
+  const viewDetailsGrants = new Map()
+  
+  const viewDetailsGranted = (fromUser, toUser) => {
+    return viewDetailsGrants.has(fromUser) &&
+      viewDetailsGrants.get(fromUser).has(toUser)
+  }
 
   return {
     get (reqData, resolve, reject) {
@@ -119,7 +125,8 @@ export function UserAuthServer () {
     syncGetIsAllowedToSeeAccountDetails (token, userId) {
       const loggedInUserId = usersToAuth.getByValue(token)
       // console.log('loggedInUserId = ', loggedInUserId)
-      return (typeof userId !== 'undefined') && userId === loggedInUserId
+      return (typeof userId !== 'undefined') && 
+        (userId === loggedInUserId || viewDetailsGranted(userId, loggedInUserId))
     },
     syncGetIsAllowedToSeeProfile (token, userId) {
       const loggedInUserId = usersToAuth.getByValue(token)
@@ -137,6 +144,19 @@ export function UserAuthServer () {
       const loggedInUserId = usersToAuth.getByValue(token)
       // For now - are they loggedin and posting to their own userId?
       return (typeof userId !== 'undefined') && userId === loggedInUserId
+    },
+    syncPostRevokeViewDetails (fromUser, toUser) {
+      // toUser is allowed to see fromUser's account details from now on
+      if (viewDetailsGrants.has(fromUser)) {
+        viewDetailsGrants.get(fromUser).delete(toUser)
+      }
+    },
+    syncPostGrantViewDetails (fromUser, toUser) {
+      // toUser is allowed to see fromUser's account details from now on
+      if (!viewDetailsGrants.has(fromUser)) {
+        viewDetailsGrants.set(fromUser, new Set())
+      }
+      viewDetailsGrants.get(fromUser).add(toUser)
     }
   }
 }

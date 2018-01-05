@@ -29,18 +29,21 @@ function inferUserId (token) {
       : null)
 }
 
-const DUMMY_AUTHER = {
-  syncCanPostConnectionInvite (token, userId) {
-    const loggedInUserId = inferUserId(token)
-    // For now - are they loggedin and posting to their own userId?
-    return (typeof userId !== 'undefined') && userId === loggedInUserId
-  },
-  syncGetIsAllowedToSeeConnections (token, userId) {
-    const loggedInUserId = inferUserId(token)
-    // For now - are they loggedin and posting to their own userId?
-    return (typeof userId !== 'undefined') && userId === loggedInUserId
+function makeAuther() {
+  return {
+    syncCanPostConnectionInvite (token, userId) {
+      const loggedInUserId = inferUserId(token)
+      // For now - are they loggedin and posting to their own userId?
+      return (typeof userId !== 'undefined') && userId === loggedInUserId
+    },
+    syncGetIsAllowedToSeeConnections (token, userId) {
+      const loggedInUserId = inferUserId(token)
+      // For now - are they loggedin and posting to their own userId?
+      return (typeof userId !== 'undefined') && userId === loggedInUserId
+    },
+    syncPostGrantViewDetails: jest.fn(),
+    syncPostRevokeViewDetails: jest.fn()
   }
-
 }
 
 function expectToSucceed(method, req) {
@@ -88,24 +91,30 @@ function displayPair(pair) {
   return `(${displayName(pair.fromUser)}, ${displayName(pair.toUser)})`
 }
 
-function checkBothPairsForResult(cell, expectedResult) {
-  const bothPairs = [
-    {fromUser: ALL_USERS[0], toUser: ALL_USERS[1]},
-    {fromUser: ALL_USERS[1], toUser: ALL_USERS[0]}
+function checkBothPairsHaveBeenCalled(mock) {
+  const bothPairsOfIds = [
+    [ALL_USERS[0].id, ALL_USERS[1].id],
+    [ALL_USERS[1].id, ALL_USERS[0].id]
   ]
-  for (const pair of bothPairs) {
-    it(`GET-CONNECTION-ACTIVE on pair ${displayPair(pair)} should return ${expectedResult}`, () => {
-      expect(cell.onTest.syncGetUsersMayConnect(pair.fromUser.id, pair.toUser.id)).toEqual(expectedResult)
-    })
-  }
+  expect(mock.calls).toEqual(expect.arrayContaining(bothPairsOfIds))
 }
 
-function itShouldReportThatConnectionBetweenUsersIsActive(onTest) {
-  checkBothPairsForResult(onTest, true)
+function itShouldHaveGrantedViewDetailsBetweenTheUsers(refCell) {
+  it('should have granted permissions to view user details in both directions', () => {
+    checkBothPairsHaveBeenCalled(refCell.auther.syncPostGrantViewDetails.mock)
+  })
 }
 
-function itShouldReportThatNoConnectionBetweenUsersIsActive(onTest) {
-  checkBothPairsForResult(onTest, false)
+function itShouldHaveRevokedViewDetailsBetweenTheUsers(refCell) {
+  it('should have revoked permissions to view user details in both directions', () => {
+    checkBothPairsHaveBeenCalled(refCell.auther.syncPostRevokeViewDetails.mock)
+  })
+}
+
+function itShouldNotHaveGrantedAnyDetailViewing(refCell) {
+  it('should not have granted any permissions to view user details', () => {
+    expect(refCell.auther.syncPostGrantViewDetails.mock.calls).toHaveLength(0)
+  })
 }
 
 const A_INVITES_B = {
@@ -119,41 +128,42 @@ function getReqForUserLoggedIn(user) {
 
 describe('connectedUserServer', () => {
   it('should be possible to post an accept connection for the logged in user', () => {
-    const onTest = new ConnectedUserServer(DUMMY_AUTHER)
+    const onTest = new ConnectedUserServer(makeAuther())
     const req = {...fillReqDataForUsers(A_INVITES_B), ...reqFromUser(A_INVITES_B.fromUser)}
     expectToSucceed(onTest.postConnectionRequest, req)
   })
 
   it('should refuse a post for a user that the token doesn\'t currently authorise', () => {
-    const onTest = new ConnectedUserServer(DUMMY_AUTHER)
+    const onTest = new ConnectedUserServer(makeAuther())
     const req = {...fillReqDataForUsers(A_INVITES_B), ...reqFromUser(A_INVITES_B.toUser)}
     expectToFail(onTest.postConnectionRequest, req)
   })
 
   it('should refuse a delete for an accept connection that doesn\'t exist', () => {
-    const onTest = new ConnectedUserServer(DUMMY_AUTHER)
+    const onTest = new ConnectedUserServer(makeAuther())
     const req = {...fillReqDataForUsers(A_INVITES_B), ...reqFromUser(A_INVITES_B.toUser)}
     expectToFail(onTest.deleteConnectionRequest, req)
   })
 
   it('should refuse a get for a userId that is not the logged in user', () => {
-    const onTest = new ConnectedUserServer(DUMMY_AUTHER)
+    const onTest = new ConnectedUserServer(makeAuther())
     const req = {...fillReqDataForUser(USER_RECEIVING_INVITE), ...reqFromUser(USER_WHO_POSTS_INVITE)}
     expectToFail(onTest.getConnectionsFrom, req)
   })
 
   it('should refuse a get invites for a userId that is not the logged in user', () => {
-    const onTest = new ConnectedUserServer(DUMMY_AUTHER)
+    const onTest = new ConnectedUserServer(makeAuther())
     const req = {...fillReqDataForUser(USER_RECEIVING_INVITE), ...reqFromUser(USER_WHO_POSTS_INVITE)}
     expectToFail(onTest.getConnectionsTo, req)
   })
 
   describe('when no posts have been made', () => {
     let onTest
-    const refCell = {onTest: null}
+    const refCell = {auther: null}
     beforeEach(() => {
-      onTest = new ConnectedUserServer(DUMMY_AUTHER)
-      refCell.onTest = onTest
+      const auther = makeAuther()
+      onTest = new ConnectedUserServer(auther)
+      refCell.auther = auther
     })
     for (const getMethod of GET_METHODS) {
       for (const user of ALL_USERS) {
@@ -165,17 +175,18 @@ describe('connectedUserServer', () => {
       }
     }
   
-    itShouldReportThatNoConnectionBetweenUsersIsActive(refCell)
+    itShouldNotHaveGrantedAnyDetailViewing(refCell)
   })
 
   describe('after a post has been made', () => {
     let onTest
     const reqData = fillReqDataForUsers(A_INVITES_B)
     const fromUser = A_INVITES_B.fromUser
-    const refCell = {onTest: null}
+    const refCell = {auther: null}
     beforeEach(() => {
-      onTest = new ConnectedUserServer(DUMMY_AUTHER)
-      refCell.onTest = onTest
+      const auther = makeAuther()
+      onTest = new ConnectedUserServer(auther)
+      refCell.auther = auther
       const req = {...fillReqDataForUsers(A_INVITES_B, true), ...reqFromUser(fromUser)}
       expectToSucceed(onTest.postConnectionRequest, req)
     })
@@ -211,7 +222,7 @@ describe('connectedUserServer', () => {
           .andRespData().toEqual([])
       })
     }
-    itShouldReportThatNoConnectionBetweenUsersIsActive(refCell)
+    itShouldNotHaveGrantedAnyDetailViewing(refCell)
 
     describe('after the post has been deleted', () => {
       beforeEach(() => {
@@ -243,15 +254,16 @@ describe('connectedUserServer', () => {
     }
     const REQA = {...fillReqDataForUsers(A_INVITES_B), ...reqFromUser(A_INVITES_B.fromUser)}
     const REQB = {...fillReqDataForUsers(B_INVITES_A), ...reqFromUser(B_INVITES_A.fromUser)}
-    const refCell = {onTest: null}
+    const refCell = {auther: null}
     beforeEach(() => {
-      onTest = new ConnectedUserServer(DUMMY_AUTHER)
-      refCell.onTest = onTest
+      const auther = makeAuther()
+      onTest = new ConnectedUserServer(auther)
+      refCell.auther = auther
       expectToSucceed(onTest.postConnectionRequest, REQA)
       expectToSucceed(onTest.postConnectionRequest, REQB)
     })
 
-    itShouldReportThatConnectionBetweenUsersIsActive(refCell)
+    itShouldHaveGrantedViewDetailsBetweenTheUsers(refCell)
 
     for (const user of ALL_USERS) {
       describe(`if ${user.username} deletes their invite`, () => {
@@ -263,7 +275,7 @@ describe('connectedUserServer', () => {
           expectToSucceed(onTest.deleteConnectionRequest, deleteReq)
         })
 
-        itShouldReportThatNoConnectionBetweenUsersIsActive(refCell)
+        itShouldHaveGrantedViewDetailsBetweenTheUsers(refCell)
       })
     }
   })

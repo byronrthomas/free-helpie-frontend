@@ -44,6 +44,9 @@ export function ConnectedUserServer (userAuth, initialData) {
     invitesFromUser.get(fromUser).delete(toUser)
     invitesToUser.get(toUser).delete(fromUser)
   }
+  const usersConnected = (userA, userB) => {
+    return invitedFrom(userA, userB) && invitedFrom(userB, userA)
+  }
 
   return {
     getConnectionsFrom (reqData, resolve, reject) {
@@ -76,9 +79,6 @@ export function ConnectedUserServer (userAuth, initialData) {
       const respData = getConnectionRecords(invitesToUser, userId)
       resolve({data: respData})
     },
-    syncGetUsersMayConnect (userA, userB) {
-      return invitedFrom(userA, userB) && invitedFrom(userB, userA)
-    },
     postConnectionRequest (reqData, resolve, reject) {
       console.log('POST connection invite: req = ', reqData)
       if (!reqData.hasOwnProperty('userId')) {
@@ -98,7 +98,14 @@ export function ConnectedUserServer (userAuth, initialData) {
 
       console.log('POST connection invite: Saving user data for userID ' + userId)
       const otherUserId = reqData.data.invitedUserId
+      const usersWereConnected = usersConnected(userId, otherUserId)
       recordInvite(userId, otherUserId, reqData.data.relatedToPostId, new Date())
+      const usersAreConnected = usersConnected(userId, otherUserId)
+      if (!usersWereConnected && usersAreConnected) {
+        console.log('Users have become newly connected, granting perms')
+        userAuth.syncPostGrantViewDetails(userId, otherUserId)
+        userAuth.syncPostGrantViewDetails(otherUserId, userId)
+      }
       resolve()
     },
     deleteConnectionRequest (reqData, resolve, reject) {
@@ -120,7 +127,15 @@ export function ConnectedUserServer (userAuth, initialData) {
 
       console.log('DELETE connection invite: Saving user data for userID ' + userId)
       const otherUserId = reqData.data.invitedUserId
+      const usersWereConnected = usersConnected(userId, otherUserId)
       deleteInvite(userId, otherUserId)
+      const usersAreConnected = usersConnected(userId, otherUserId)
+      if (usersWereConnected && !usersAreConnected) {
+        console.log('Users have become newly disconnected, revoking perms')
+        userAuth.syncPostRevokeViewDetails(userId, otherUserId)
+        userAuth.syncPostRevokeViewDetails(otherUserId, userId)
+      }
+
       resolve()
     }
   }
