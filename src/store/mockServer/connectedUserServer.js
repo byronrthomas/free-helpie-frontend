@@ -1,4 +1,4 @@
-function recordInviteOneWay(inMap, userA, userB, toRecord) {
+function recordInviteOneWay (inMap, userA, userB, toRecord) {
   if (!inMap.has(userA)) {
     inMap.set(userA, new Map())
   }
@@ -6,14 +6,14 @@ function recordInviteOneWay(inMap, userA, userB, toRecord) {
   innerMap.set(userB, toRecord)
 }
 
-function makeConnectionRecord(keyAndValue) {
+function makeConnectionRecord (keyAndValue) {
   return {
-    otherUser: keyAndValue[0], 
-    relatedToPostId: keyAndValue[1].relatedToPostId, 
+    otherUser: keyAndValue[0],
+    relatedToPostId: keyAndValue[1].relatedToPostId,
     inviteSent: keyAndValue[1].timestamp}
 }
 
-function getConnectionRecords(map, userId) {
+function getConnectionRecords (map, userId) {
   if (!map.has(userId)) {
     return []
   } else {
@@ -37,8 +37,8 @@ export function ConnectedUserServer (userAuth, initialData) {
   }
 
   const invitedFrom = (userA, userB) => {
-    return invitesFromUser.has(userA) 
-      && invitesFromUser.get(userA).has(userB)
+    return invitesFromUser.has(userA) &&
+      invitesFromUser.get(userA).has(userB)
   }
   const deleteInvite = (fromUser, toUser) => {
     invitesFromUser.get(fromUser).delete(toUser)

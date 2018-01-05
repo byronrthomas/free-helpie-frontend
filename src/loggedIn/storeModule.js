@@ -5,7 +5,7 @@ import { singleMailThreadStore } from './homePage/mailThreadStore'
 import { activeMailThreadStore } from './homePage/activeMailThreadStore'
 import { userInfoStore } from './homePage/userInfoStore'
 import { userDetailStore } from './homePage/userDetailStore'
-import { userConnectionsStore } from './homePage/userConnectionsStore';
+import { userConnectionsStore } from './homePage/userConnectionsStore'
 
 function userProfileIsComplete (profile) {
   return profile &&

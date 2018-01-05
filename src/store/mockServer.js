@@ -9,9 +9,8 @@ import { INITIAL_MAILS, INITIAL_READ_MAILS } from './mockServer/initialMails'
 import { runAll } from './mockServer/callbackTools'
 import { UserAccountServer } from './mockServer/userAccountServer'
 import { INITIAL_ACCOUNT_DETAILS } from './mockServer/initialAccountDetails'
-import { ConnectedUserServer } from './mockServer/connectedUserServer';
+import { ConnectedUserServer } from './mockServer/connectedUserServer'
 import { INITIAL_CONNECTION_INVITES } from './mockServer/initialConnectionInvites'
-
 
 const MOCK_NETWORK_LATENCY = 500
 function wrapAsPromise (func, data) {
@@ -29,11 +28,11 @@ const FROM_CONNECTIONS_PATH_REG_EXP = RegExp(/^\/users\/(\d+)\/connectionInvites
 const TO_CONNECTIONS_PATH_REG_EXP = RegExp(/^\/users\/(\d+)\/connectionInvitesToMe$/)
 const EDIT_CONNECTION_PATH_REG_EXP = RegExp(/^\/users\/(\d+)\/connectionInvitesFromMe\/(\d+)$/)
 function Server (config) {
-  const userAuth = config.authServer 
-  const userData = config.profileServer 
-  const posts = config.postsServer 
+  const userAuth = config.authServer
+  const userData = config.profileServer
+  const posts = config.postsServer
   const userFavourites = config.postFavouritesServer
-  const mails = config.mailsServer 
+  const mails = config.mailsServer
   const accountDetails = config.accountDeatilsServer
   const connections = config.connectionRequestsServer
 
@@ -136,7 +135,7 @@ function Server (config) {
         const postId = resourcePath.substring('/posts/'.length)
         return wrapAsPromise(posts.delete, {postId: postId, ...data})
       }
-      const matchToConnectionsEditPath = resourcePath.match(EDIT_CONNECTIONS_PATH_REG_EXP)
+      const matchToConnectionsEditPath = resourcePath.match(EDIT_CONNECTION_PATH_REG_EXP)
       if (matchToConnectionsEditPath != null) {
         const userId = parseInt(matchToConnectionsEditPath[1])
         const otherUserId = parseInt(matchToConnectionsEditPath[2])
