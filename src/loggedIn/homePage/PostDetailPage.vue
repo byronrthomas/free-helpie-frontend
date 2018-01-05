@@ -88,7 +88,7 @@ export default {
           description: '',
           skills: [],
           interests: [],
-          location: '',
+          locations: [],
           remote: false,
           timings: {
             regularAmount: {
