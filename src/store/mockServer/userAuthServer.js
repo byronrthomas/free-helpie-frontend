@@ -34,7 +34,7 @@ export function UserAuthServer () {
   const usersToAuth = makeReversibleMap()
   const unverifiedUsers = {}
   const viewDetailsGrants = new Map()
-  
+
   const viewDetailsGranted = (fromUser, toUser) => {
     return viewDetailsGrants.has(fromUser) &&
       viewDetailsGrants.get(fromUser).has(toUser)
@@ -125,7 +125,7 @@ export function UserAuthServer () {
     syncGetIsAllowedToSeeAccountDetails (token, userId) {
       const loggedInUserId = usersToAuth.getByValue(token)
       // console.log('loggedInUserId = ', loggedInUserId)
-      return (typeof userId !== 'undefined') && 
+      return (typeof userId !== 'undefined') &&
         (userId === loggedInUserId || viewDetailsGranted(userId, loggedInUserId))
     },
     syncGetIsAllowedToSeeProfile (token, userId) {

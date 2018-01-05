@@ -1,6 +1,3 @@
-import { rootGetters } from "../../store/store";
-
-
 function recordsDiff (input, toRemove) {
   const toRem = new Set(toRemove.map(rec => rec.otherUser))
   const result = []

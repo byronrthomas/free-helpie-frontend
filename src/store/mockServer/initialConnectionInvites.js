@@ -1,4 +1,3 @@
-
 const JOHN_DOE_POST = 0
 const TEST_USER_POST = 4
 const WENDY_SMALL_POST = 1
@@ -28,5 +27,5 @@ export const INITIAL_CONNECTION_INVITES = [
   inviteFromTestUser(A_N_OTHER2, A_N_OTHER2_POST, new Date(2000, 5, 1, 16, 17, 4)),
 
   // Not putting any active ones in - they don't get posted fully, so they're a bit confusing
-  inviteToTestUser(WENDY_SMALL, TEST_USER_POST, new Date(2000, 1, 1, 16, 17, 4)),
+  inviteToTestUser(WENDY_SMALL, WENDY_SMALL_POST, new Date(2000, 1, 1, 16, 17, 4))
 ]
