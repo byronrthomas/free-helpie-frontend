@@ -4,7 +4,7 @@
       <button class="btn btn-primary" @click="actionClicked">{{nextAction}}</button>
     </div>
     <div class="col-xs-3">
-      {{ withName }}
+      <a role="button" @click.prevent="userClicked">{{ withName }}</a>
     </div>
     <div class="col-xs-5">
       {{ postSubject }}
@@ -32,6 +32,9 @@ export default {
   methods: {
     actionClicked () {
       this.$emit('actionClicked')
+    },
+    userClicked () {
+      this.$emit('userClicked')
     }
   }
 }

@@ -4,19 +4,22 @@
     :header-text="'Requests from other users to connect'"
     :next-action="'Accept invite'"
     :summaries="pendingInvitesToMe"
-    @summaryActionClicked="makeInvite" />
+    @summaryActionClicked="makeInvite"
+    @viewUser="viewUser" />
   <hr>
   <connections-container
     :header-text="'Pending invites you have made to connect with others'"
     :next-action="'Cancel invite'"
     :summaries="pendingInvitesFromMe"
-    @summaryActionClicked="cancelInvite" />
+    @summaryActionClicked="cancelInvite"
+    @viewUser="viewUser" />
   <hr>
   <connections-container
     :header-text="'Users you are already connected with'"
     :next-action="'Cancel sharing'"
     :summaries="activeConnections"
-    @summaryActionClicked="cancelInvite" />
+    @summaryActionClicked="cancelInvite"
+    @viewUser="viewUser" />
 </div>
 </template>
 
@@ -80,7 +83,10 @@ export default {
     },
     cancelInvite (otherUserId) {
       this.$store.dispatch('loggedin/userconnections/cancelConnection', otherUserId)
-    }
+    },
+    viewUser (userId) {
+      this.$router.push({name: 'userDetail', params: {userId}})
+    },
   },
   watch: {
     allPostIds (newValue) {

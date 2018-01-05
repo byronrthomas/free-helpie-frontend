@@ -16,7 +16,8 @@
           :post-subject="getSubject(summary)"
           :next-action="nextAction"
           :with-name="getConversationName(summary)"
-          @actionClicked="actionClicked(summary)">
+          @actionClicked="actionClicked(summary)"
+          @userClicked="userClicked(summary)">
         </connection-summary-item>
       
     </div>
@@ -46,6 +47,9 @@ export default {
     },
     actionClicked (summary) {
       this.$emit('summaryActionClicked', summary.otherUserId)
+    },
+    userClicked (summary) {
+      this.$emit('viewUser', summary.otherUserId)
     }
   },
   components: {
