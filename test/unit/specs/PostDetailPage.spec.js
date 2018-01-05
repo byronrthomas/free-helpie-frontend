@@ -102,6 +102,17 @@ function storeConfig (emails, actions) {
               }
             }
           },
+          userconnections: {
+            namespaced: true,
+            actions: {
+              ensureInitialised ({}) {}
+            },
+            getters: {
+              connectionInvitesFromMe () {
+                return []
+              }
+            }
+          },
           postthread: {
             namespaced: true,
             actions: actions,
