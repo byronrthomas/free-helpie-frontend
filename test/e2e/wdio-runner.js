@@ -29,9 +29,9 @@ devConfigPromise.then(devConfig => {
   if (opts.indexOf('--config') === -1) {
     opts = opts.concat(['test/e2e/wdio.conf.js'])
   }
-  // if (opts.indexOf('--env') === -1) {
-  //   opts = opts.concat(['--env', 'chrome'])
-  // }
+  if (opts.indexOf('--env') === -1) {
+    opts = opts.concat(['--env', 'chrome'])
+  }
 
   const spawn = require('cross-spawn')
   const runner = spawn('./node_modules/.bin/wdio', opts, { stdio: 'inherit' })
