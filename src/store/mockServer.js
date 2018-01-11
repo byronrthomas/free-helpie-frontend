@@ -147,7 +147,7 @@ function Server (config) {
   }
 }
 
-function makeServer () {
+export function makeServer () {
   const auther = new UserAuthServer()
   const postsServer = new PostsServer(auther)
   runAll(postsServer.postWithoutAuth, INITIAL_POSTS.map(post => { return { data: post } }))
