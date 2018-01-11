@@ -2,17 +2,16 @@ import {PostsServer} from '@/store/mockServer/postsServer'
 import {INITIAL_POSTS} from '@/store/mockServer/initialPosts'
 import {runAll} from '@/store/mockServer/callbackTools'
 
-const USER_ID = 0
 const AUTH_TOKEN = Math.random()
 
 const dummyAuther = {
-  syncGetUserCanPost(token) {
+  syncGetUserCanPost (token) {
     return typeof token !== 'undefined'
   },
-  syncGetUserCanSeeFullPosts(token) {
+  syncGetUserCanSeeFullPosts (token) {
     return typeof token !== 'undefined'
   },
-  syncGetUserCanUpdate(token) {
+  syncGetUserCanUpdate (token) {
     return typeof token !== 'undefined'
   },
   syncGetUserCanDelete (token, postId) {
@@ -20,46 +19,46 @@ const dummyAuther = {
   }
 }
 
-function makeReq(remainingReq) {
+function makeReq (remainingReq) {
   return {authToken: AUTH_TOKEN, ...remainingReq}
 }
 
 const TEST_POST_DATA = INITIAL_POSTS[0]
 
-function extractPostData(postsData) {
+function extractPostData (postsData) {
   const posts = []
   for (const key in postsData) {
     if (postsData.hasOwnProperty(key)) {
-      posts.push(postsData[key]);
+      posts.push(postsData[key])
     }
   }
   return posts
 }
 
-function shouldRunSuccessfully(method, data, checkResult) {
+function shouldRunSuccessfully (method, data, checkResult) {
   const checker = checkResult || (x => true)
   let hasSucceeded = false
   method(
     data,
     res => { hasSucceeded = true; checker(res) },
-    err => {throw err}
+    err => { throw err }
   )
   expect(hasSucceeded).toBeTruthy()
 }
 
-function checkPostsEqualTo(expectedResults) {
+function checkPostsEqualTo (expectedResults) {
   return res => expect(extractPostData(res.data)).toEqual(expectedResults)
-} 
+}
 
-describe ('PostsServer', () => {
+describe('PostsServer', () => {
   const checkNoResults = res => expect(extractPostData(res.data)).toHaveLength(0)
 
   it('should accept post requests', () => {
     const onTest = new PostsServer(dummyAuther)
     console.log(onTest)
-    
+
     shouldRunSuccessfully(onTest.post, makeReq({data: TEST_POST_DATA}))
-  }),
+  })
 
   describe('after a post', () => {
     const postContents = INITIAL_POSTS[0]
@@ -68,9 +67,9 @@ describe ('PostsServer', () => {
     beforeEach(() => {
       onTest = new PostsServer(dummyAuther)
       onTest.post(
-        makeReq({data: postContents}), 
-        res => {postId = res.data.postId}, 
-        err => {throw err})
+        makeReq({data: postContents}),
+        res => { postId = res.data.postId },
+        err => { throw err })
     })
 
     it('should return that the post was posted by the correct user', () => {
@@ -82,7 +81,7 @@ describe ('PostsServer', () => {
       const newPostContents = {locations: ['Some new location'], ...postContents}
       shouldRunSuccessfully(onTest.put, makeReq({data: newPostContents, postId: postId}))
     })
-      
+
     describe('after putting an edited version of the post', () => {
       it('should give back the edited version on the next get', () => {
         const newPostContents = {...postContents, locations: ['Some new location']}
@@ -90,7 +89,7 @@ describe ('PostsServer', () => {
         shouldRunSuccessfully(
           onTest.getSingle,
           makeReq({postId: postId}),
-          res => {expect(res.data).toEqual(newPostContents)})
+          res => { expect(res.data).toEqual(newPostContents) })
       })
     })
 
@@ -117,7 +116,6 @@ describe ('PostsServer', () => {
       shouldRunSuccessfully(onTest.get, makeReq({}), checkPostsEqualTo(postsToPost))
     })
 
-
     describe('should give no results if an empty list is supplied as ', () => {
       const filtersToCheck = ['postIdsFilter', 'postedByFilter', 'interestsFilter', 'skillsFilter']
       for (const filterField of filtersToCheck) {
@@ -138,13 +136,13 @@ describe ('PostsServer', () => {
     describe('should be possible to filter to a non-empty result using', () => {
       const expectedResult = TEST_POST_DATA
       const filtersAndFields = {
-        'postIdsFilter' : [0], // NOTE: this is a bit rubbish - have to assume we're going to get ID 0, should refactor
-        'postedByFilter' : [expectedResult.postedBy],
-        'interestsFilter' : [expectedResult.interests[0]],
-        'skillsFilter' : [expectedResult.skills[0]],
+        'postIdsFilter': [0], // NOTE: this is a bit rubbish - have to assume we're going to get ID 0, should refactor
+        'postedByFilter': [expectedResult.postedBy],
+        'interestsFilter': [expectedResult.interests[0]],
+        'skillsFilter': [expectedResult.skills[0]],
         'locationsFilter': [expectedResult.locations[0]]
       }
-      const containsExpectedResult = 
+      const containsExpectedResult =
         res => expect(extractPostData(res.data))
           .toEqual(expect.arrayContaining([expectedResult]))
       for (const filterKey in filtersAndFields) {

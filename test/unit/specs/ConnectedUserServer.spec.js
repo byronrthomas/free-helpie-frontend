@@ -1,11 +1,8 @@
 import {ConnectedUserServer} from '@/store/mockServer/connectedUserServer'
-import {runAll} from '@/store/mockServer/callbackTools'
-
 
 const USER_WHO_POSTS_INVITE = {id: 0, username: 'UserWhoInvitesConnection', authToken: Math.random()}
 const USER_RECEIVING_INVITE = {id: 55, username: 'UserWhoGetsInvite', authToken: Math.random()}
 const TEST_POST_ID = 777
-const startTime = new Date()
 
 const ACCEPTED_CONNECTIONS = 'accepted connections'
 const GET_METHODS = [ACCEPTED_CONNECTIONS, 'invited connections']
@@ -13,7 +10,7 @@ function getSubjects (getMethod) {
   return getMethod === ACCEPTED_CONNECTIONS
     ? {correctUser: USER_WHO_POSTS_INVITE, otherUser: USER_RECEIVING_INVITE}
     : {correctUser: USER_RECEIVING_INVITE, otherUser: USER_WHO_POSTS_INVITE}
-} 
+}
 function lookupMethod (getMethod, onTest) {
   return getMethod === ACCEPTED_CONNECTIONS
     ? onTest.getConnectionsFrom
@@ -25,11 +22,11 @@ function inferUserId (token) {
   return token === USER_WHO_POSTS_INVITE.authToken
     ? USER_WHO_POSTS_INVITE.id
     : (token === USER_RECEIVING_INVITE.authToken
-      ? USER_RECEIVING_INVITE.id 
+      ? USER_RECEIVING_INVITE.id
       : null)
 }
 
-function makeAuther() {
+function makeAuther () {
   return {
     syncCanPostConnectionInvite (token, userId) {
       const loggedInUserId = inferUserId(token)
@@ -46,7 +43,7 @@ function makeAuther() {
   }
 }
 
-function expectToSucceed(method, req) {
+function expectToSucceed (method, req) {
   const resolve = jest.fn()
   const reject = jest.fn()
   method(req, resolve, reject)
@@ -59,7 +56,7 @@ function expectToSucceed(method, req) {
   }}
 }
 
-function expectToFail(method, req) {
+function expectToFail (method, req) {
   const resolve = jest.fn()
   const reject = jest.fn()
   method(req, resolve, reject)
@@ -67,31 +64,28 @@ function expectToFail(method, req) {
   expect(reject.mock.calls).toHaveLength(1)
 }
 
-function reqFromUser(userId) {
+function reqFromUser (userId) {
   return {authToken: userId.authToken}
 }
 
 /// WithPostId is optional as it's only for information purposes
-function fillReqDataForUsers({fromUser, toUser}, withPostId) {
-  const data = 
+function fillReqDataForUsers ({fromUser, toUser}, withPostId) {
+  const data =
     withPostId
     ? {invitedUserId: toUser.id, relatedToPostId: TEST_POST_ID}
     : {invitedUserId: toUser.id}
   return {userId: fromUser.id, data}
 }
 
-function fillReqDataForUser(fromUser) {
+function fillReqDataForUser (fromUser) {
   return {userId: fromUser.id}
 }
 
-function displayName(user) {
+function displayName (user) {
   return user.username
 }
-function displayPair(pair) {
-  return `(${displayName(pair.fromUser)}, ${displayName(pair.toUser)})`
-}
 
-function checkBothPairsHaveBeenCalled(mock) {
+function checkBothPairsHaveBeenCalled (mock) {
   const bothPairsOfIds = [
     [ALL_USERS[0].id, ALL_USERS[1].id],
     [ALL_USERS[1].id, ALL_USERS[0].id]
@@ -99,19 +93,13 @@ function checkBothPairsHaveBeenCalled(mock) {
   expect(mock.calls).toEqual(expect.arrayContaining(bothPairsOfIds))
 }
 
-function itShouldHaveGrantedViewDetailsBetweenTheUsers(refCell) {
+function itShouldHaveGrantedViewDetailsBetweenTheUsers (refCell) {
   it('should have granted permissions to view user details in both directions', () => {
     checkBothPairsHaveBeenCalled(refCell.auther.syncPostGrantViewDetails.mock)
   })
 }
 
-function itShouldHaveRevokedViewDetailsBetweenTheUsers(refCell) {
-  it('should have revoked permissions to view user details in both directions', () => {
-    checkBothPairsHaveBeenCalled(refCell.auther.syncPostRevokeViewDetails.mock)
-  })
-}
-
-function itShouldNotHaveGrantedAnyDetailViewing(refCell) {
+function itShouldNotHaveGrantedAnyDetailViewing (refCell) {
   it('should not have granted any permissions to view user details', () => {
     expect(refCell.auther.syncPostGrantViewDetails.mock.calls).toHaveLength(0)
   })
@@ -122,7 +110,7 @@ const A_INVITES_B = {
   toUser: USER_RECEIVING_INVITE
 }
 
-function getReqForUserLoggedIn(user) {
+function getReqForUserLoggedIn (user) {
   return {...fillReqDataForUser(user), ...reqFromUser(user)}
 }
 
@@ -174,7 +162,7 @@ describe('connectedUserServer', () => {
         })
       }
     }
-  
+
     itShouldNotHaveGrantedAnyDetailViewing(refCell)
   })
 
@@ -197,7 +185,7 @@ describe('connectedUserServer', () => {
     })
 
     for (const getMethod of GET_METHODS) {
-      const subjects = getSubjects(getMethod) 
+      const subjects = getSubjects(getMethod)
       it(`GET should contain the invite in ${getMethod} when asking about ${displayName(subjects.correctUser)}`, () => {
         const req = getReqForUserLoggedIn(subjects.correctUser)
         expectToSucceed(lookupMethod(getMethod, onTest), req).andRespData().toEqual(
@@ -215,7 +203,7 @@ describe('connectedUserServer', () => {
         expectToSucceed(lookupMethod(getMethod, onTest), req).andRespData().toEqual(
           expect.arrayContaining([expect.objectContaining({relatedToPostId: TEST_POST_ID})])
         )
-      })      
+      })
       it(`GET should not contain the invite in ${getMethod} when asking about ${displayName(subjects.otherUser)}`, () => {
         const req = getReqForUserLoggedIn(subjects.otherUser)
         expectToSucceed(lookupMethod(getMethod, onTest), req)
@@ -231,7 +219,7 @@ describe('connectedUserServer', () => {
       })
 
       for (const getMethod of GET_METHODS) {
-        const subjects = getSubjects(getMethod) 
+        const subjects = getSubjects(getMethod)
         it(`GET should not contain the invite in ${getMethod} when asking about ${displayName(subjects.otherUser)}`, () => {
           const req = getReqForUserLoggedIn(subjects.otherUser)
           expectToSucceed(lookupMethod(getMethod, onTest), req)
@@ -267,7 +255,7 @@ describe('connectedUserServer', () => {
 
     for (const user of ALL_USERS) {
       describe(`if ${user.username} deletes their invite`, () => {
-        const deleteReq = 
+        const deleteReq =
           user === USER_WHO_POSTS_INVITE
           ? REQA
           : REQB

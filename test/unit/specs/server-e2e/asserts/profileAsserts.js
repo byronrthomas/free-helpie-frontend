@@ -43,7 +43,7 @@ function checkAll (profile) {
   checkValues(profile)
 }
 
-export function assertMatchingProfile(expected, actual) {
+export function assertMatchingProfile (expected, actual) {
   checkAll(actual)
   expect(actual).toEqual(expected)
 }

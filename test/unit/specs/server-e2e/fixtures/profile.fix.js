@@ -1,7 +1,6 @@
 import faker from 'faker'
 
-
-function oneToThree(generator) {
+function oneToThree (generator) {
   const rand = Math.random() * 3
   const result = [generator()]
   if (rand > 1.0) {
@@ -13,11 +12,11 @@ function oneToThree(generator) {
   return result
 }
 
-function randomlyOnceIn(n) {
+function randomlyOnceIn (n) {
   return (Math.random() * n) > 1.0
 }
 
-function selectionOf(things, oneInN) {
+function selectionOf (things, oneInN) {
   const result = []
   for (const thing of things) {
     if (randomlyOnceIn(oneInN)) {
@@ -35,9 +34,9 @@ function generateTimeslots () {
   return selectionOf(['Weekends', 'Evenings', 'Weekdays', 'Daytimes'], 2)
 }
 
-function randomInt(atLeast, lessThan) {
+function randomInt (atLeast, lessThan) {
   const range = lessThan - atLeast
-  return Math.floor(Math.random() * lessThan) + atLeast
+  return Math.floor(Math.random() * range) + atLeast
 }
 
 function generateTimings () {
@@ -66,7 +65,6 @@ function one () {
     timings: generateTimings(),
     agreedToTsAndCs: true
   }
-
 }
 
 export const profileFix = {

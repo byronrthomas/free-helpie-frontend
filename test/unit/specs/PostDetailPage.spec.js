@@ -1,10 +1,6 @@
 import { shallow, createLocalVue, mount } from 'vue-test-utils'
-
 import PostDetailPage from '@/loggedIn/homePage/PostDetailPage.vue'
 import MailThreadContainer from '@/loggedIn/homePage/shared/MailThreadContainer.vue'
-import { rootGetters } from '@/store/store'
-import { singlePostStore } from '@/loggedIn/homePage/singlePostStore'
-import { fail } from 'assert';
 import Vuex from 'vuex'
 
 const localVue = createLocalVue()
@@ -66,7 +62,7 @@ const USER_DISPLAY_INFOS = {}
 USER_DISPLAY_INFOS[TEST_USER_ID] = {name: 'TheCurrentUser'}
 USER_DISPLAY_INFOS[OTHER_USER_ID] = {name: 'AnOtherUser'}
 
-function updatePostStore(postId) {
+function updatePostStore (postId) {
   if (postId === currentUsersPostId) {
     postStore.post = testPostData
   } else if (postId === otherUserPostId) {
@@ -79,13 +75,13 @@ function updatePostStore(postId) {
 function storeConfig (emails, actions) {
   return {
     getters: {
-      userId (state) {return TEST_USER_ID}
+      userId (state) { return TEST_USER_ID }
     },
     modules: {
       loggedin: {
         namespaced: true,
         getters: {
-          favouritePostIds (state) {return []},
+          favouritePostIds (state) { return [] }
         },
         modules: {
           postdetails: {
@@ -105,7 +101,7 @@ function storeConfig (emails, actions) {
           userconnections: {
             namespaced: true,
             actions: {
-              ensureInitialised ({}) {}
+              ensureInitialised () { }
             },
             getters: {
               connectionInvitesFromMe () {
@@ -178,20 +174,20 @@ describe('PostDetailsPage', () => {
 
   it('should pass on mails in the thread to its MailThreadContainer component', () => {
     const onTest = mount(PostDetailPage, {localVue, store, propsData: {postId: otherUserPostId}})
-    
+
     expect(onTest.find(MailThreadContainer).vm.mailItems).toEqual(testEmails)
   })
 
   it('should pass cancelConnectState as disabled to its MailThreadContainer component if there are no emails', () => {
     const noEmailsStore = new Vuex.Store(storeConfig([], actions))
     const onTest = mount(PostDetailPage, {localVue, store: noEmailsStore, propsData: {postId: otherUserPostId}})
-    
+
     expect(onTest.find(MailThreadContainer).vm.connectOrCancelAllowed).toEqual('disabled')
   })
 
   it('should pass cancelConnectState as connectAllowed to its MailThreadContainer component if there are no emails', () => {
     const onTest = mount(PostDetailPage, {localVue, store, propsData: {postId: otherUserPostId}})
-    
+
     expect(onTest.find(MailThreadContainer).vm.connectOrCancelAllowed).toEqual('connectAllowed')
   })
 })

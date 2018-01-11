@@ -1,7 +1,6 @@
 import { mount } from 'vue-test-utils'
 
 import MailThreadContainer from '@/loggedIn/homePage/shared/MailThreadContainer.vue'
-import { fail } from 'assert';
 
 const TEST_USER_ID = 555
 function makeOptionsForConnectCancel (connectCancel) {
@@ -79,7 +78,6 @@ describe('Mail thread container', () => {
     expect(onTest.emitted().cancelConnection[0]).toEqual([])
   })
 
-  const allowedText = allowed => allowed ? 'allowed' : 'not allowed'
   const aMail = makeAMailSentBy('AnotherUser')
   for (const hasMessages of [false, true]) {
     const messagesText = hasMessages ? 'messages' : 'no messages'
@@ -92,7 +90,7 @@ describe('Mail thread container', () => {
             myAvatar: {altText: 'You'},
             otherAvatar: {altText: 'Them'},
             userId: TEST_USER_ID},
-            connectOrCancelAllowed: connectOrCancelState}
+          connectOrCancelAllowed: connectOrCancelState}
         const onTest = mount(MailThreadContainer, options)
         expect(onTest.element).toMatchSnapshot()
       })

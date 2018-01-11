@@ -2,27 +2,26 @@ import {MailsServer} from '@/store/mockServer/mailsServer'
 import {runAll} from '@/store/mockServer/callbackTools'
 import {TEST_MAIL_USERS, TEST_MAILS, TEST_POSTS} from './testMails'
 
-
 const THREAD_AUTHOR_ID = {id: 0, username: 'UserRespondingToThePost', authToken: Math.random()}
 const POST_AUTHOR_ID = {id: 55, username: 'UserWhoPosted', authToken: Math.random()}
 
 const dummyAuther = {
-  syncGetUserCanPostMails(token) {
+  syncGetUserCanPostMails (token) {
     return typeof token !== 'undefined'
   },
-  syncGetUserCanSeeFullPosts(token) {
+  syncGetUserCanSeeFullPosts (token) {
     return typeof token !== 'undefined'
   },
-  syncGetUserCanUpdate(token) {
+  syncGetUserCanUpdate (token) {
     return typeof token !== 'undefined'
   },
   syncGetUserCanDelete (token, postId) {
     return typeof token !== 'undefined'
   },
   syncGetAuthUsers (token) {
-    // console.log("getUsersForToken", token)
-    // console.log("ThreadAuthor", THREAD_AUTHOR_ID)
-    // console.log("PostAuthor", POST_AUTHOR_ID)
+    // console.log('getUsersForToken', token)
+    // console.log('ThreadAuthor', THREAD_AUTHOR_ID)
+    // console.log('PostAuthor', POST_AUTHOR_ID)
     if (token === THREAD_AUTHOR_ID.authToken) {
       return [THREAD_AUTHOR_ID.id]
     } if (token === POST_AUTHOR_ID.authToken) {
@@ -36,11 +35,11 @@ const dummyAuther = {
   }
 }
 
-function makeReqFromUser(remainingReq, userId) {
+function makeReqFromUser (remainingReq, userId) {
   return {authToken: userId.authToken, ...remainingReq}
 }
 
-function makeReq(remainingReq) {
+function makeReq (remainingReq) {
   return makeReqFromUser(remainingReq, THREAD_AUTHOR_ID)
 }
 
@@ -54,36 +53,36 @@ const TEST_MAIL_DATA = {
 function findPostedBy (postId) {
   const res = TEST_POSTS.find(post => post.postId === postId)
   if (!res) {
-    throw new Error("Cannot find any thread for postId " + postId)
+    throw new Error('Cannot find any thread for postId ' + postId)
   }
   return res.postedBy
 }
 
 const dummyPostServer = {
-  syncGetPostedBy(postId) {
+  syncGetPostedBy (postId) {
     return postId === TEST_POST_ID ? POST_AUTHOR_ID.id : findPostedBy(postId).id
   }
 }
 
-function shouldRunSuccessfully(method, data, checkResult) {
+function shouldRunSuccessfully (method, data, checkResult) {
   const checker = checkResult || (x => true)
   let hasSucceeded = false
   method(
     data,
     res => { hasSucceeded = true; checker(res) },
-    err => {throw err}
+    err => { throw err }
   )
   expect(hasSucceeded).toBeTruthy()
 }
 
-function expectRespDataToEqual(expectedData) {
+function expectRespDataToEqual (expectedData) {
   return res => expect(res.data).toEqual(expectedData)
 }
 
 // This is like the equivalent of F# seq.collect, apply
 // a function of 'a -> 'b Array on each element of a 'a Array
 // and concat the resulting arrays to give a result 'b Array
-function arrayCollect(collectFun, inputArray) {
+function arrayCollect (collectFun, inputArray) {
   const arrayOfArrays = inputArray.map(collectFun)
   return arrayOfArrays.reduce((l, r) => l.concat(r), [])
 }
@@ -91,7 +90,7 @@ function arrayCollect(collectFun, inputArray) {
 function reqForTestMail (threadId, testMail) {
   const reqData = {
     mailText: testMail.text,
-    ...threadId} 
+    ...threadId}
   return makeReqFromUser({data: reqData}, testMail.sender)
 }
 
@@ -104,14 +103,12 @@ function expectSentTimesAscending (mail1, mail2) {
   expect(mail2.sent.getTime()).toBeGreaterThan(mail1.sent.getTime())
 }
 
-describe ('MailsServer', () => {
-  const checkNoResults = res => expect(extractPostData(res.data)).toHaveLength(0)
-
+describe('MailsServer', () => {
   it('should accept post requests', () => {
     const onTest = new MailsServer(dummyAuther, dummyPostServer)
-    
+
     shouldRunSuccessfully(onTest.post, makeReq({data: TEST_MAIL_DATA}))
-  }),
+  })
 
   it('should refuse a post request where the user is not the postAuthor or the threadAuthor', () => {
     const onError = jest.fn()
@@ -138,9 +135,9 @@ describe ('MailsServer', () => {
       onTest = new MailsServer(dummyAuther, dummyPostServer)
       justBeforePost = new Date()
       onTest.post(
-        makeReq({data: mailContents}), 
+        makeReq({data: mailContents}),
         res => { },
-        err => {throw err})
+        err => { throw err })
     })
 
     it('should return the mail from a request to get the thread', () => {
@@ -186,9 +183,9 @@ describe ('MailsServer', () => {
 
     it('should report the latest sent time in the thread info when fetching active threads', () => {
       let persistedMail
-      onTest.getMailThread(makeReq({data: mailThreadId}), 
-        (res) => {persistedMail = res.data[0]},
-        (err) => {throw err})
+      onTest.getMailThread(makeReq({data: mailThreadId}),
+        (res) => { persistedMail = res.data[0] },
+        (err) => { throw err })
 
       const expectedThreadInfo = expect.objectContaining({latestMessageSent: persistedMail.sent})
       shouldRunSuccessfully(onTest.getActiveThreads, makeReq({}), expectRespDataToEqual([expectedThreadInfo]))
@@ -211,9 +208,9 @@ describe ('MailsServer', () => {
         setTimeout(() => {
           startTimeForSecondPost = new Date()
           onTest.post(
-            makeReq({data: mailContents}), 
+            makeReq({data: mailContents}),
             res => { done() },
-            err => {throw err})
+            err => { throw err })
         }, 10)
       })
 
@@ -238,15 +235,15 @@ describe ('MailsServer', () => {
         it(`should be possible to read the contents of the thread in ${description} chronological order`, () => {
           const reqData = {...mailThreadId, sortField: 'sent', sortOrderAsc: orderIsAscending}
           const req = makeReq({data: reqData})
-          const checkRes = res =>
-            {
-              expect(res.data).toHaveLength(2) // Returns both results
-              if (orderIsAscending) {
-                expectSentTimesAscending(res.data[0], res.data[1])
-              } else {
-                expectSentTimesAscending(res.data[1], res.data[0])
-              }
+          const checkRes = res => {
+            expect(res.data).toHaveLength(2) // Returns both results
+            if (orderIsAscending) {
+              expectSentTimesAscending(res.data[0], res.data[1])
+            } else {
+              expectSentTimesAscending(res.data[1], res.data[0])
             }
+          }
+
           shouldRunSuccessfully(onTest.getMailThread, req, checkRes)
         })
       }
@@ -258,14 +255,13 @@ describe ('MailsServer', () => {
     runAll(onTest.post, arrayCollect(reqsForThread, TEST_MAILS))
   })
 
-  const threadAppearsAsUnread = threadId => res => 
+  const threadAppearsAsUnread = threadId => res =>
     expectRespDataToEqual(
       expect.arrayContaining([expect.objectContaining({threadId, unread: true})]))
   const threadIsPresent = threadId => res => expectRespDataToEqual(expect.arrayContaining([threadId]))
-      
+
   describe('after multiple mails have been posted on multiple threads', () => {
     const expectedMailThreads = TEST_MAILS
-    const postedThreadIds = expectedMailThreads.map(thread => thread.threadId)
     let onTest
     beforeEach(() => {
       onTest = new MailsServer(dummyAuther, dummyPostServer)
@@ -275,7 +271,7 @@ describe ('MailsServer', () => {
 
     for (const thread of expectedMailThreads) {
       for (const role of ['post author', 'thread author']) {
-        const user = role === 'post author' 
+        const user = role === 'post author'
           ? thread.postAuthor
           : thread.threadAuthor
         it(`should report thread ${thread.threadName} as active for the ${role} - ${user.username}`, () => {
@@ -300,20 +296,19 @@ describe ('MailsServer', () => {
     const threadToWorkWith = expectedMailThreads[0]
     const makeReqFromUserWithUnread = req => makeReqFromUser(req, threadToWorkWith.userWithUnread)
     const threadIdMatches = thrd => {
-      return thrd.threadId.relatedToPostId === threadToWorkWith.threadId.relatedToPostId
-        && thrd.threadId.threadAuthor === threadToWorkWith.threadId.threadAuthor
+      return thrd.threadId.relatedToPostId === threadToWorkWith.threadId.relatedToPostId &&
+        thrd.threadId.threadAuthor === threadToWorkWith.threadId.threadAuthor
     }
     const getLatestWrittenForThread = () => {
       let lastThreadActivity
       onTest.getActiveThreads(
         makeReqFromUserWithUnread({}),
-        res => {lastThreadActivity = res.data.find(threadIdMatches).latestMessageSent},
-        err => {throw err}
+        res => { lastThreadActivity = res.data.find(threadIdMatches).latestMessageSent },
+        err => { throw err }
       )
       return lastThreadActivity
     }
-    it (`should be possible for ${threadToWorkWith.userWithUnread.username} to mark thread ${threadToWorkWith.threadName} as read`, () => {
-
+    it(`should be possible for ${threadToWorkWith.userWithUnread.username} to mark thread ${threadToWorkWith.threadName} as read`, () => {
       const reqByUser = makeReqFromUserWithUnread({data: {timestampReadUpTo: getLatestWrittenForThread(), ...threadToWorkWith.threadId}})
       shouldRunSuccessfully(onTest.postMarkAsRead, reqByUser)
     })
@@ -338,18 +333,18 @@ describe ('MailsServer', () => {
         shouldRunSuccessfully(onTest.getActiveThreads, threadsReqForUser, threadAppearsAsRead)
       })
 
-      const sendNewMailOnThreadFromUser = user =>
-        {
-          const newMailData = {mailText: 'new mail', ...threadToWorkWith.threadId}
-          const req = makeReqFromUser({data: newMailData}, user)
-          shouldRunSuccessfully(onTest.post, req)
-        }
+      const sendNewMailOnThreadFromUser = user => {
+        const newMailData = {mailText: 'new mail', ...threadToWorkWith.threadId}
+        const req = makeReqFromUser({data: newMailData}, user)
+        shouldRunSuccessfully(onTest.post, req)
+      }
+
       it('should switch back to unread according to getUnread if another mail occurs', () => {
-        const userToSend = 
-          userWhoStartsWithUnread.username === threadToWorkWith.postAuthor.username 
-          ? threadToWorkWith.threadAuthor 
+        const userToSend =
+          userWhoStartsWithUnread.username === threadToWorkWith.postAuthor.username
+          ? threadToWorkWith.threadAuthor
           : threadToWorkWith.postAuthor
-        
+
         sendNewMailOnThreadFromUser(userToSend)
         const checkThreadIsUnread = res => {
           expect(res.data).toEqual(expect.arrayContaining([threadToWorkWith.threadId]))
@@ -358,11 +353,11 @@ describe ('MailsServer', () => {
       })
 
       it('should switch back to unread according to getActive if another mail occurs', () => {
-        const userToSend = 
-          userWhoStartsWithUnread.username === threadToWorkWith.postAuthor.username 
-          ? threadToWorkWith.threadAuthor 
+        const userToSend =
+          userWhoStartsWithUnread.username === threadToWorkWith.postAuthor.username
+          ? threadToWorkWith.threadAuthor
           : threadToWorkWith.postAuthor
-        
+
         sendNewMailOnThreadFromUser(userToSend)
         const checkThreadIsUnread = res => {
           expect(res.data).toEqual(expect.arrayContaining([threadToWorkWith.threadId]))

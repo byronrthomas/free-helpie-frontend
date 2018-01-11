@@ -26,7 +26,7 @@ export const TEST_MAILS = [
     mails: [{
       sender: user2,
       text: 'I could help you'},
-      {sender: user1,
+    {sender: user1,
       text: 'Oh yeah, where you living?'}]
   },
   {threadName: '2',
@@ -37,18 +37,18 @@ export const TEST_MAILS = [
     mails: [{
       sender: user3,
       text: 'Hey, I\'ve been coaching for ten years, let\'s meet for a coffee'},
-      {sender: user2,
+    {sender: user2,
       text: 'Maybe - how many hours a week do you have spare?'},
-      {sender: user3,
+    {sender: user3,
       text: '10 hrs, I don\'t work much'}]
- },
- {threadName: '3',
-  postAuthor: user1,
-  threadAuthor: user3,
-  userWithUnread: user1,
-  threadId: {relatedToPostId: postByUser1.postId, threadAuthor: user3.id},
-  mails: [{
-    sender: user3,
-    text: 'Hey - do you need help with coaching at all?'}]
- }
+  },
+  {threadName: '3',
+    postAuthor: user1,
+    threadAuthor: user3,
+    userWithUnread: user1,
+    threadId: {relatedToPostId: postByUser1.postId, threadAuthor: user3.id},
+    mails: [{
+      sender: user3,
+      text: 'Hey - do you need help with coaching at all?'}]
+  }
 ]

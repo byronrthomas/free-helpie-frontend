@@ -1,38 +1,61 @@
 import { mount } from 'vue-test-utils'
-
 import PostEditForm from '@/loggedIn/homePage/PostEditForm.vue'
 
-
 const CHECKED_DATA_ITEMS = [
-  {propName: 'skillsAndInterestsMissing', 
-  fixes: [
-    { name: 'some interest is present', data: {interests: ['anInterest']}},
-    { name: 'some skill is present', data: {skills: ['aSkill']}},
-    ]},
-  {propName: 'locationsMissing', 
-  fixes: [
-    { name: 'remote is true', data: {remote: true}},
-    { name: 'some location is present', data: {locations: ['aLocation']}},
-    ]},
-  {propName: 'regularTimeMissing',
-  fixes: [
-    { name: 'both amount and frequency are non-empty', data: {timings: {regularAmount: {unit: 'Something', frequency: 'per something'}, slots: []}}},
-  ]},
-  {propName: 'timeslotsMissing',
-  fixes: [
-    { name: 'some timeslots are selected', data: {timings: {slots: ['Weekdays'], regularAmount: {unit: '', frequency: ''}}}}
-  ]},
-  {propName: 'titleMissing',
-  fixes: [
-    { name: 'title is non-empty', data: {title: 'Help me please'}}
-  ]},
-  {propName: 'descriptionMissing',
-  fixes: [
-    { name: 'description is non-empty', data: {description: 'Help me please'}}
-  ]}
-]
+  {
+    propName: 'skillsAndInterestsMissing',
+    fixes: [{
+      name: 'some interest is present',
+      data: {
+        interests: ['anInterest']}},
+    {
+      name: 'some skill is present',
+      data: {
+        skills: ['aSkill']}}]},
+  {
+    propName: 'locationsMissing',
+    fixes: [{
+      name: 'remote is true',
+      data: {
+        remote: true}},
+    {
+      name: 'some location is present',
+      data: {
+        locations: ['aLocation']}}]},
+  {
+    propName: 'regularTimeMissing',
+    fixes: [{
+      name: 'both amount and frequency are non-empty',
+      data: {
+        timings: {
+          regularAmount: {
+            unit: 'Something',
+            frequency: 'per something'},
+          slots: []}}}]},
+  {
+    propName: 'timeslotsMissing',
+    fixes: [{
+      name: 'some timeslots are selected',
+      data: {
+        timings: {
+          slots: ['Weekdays'],
+          regularAmount: {
+            unit: '',
+            frequency: ''}}}}]},
+  {
+    propName: 'titleMissing',
+    fixes: [{
+      name: 'title is non-empty',
+      data: {
+        title: 'Help me please'}}]},
+  {
+    propName: 'descriptionMissing',
+    fixes: [{
+      name: 'description is non-empty',
+      data: {
+        description: 'Help me please'}}]}]
 
-const EMPTY_POST = 
+const EMPTY_POST =
   {
     postedBy: 'John Doe',
     title: '',
@@ -53,9 +76,9 @@ const VALID_POST =
     locations: ['Location'],
     remote: false,
     description: 'Help me',
-    timings: {regularAmount: {unit: '1h', frequency: 'Week'}, slots: ['Evenings']}    
+    timings: {regularAmount: {unit: '1h', frequency: 'Week'}, slots: ['Evenings']}
   }
-function makeMountArg(post) {
+function makeMountArg (post) {
   const props = {
     initialPostData: post,
     createOrUpdate: 'Create',
@@ -113,7 +136,7 @@ describe('post edit form', () => {
         throw new Error(`Precondition failed, property ${check.propName} is false, should all be true`)
       }
     }
-    expect(onTest.element).toMatchSnapshot()   
+    expect(onTest.element).toMatchSnapshot()
   })
 
   it('has the expected HTML when all checks are inactive (i.e. all data is present)', () => {
@@ -121,7 +144,7 @@ describe('post edit form', () => {
     if (!onTest.vm.formContentsValid) {
       throw new Error(`Precondition failed formContentsValid is false should be true`)
     }
-    expect(onTest.element).toMatchSnapshot()   
+    expect(onTest.element).toMatchSnapshot()
   })
 
   it('emits a postEditSubmitted event when the submit button is clicked', () => {
@@ -132,4 +155,3 @@ describe('post edit form', () => {
     expect(onTest.emitted().submitForm[0]).toEqual([VALID_POST])
   })
 })
-

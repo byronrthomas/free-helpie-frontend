@@ -4,4 +4,3 @@ describe('when on the home page', () => {
     console.log(browser.getText('.btn*=Login'))
   })
 })
-

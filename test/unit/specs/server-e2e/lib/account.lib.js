@@ -16,7 +16,7 @@ export function getAccountData (state) {
 
 function saveAuthToState (resp, state) {
   const accountData = {
-    authToken: resp.authData, 
+    authToken: resp.authData,
     userId: resp.userId
   }
   state.accountData = accountData

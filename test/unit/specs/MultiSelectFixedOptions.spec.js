@@ -1,13 +1,13 @@
 import { shallow } from 'vue-test-utils'
 import MultiSelectFixedOptions from '@/sharedComponents/MultiselectFixedOptions.vue'
 
-function createComponentGivenOptions(options) {
+function createComponentGivenOptions (options) {
   return shallow(MultiSelectFixedOptions, {propsData: {possibleOptions: options}})
 }
 
-function validInputEventEmittedOnAction(wrapper, action) {
+function validInputEventEmittedOnAction (wrapper, action) {
   const oldLength = wrapper.emitted().input ? wrapper.emitted().input.length : 0
-  action();
+  action()
   expect(wrapper.emitted().input).toBeTruthy()
   expect(wrapper.emitted().input.length).toBe(oldLength + 1)
   expect(wrapper.emitted().input[oldLength]).toEqual([wrapper.vm.value])
@@ -51,14 +51,14 @@ describe('MultiSelectFixedOptions.vue', () => {
   })
 
   describe('when the new selection is non-empty and you click on add another', () => {
-    let wrapper;
+    let wrapper
     const toAdd = 'cheese'
 
     beforeEach(() => {
       wrapper = createComponentGivenOptions(NON_EMPTY_ARBITRARY_LIST)
       wrapper.vm.newSelectionChanged(toAdd)
     })
-    
+
     it('should be in the value', () => {
       wrapper.vm.addRow()
       expect(wrapper.vm.value).toEqual([toAdd])

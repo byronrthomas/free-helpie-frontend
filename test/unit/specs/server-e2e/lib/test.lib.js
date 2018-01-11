@@ -1,6 +1,5 @@
 import {makeServer} from '@/store/mockServer'
 
-
 export function initServer (serverState) {
   beforeEach(() => {
     serverState.server = makeServer()

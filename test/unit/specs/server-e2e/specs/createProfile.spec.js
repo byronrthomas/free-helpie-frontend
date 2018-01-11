@@ -4,7 +4,6 @@ import { profileFix } from '../fixtures/profile.fix'
 import { accountLib } from '../lib/account.lib'
 import { profileLib } from '../lib/profile.lib'
 
-
 describe('Create profile', () => {
   const state = {}
   initServer(state)
@@ -19,5 +18,4 @@ describe('Create profile', () => {
         .then(resp => assertMatchingProfile(profileData, resp.data))
     })
   })
-}) 
-
+})

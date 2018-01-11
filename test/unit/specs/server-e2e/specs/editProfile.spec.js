@@ -9,7 +9,7 @@ describe('Edit profile', () => {
 
   describe('Normal behaviours', () => {
     profileLib.setupOne(state)
-    
+
     it('should be possible to create a profile and get it back', () => {
       const profileData = profileFix.one()
       return profileLib.edit(state, profileData)
@@ -17,5 +17,4 @@ describe('Edit profile', () => {
         .then(resp => assertMatchingProfile(profileData, resp.data))
     })
   })
-}) 
-
+})
