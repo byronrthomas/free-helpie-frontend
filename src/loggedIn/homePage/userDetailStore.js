@@ -40,7 +40,7 @@ export function userDetailStore (server) {
         const userId = state.userId
         if (typeof userId !== 'undefined') {
           commit('setLastServerError', '', {root: true})
-          server.get(`/accountDetails/${userId}`, {authToken: rootGetters.authToken})
+          server.get(`/users/${userId}/contactDetails`, {authToken: rootGetters.authToken})
             .then(resp => { commit('setDetails', resp.data) })
         }
       },

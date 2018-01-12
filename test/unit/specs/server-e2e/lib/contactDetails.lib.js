@@ -2,23 +2,23 @@ import { getServer } from './test.lib'
 import { loginToKnownAccount } from './account.lib'
 import { makeAuthdRequest, makeEditRequest } from './commonReqs'
 import { userRoutePrefix } from './commonRoutes'
-import { profileFix } from '../fixtures/profile.fix'
+import { contactDetailsFix } from '../fixtures/contactDetails.fix'
 
 function makeRoute (state) {
-  return `${userRoutePrefix(state)}/profile`
+  return `${userRoutePrefix(state)}/contactDetails`
 }
 
-function create (state, profileData) {
+function create (state, contactData) {
   return getServer(state).post(
     makeRoute(state),
-    makeEditRequest(state, profileData))
+    makeEditRequest(state, contactData))
 }
 
 // TODO: make this put rather than post
-function edit (state, profileData) {
-  return getServer(state).post(
+function edit (state, contactData) {
+  return getServer(state).put(
     makeRoute(state),
-    makeEditRequest(state, profileData))
+    makeEditRequest(state, contactData))
 }
 
 function get (state) {
@@ -29,13 +29,13 @@ function get (state) {
 
 function setupOne (state) {
   beforeEach(() => {
-    const profileData = profileFix.one()
+    const contactData = contactDetailsFix.one()
     return loginToKnownAccount(state)
-      .then(() => create(state, profileData))
+      .then(() => create(state, contactData))
   })
 }
 
-export const profileLib = {
+export const contactDetailsLib = {
   create,
   edit,
   get,

@@ -91,7 +91,7 @@ export function loggedInStore (server) {
         const userId = rootGetters.userId
         if (userId) {
           commit('setLastServerError', '', { root: true })
-          server.get(`/accountDetails/${userId}`, {authToken: rootGetters.authToken})
+          server.get(`/users/${userId}/contactDetails`, {authToken: rootGetters.authToken})
             .then(resp => commit('setAccountDetails', resp.data))
             .catch(err => commit('setLastServerError', err.message, { root: true }))
         }
@@ -123,7 +123,7 @@ export function loggedInStore (server) {
       updateAccountDetails ({ commit, dispatch, state, rootGetters }, accountDetails) {
         commit('setLastServerError', '', { root: true })
         const userId = rootGetters.userId
-        server.post(`/accountDetails/${userId}`, {authToken: rootGetters.authToken, data: accountDetails})
+        server.post(`/users/${userId}/contactDetails`, {authToken: rootGetters.authToken, data: accountDetails})
           .then(() => dispatch('refreshAccountDetails'))
           .catch(err => commit('setLastServerError', err.message, { root: true }))
       },

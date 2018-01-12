@@ -23,6 +23,7 @@ function wrapAsPromise (func, data) {
 }
 
 const FAVOURITES_PATH_REG_EXP = RegExp(/^\/users\/(\d+)\/favourites$/)
+const CONTACT_DETAILS_PATH_REG_EXP = RegExp(/^\/users\/(\d+)\/contactDetails$/)
 const PROFILE_PATH_REG_EXP = RegExp(/^\/users\/(\d+)\/profile$/)
 const FROM_CONNECTIONS_PATH_REG_EXP = RegExp(/^\/users\/(\d+)\/connectionInvitesFromMe$/)
 const TO_CONNECTIONS_PATH_REG_EXP = RegExp(/^\/users\/(\d+)\/connectionInvitesToMe$/)
@@ -68,8 +69,9 @@ function Server (config) {
       if (resourcePath === '/mails') {
         return wrapAsPromise(mails.getMailThread, data)
       }
-      if (resourcePath.startsWith('/accountDetails/')) {
-        const userId = parseInt(resourcePath.substring('/accountDetails/'.length))
+      const matchToContactDetailsPath = resourcePath.match(CONTACT_DETAILS_PATH_REG_EXP)
+      if (matchToContactDetailsPath != null) {
+        const userId = parseInt(matchToContactDetailsPath[1])
         return wrapAsPromise(accountDetails.get, {userId: userId, ...data})
       }
       const matchToConnectionsToPath = resourcePath.match(TO_CONNECTIONS_PATH_REG_EXP)
@@ -108,8 +110,9 @@ function Server (config) {
       if (resourcePath === '/mailReads') {
         return wrapAsPromise(mails.postMarkAsRead, data)
       }
-      if (resourcePath.startsWith('/accountDetails/')) {
-        const userId = parseInt(resourcePath.substring('/accountDetails/'.length))
+      const matchToContactDetailsPath = resourcePath.match(CONTACT_DETAILS_PATH_REG_EXP)
+      if (matchToContactDetailsPath != null) {
+        const userId = parseInt(matchToContactDetailsPath[1])
         return wrapAsPromise(accountDetails.post, {userId: userId, ...data})
       }
       const matchToConnectionsFromPath = resourcePath.match(FROM_CONNECTIONS_PATH_REG_EXP)
@@ -124,8 +127,9 @@ function Server (config) {
         const postId = resourcePath.substring('/posts/'.length)
         return wrapAsPromise(posts.put, {postId: postId, ...data})
       }
-      if (resourcePath.startsWith('/accountDetails/')) {
-        const userId = parseInt(resourcePath.substring('/accountDetails/'.length))
+      const matchToContactDetailsPath = resourcePath.match(CONTACT_DETAILS_PATH_REG_EXP)
+      if (matchToContactDetailsPath != null) {
+        const userId = parseInt(matchToContactDetailsPath[1])
         return wrapAsPromise(accountDetails.put, {userId: userId, ...data})
       }
       throw new Error(`Unknown route: POST ${resourcePath}`)
