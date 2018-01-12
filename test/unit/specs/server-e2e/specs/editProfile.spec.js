@@ -10,7 +10,7 @@ describe('Edit profile', () => {
   describe('Normal behaviours', () => {
     profileLib.setupOne(state)
 
-    it('should be possible to create a profile and get it back', () => {
+    it('should be possible to edit a profile and get it back', () => {
       const profileData = profileFix.one()
       return profileLib.edit(state, profileData)
         .then(() => profileLib.get(state))

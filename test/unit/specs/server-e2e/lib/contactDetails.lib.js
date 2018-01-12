@@ -14,7 +14,6 @@ function create (state, contactData) {
     makeEditRequest(state, contactData))
 }
 
-// TODO: make this put rather than post
 function edit (state, contactData) {
   return getServer(state).put(
     makeRoute(state),
