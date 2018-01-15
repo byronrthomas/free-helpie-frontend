@@ -2,7 +2,7 @@ import {PostsServer} from '@/store/mockServer/postsServer'
 import {INITIAL_POSTS} from '@/store/mockServer/initialPosts'
 import {runAll} from '@/store/mockServer/callbackTools'
 
-const AUTH_TOKENS = 
+const AUTH_TOKENS =
   [
     Math.random(),
     Math.random(),

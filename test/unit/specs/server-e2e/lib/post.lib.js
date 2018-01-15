@@ -15,11 +15,31 @@ export function lastPostTimestamp (state) {
   return state.lastPostEdit
 }
 
+function recordLastPostId (resp, state) {
+  if (!resp.data || (typeof resp.data.postId !== 'number')) {
+    throw new Error('No postId returned by server')
+  }
+  state.lastPostId = resp.data.postId
+}
+
+export function getLastPostId (state) {
+  if (typeof state.lastPostId !== 'number') {
+    throw new Error('No lastPostId recorded on state!')
+  }
+  return state.lastPostId
+}
+
+export function arrayContainingLastPostId (state) {
+  const lastPostId = getLastPostId(state)
+  return expect.arrayContaining([lastPostId])
+}
+
 function create (state, postData) {
   recordTimestamp(state)
   return getServer(state).post(
     makeRoute(state),
     makeEditRequest(state, postData))
+    .then(resp => recordLastPostId(resp, state))
 }
 
 function edit (state, postData) {
