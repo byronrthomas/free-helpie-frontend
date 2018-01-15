@@ -1,3 +1,5 @@
+import { checkTimingsProperty } from './commonAsserts'
+
 const expectedStructure = {
   personalInfo: expect.any(Object),
   locations: expect.any(Array),
@@ -14,21 +16,10 @@ const expectedPInfoStructure = {
   photo: null
 }
 
-const expectedTimingsStructure = {
-  regularAmount: expect.any(Object),
-  slots: expect.any(Array)
-}
-
-const expectedRegularAmtStructre = {
-  unit: expect.any(String),
-  frequency: expect.any(String)
-}
-
 function checkProperties (profile) {
   expect(profile).toEqual(expect.objectContaining(expectedStructure))
   expect(profile.personalInfo).toEqual(expect.objectContaining(expectedPInfoStructure))
-  expect(profile.timings).toEqual(expect.objectContaining(expectedTimingsStructure))
-  expect(profile.timings.regularAmount).toEqual(expect.objectContaining(expectedRegularAmtStructre))
+  checkTimingsProperty(profile.timings)
 }
 
 function checkValues (profile) {

@@ -70,7 +70,7 @@ export function PostsServer (userAuth) {
 
   const srv = {
     get (reqData, resolve, reject) {
-      // console.log('GET posts with request:')
+      console.log('GET posts with request: ', reqData)
       // console.log(reqData)
       if (!reqData.authToken || !userAuth.syncGetUserCanSeeFullPosts(reqData.authToken)) {
         reject(new Error('Error: you must be authenticated to view posts'))
@@ -100,12 +100,13 @@ export function PostsServer (userAuth) {
     syncGetPostedBy (postId) {
       return posts[postId] ? posts[postId].postedBy : null
     },
-    postWithoutAuth (reqData, resolve, reject) {
+    postWithoutAuth (posterId, reqData, resolve, reject) {
+      // console.log('Post without req / posterId', posterId, reqData)
       if (!reqData.hasOwnProperty('data')) {
         reject(new Error('Cannot post - empty data'))
         return
       }
-      let newPost = {...reqData.data}
+      let newPost = {...reqData.data, postedBy: posterId}
       if (newPost.hasOwnProperty('id')) {
         reject(new Error('Error: cannot post something that already has an ID - this is server-assigned'))
         return
@@ -116,11 +117,20 @@ export function PostsServer (userAuth) {
       resolve({data: {postId: postId}})
     },
     post (reqData, resolve, reject) {
+      // console.log('Post req', reqData)
       if (!reqData.authToken || !userAuth.syncGetUserCanPost(reqData.authToken)) {
+        console.log('Rejecting due to auth issue')
         reject(new Error('Error: you must be authenticated to view posts'))
         return
       }
-      srv.postWithoutAuth(reqData, resolve, reject)
+      const users = userAuth.syncGetAuthUsers(reqData.authToken)
+      if (users.length !== 1) {
+        console.log('Rejecting due to token error')
+        reject(new Error('Can\'t find the currently logged in user from the token supplied'))
+        return
+      }
+      const posterId = users[0]
+      srv.postWithoutAuth(posterId, reqData, resolve, reject)
     },
     put (reqData, resolve, reject) {
       console.log('PUT post request:')

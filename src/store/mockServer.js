@@ -151,10 +151,19 @@ function Server (config) {
   }
 }
 
+function handlePost (postsServer) {
+  return (post, resolve, reject) => {
+    const posterId = post.postedBy
+    const data = {...post}
+    delete post.postedBy
+    postsServer.postWithoutAuth(posterId, {data}, resolve, reject)
+  }
+}
+
 export function makeServer () {
   const auther = new UserAuthServer()
   const postsServer = new PostsServer(auther)
-  runAll(postsServer.postWithoutAuth, INITIAL_POSTS.map(post => { return { data: post } }))
+  runAll(handlePost(postsServer), INITIAL_POSTS)
   const mailsServer = new MailsServer(auther, postsServer)
   INITIAL_MAILS.forEach(mail => mailsServer.directPost(mail.threadId, mail.mailData, mail.postAuthor))
   runAll(mailsServer.syncPostMarkAsRead, INITIAL_READ_MAILS)

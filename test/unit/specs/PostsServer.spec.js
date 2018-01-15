@@ -2,7 +2,16 @@ import {PostsServer} from '@/store/mockServer/postsServer'
 import {INITIAL_POSTS} from '@/store/mockServer/initialPosts'
 import {runAll} from '@/store/mockServer/callbackTools'
 
-const AUTH_TOKEN = Math.random()
+const AUTH_TOKENS = 
+  [
+    Math.random(),
+    Math.random(),
+    Math.random(),
+    Math.random(),
+    Math.random(),
+    Math.random()
+  ]
+console.log('AuthTokens: ', AUTH_TOKENS)
 
 const dummyAuther = {
   syncGetUserCanPost (token) {
@@ -16,11 +25,27 @@ const dummyAuther = {
   },
   syncGetUserCanDelete (token, postId) {
     return typeof token !== 'undefined'
+  },
+  syncGetAuthUsers (token) {
+    const tokenId = AUTH_TOKENS.findIndex(x => x === token)
+    return tokenId < 0 ? [] : [tokenId]
   }
 }
 
 function makeReq (remainingReq) {
-  return {authToken: AUTH_TOKEN, ...remainingReq}
+  return {authToken: AUTH_TOKENS[0], ...remainingReq}
+}
+
+function getTokenForUserId (userId) {
+  if (typeof userId !== 'number' || AUTH_TOKENS.length < (userId + 1)) {
+    throw new Error(`Can't find any token for userId ${userId}`)
+  }
+  return AUTH_TOKENS[userId]
+}
+
+function makePostReq (postData) {
+  const posterToken = getTokenForUserId(postData.data.postedBy)
+  return {authToken: posterToken, ...postData}
 }
 
 const TEST_POST_DATA = INITIAL_POSTS[0]
@@ -57,7 +82,7 @@ describe('PostsServer', () => {
     const onTest = new PostsServer(dummyAuther)
     console.log(onTest)
 
-    shouldRunSuccessfully(onTest.post, makeReq({data: TEST_POST_DATA}))
+    shouldRunSuccessfully(onTest.post, makePostReq({data: TEST_POST_DATA}))
   })
 
   describe('after a post', () => {
@@ -67,7 +92,7 @@ describe('PostsServer', () => {
     beforeEach(() => {
       onTest = new PostsServer(dummyAuther)
       onTest.post(
-        makeReq({data: postContents}),
+        makePostReq({data: postContents}),
         res => { postId = res.data.postId },
         err => { throw err })
     })
@@ -79,13 +104,13 @@ describe('PostsServer', () => {
 
     it('should be possible to put an edited version of the existing post', () => {
       const newPostContents = {locations: ['Some new location'], ...postContents}
-      shouldRunSuccessfully(onTest.put, makeReq({data: newPostContents, postId: postId}))
+      shouldRunSuccessfully(onTest.put, makePostReq({data: newPostContents, postId: postId}))
     })
 
     describe('after putting an edited version of the post', () => {
       it('should give back the edited version on the next get', () => {
         const newPostContents = {...postContents, locations: ['Some new location']}
-        shouldRunSuccessfully(onTest.put, makeReq({data: newPostContents, postId: postId}))
+        shouldRunSuccessfully(onTest.put, makePostReq({data: newPostContents, postId: postId}))
         shouldRunSuccessfully(
           onTest.getSingle,
           makeReq({postId: postId}),
@@ -109,7 +134,7 @@ describe('PostsServer', () => {
     let onTest
     beforeEach(() => {
       onTest = new PostsServer(dummyAuther)
-      runAll(onTest.post, postsToPost.map(post => makeReq({data: post})))
+      runAll(onTest.post, postsToPost.map(post => makePostReq({data: post})))
     })
 
     it('should be possible to fetch them back with unfiltered get', () => {
