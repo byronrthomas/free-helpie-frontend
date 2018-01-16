@@ -1,4 +1,4 @@
-import { getAccountData, getOtherAccountData } from '../lib/account.lib'
+import { getOtherAccountData } from '../lib/account.lib'
 import { getTimeBeforeMail } from '../lib/mail.lib'
 
 const expectedStructure = {
@@ -11,7 +11,7 @@ function checkProperties (mail) {
   expect(mail).toEqual(expect.objectContaining(expectedStructure))
 }
 
-function expectTimeAfter(expectedAfter, actual) {
+function expectTimeAfter (expectedAfter, actual) {
   expect(actual.getTime()).toBeGreaterThanOrEqual(expectedAfter.getTime())
 }
 
@@ -30,17 +30,6 @@ function checkAll (mails, state) {
     checkProperties(mail)
     checkValues(mail, state)
   }
-}
-
-function getMappedValues (mapObj) {
-  const result = []
-  for (const key in mapObj) {
-    if (mapObj.hasOwnProperty(key)) {
-      const elem = mapObj[key]
-      result.push(elem)
-    }
-  }
-  return result
 }
 
 export function assertMailThreadContents (expected, actuals, state) {

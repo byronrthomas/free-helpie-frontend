@@ -1,8 +1,7 @@
 import { getServer } from './test.lib'
 import { makeAuthdRequest, makeOtherUserAuthdRequest } from './commonReqs'
-import { userRoutePrefix } from './commonRoutes'
 import { getLastPostId, postLib } from './post.lib'
-import { accountLib, getAccountData, getOtherAccountData } from './account.lib'
+import { accountLib, getOtherAccountData } from './account.lib'
 import { mailFix } from '../fixtures/mail.fix'
 
 const mailsRoute = `/mails`

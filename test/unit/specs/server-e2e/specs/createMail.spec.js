@@ -1,45 +1,8 @@
 import { initServer } from '../lib/test.lib'
 import { assertMailThreadContents } from '../asserts/mailAsserts'
+import { assertMatchingMailThread, assertMatchingMailThreadIsRead, assertMatchingMailThreadIsUnread } from '../asserts/mailThreadAsserts'
 import { mailFix } from '../fixtures/mail.fix'
-import { accountLib } from '../lib/account.lib'
-import { mailLib, getThreadInfo } from '../lib/mail.lib'
-
-function arrayContainingLatestThreadId (state) {
-  return expect.arrayContaining(
-    [expect.objectContaining({
-      threadId: getThreadInfo(state)})])
-}
-
-function findMatchingMailThread (data, state) {
-  const threadInfo = getThreadInfo(state)
-  const isMatching = thrd => {
-    return thrd.threadId.threadAuthor === threadInfo.threadAuthor &&
-      thrd.threadId.relatedToPostId === threadInfo.relatedToPostId
-  }
-  const matching = data.find(isMatching)
-  if (!matching) {
-    throw new Error(`Failed to find matching thread for threadInfo {author: ${threadInfo.threadAuthor}, post: ${threadInfo.relatedToPostId}}`)
-  }
-  return matching
-}
-
-function assertMatchingMailThread (data, state) {
-  expect(data).toEqual(arrayContainingLatestThreadId(state))
-}
-
-function assertNoMatchingMailThread (data, state) {
-  expect(data).not.toEqual(arrayContainingLatestThreadId(state))
-}
-
-function assertMatchingMailThreadIsRead (data, state) {
-  const thread = findMatchingMailThread(data, state)
-  expect(thread.unread).toBe(false)
-}
-
-function assertMatchingMailThreadIsUnread (data, state) {
-  const thread = findMatchingMailThread(data, state)
-  expect(thread.unread).toBe(true)
-}
+import { mailLib } from '../lib/mail.lib'
 
 describe('Create mail', () => {
   const state = {}
