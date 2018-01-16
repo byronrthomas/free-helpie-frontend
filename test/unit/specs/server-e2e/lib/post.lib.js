@@ -69,11 +69,15 @@ function getCurrentUserPosts (state) {
     req)
 }
 
+function ensureAPostCreated (state) {
+  const postData = postFix.one()
+  return loginToKnownAccount(state)
+    .then(() => create(state, postData))
+}
+
 function setupOne (state) {
   beforeEach(() => {
-    const postData = postFix.one()
-    return loginToKnownAccount(state)
-      .then(() => create(state, postData))
+    return ensureAPostCreated(state)
   })
 }
 
@@ -82,5 +86,6 @@ export const postLib = {
   edit,
   get,
   getCurrentUserPosts,
-  setupOne
+  setupOne,
+  ensureAPostCreated
 }

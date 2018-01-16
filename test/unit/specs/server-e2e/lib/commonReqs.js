@@ -1,10 +1,15 @@
-import { getAccountData } from './account.lib'
+import { getAccountData, getOtherAccountData } from './account.lib'
+
+function reqForAcct (acct) {
+  return {authToken: acct.authToken}
+}
 
 export function makeAuthdRequest (state) {
-  const acct = getAccountData(state)
-  return {
-    authToken: acct.authToken
-  }
+  return reqForAcct(getAccountData(state))
+}
+
+export function makeOtherUserAuthdRequest (state) {
+  return reqForAcct(getOtherAccountData(state))
 }
 
 export function makeEditRequest (state, newData) {

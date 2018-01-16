@@ -130,7 +130,7 @@ export function MailsServer (userAuth, postsServer) {
         return
       }
       const userIds = userAuth.syncGetAuthUsers(reqData.authToken)
-      // console.log('Post email req: ', reqData)
+      console.log('Post email req: ', reqData)
       // console.log(reqData)
       if (userIds.length !== 1) {
         reject(new Error('Error: can\'t work out your UserID from your auth token'))

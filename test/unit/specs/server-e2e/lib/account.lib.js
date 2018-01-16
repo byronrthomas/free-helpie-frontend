@@ -6,6 +6,11 @@ const LOGIN_DETAILS = {
   username: 'test@test.com'
 }
 
+const OTHER_LOGIN_DETAILS = {
+  password: 'js',
+  username: 'js@js.com'
+}
+
 export function getAccountData (state) {
   if (!state.accountData) {
     console.log('state: ', state)
@@ -14,12 +19,27 @@ export function getAccountData (state) {
   return state.accountData
 }
 
-function saveAuthToState (resp, state) {
-  const accountData = {
+export function getOtherAccountData (state) {
+  if (!state.otherAccountData) {
+    console.log('state: ', state)
+    throw new Error(`No account data for other user in state`)
+  }
+  return state.otherAccountData
+}
+
+function makeAccountData (resp) {
+  return {
     authToken: resp.authData,
     userId: resp.userId
   }
-  state.accountData = accountData
+}
+
+function saveAuthToState (resp, state) {
+  state.accountData = makeAccountData(resp)
+}
+
+function saveOtherAuthToState (resp, state) {
+  state.otherAccountData = makeAccountData(resp)
 }
 
 export function loginToKnownAccount (state) {
@@ -34,6 +54,13 @@ function setupOneLoggedIn (state) {
   })
 }
 
+function ensureAnotherUserCreated (state) {
+  const server = getServer(state)
+  return server.get('/accounts', OTHER_LOGIN_DETAILS)
+          .then(respData => saveOtherAuthToState(respData, state))
+}
+
 export const accountLib = {
-  setupOneLoggedIn
+  setupOneLoggedIn,
+  ensureAnotherUserCreated
 }
