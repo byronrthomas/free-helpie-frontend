@@ -22,7 +22,6 @@ function checkValues (connectionInvite, state) {
 function checkAll (connectionInvites, state) {
   expect(connectionInvites).not.toBeNull()
   expect(connectionInvites).not.toBeUndefined()
-  expect(connectionInvites.length).toBeGreaterThan(0)
 
   for (const connectionInvite of connectionInvites) {
     checkProperties(connectionInvite)
@@ -37,7 +36,11 @@ function checkCommonValues (connectionInvite, state) {
 }
 
 function findInviteWithUserId (invites, userId) {
-  const result = invites.find(invite => invite.otherUser === userId)
+  return invites.find(invite => invite.otherUser === userId)
+}
+
+function expectInviteWithUserId (invites, userId) {
+  const result = findInviteWithUserId(invites, userId)
   if (!result) {
     console.log('invites received = ', invites)
     throw new Error(`Can't find any invites with user Id ${userId}`)
@@ -45,16 +48,33 @@ function findInviteWithUserId (invites, userId) {
   return result
 }
 
+function expectNoInviteWithUserId (invites, userId) {
+  const result = findInviteWithUserId(invites, userId)
+  expect(result).toBeFalsy()
+}
+
 export function assertInviteFromInviterPresent (actuals, state) {
   checkAll(actuals, state)
   const userId = getOtherAccountData(state).userId
-  const matching = findInviteWithUserId(actuals, userId)
+  const matching = expectInviteWithUserId(actuals, userId)
   checkCommonValues(matching, state)
 }
 
 export function assertInviteToInviteePresent (actuals, state) {
   checkAll(actuals, state)
   const userId = getAccountData(state).userId
-  const matching = findInviteWithUserId(actuals, userId)
+  const matching = expectInviteWithUserId(actuals, userId)
   checkCommonValues(matching, state)
+}
+
+export function assertInviteFromInviterNotPresent (actuals, state) {
+  checkAll(actuals, state)
+  const userId = getOtherAccountData(state).userId
+  expectNoInviteWithUserId(actuals, userId)
+}
+
+export function assertInviteToInviteeNotPresent (actuals, state) {
+  checkAll(actuals, state)
+  const userId = getAccountData(state).userId
+  expectNoInviteWithUserId(actuals, userId)
 }

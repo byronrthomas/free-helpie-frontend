@@ -32,6 +32,16 @@ function sendInvite (state) {
   )
 }
 
+function cancelInvite (state) {
+  const posterId = getAccountData(state).userId
+  const routePrefix = makeFromMailerRoute(state)
+  const fullRoute = `${routePrefix}/${posterId}`
+  return getServer(state).delete(
+    fullRoute,
+    makeOtherUserAuthdRequest(state)
+  )
+}
+
 function getInvitesToInvitee (state) {
   return getServer(state).get(
     makeToPosterRoute(state),
@@ -55,5 +65,6 @@ export const connectionInviteLib = {
   sendInvite,
   getInvitesToInvitee,
   getInvitesFromInviter,
-  setupOne
+  setupOne,
+  cancelInvite
 }
