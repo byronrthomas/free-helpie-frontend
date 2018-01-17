@@ -1,13 +1,13 @@
 import { getThreadInfo } from '../lib/mail.lib'
 
-function arrayContainingLatestThreadId (state) {
+function arrayContainingLatestThreadId (state, user) {
   return expect.arrayContaining(
     [expect.objectContaining({
-      threadId: getThreadInfo(state)})])
+      threadId: getThreadInfo(state, user)})])
 }
 
-function findMatchingMailThread (data, state) {
-  const threadInfo = getThreadInfo(state)
+function findMatchingMailThread (data, state, user) {
+  const threadInfo = getThreadInfo(state, user)
   const isMatching = thrd => {
     return thrd.threadId.threadAuthor === threadInfo.threadAuthor &&
       thrd.threadId.relatedToPostId === threadInfo.relatedToPostId
@@ -19,16 +19,16 @@ function findMatchingMailThread (data, state) {
   return matching
 }
 
-export function assertMatchingMailThread (data, state) {
-  expect(data).toEqual(arrayContainingLatestThreadId(state))
+export function assertMatchingMailThread (data, state, mailSender) {
+  expect(data).toEqual(arrayContainingLatestThreadId(state, mailSender))
 }
 
-export function assertMatchingMailThreadIsRead (data, state) {
-  const thread = findMatchingMailThread(data, state)
+export function assertMatchingMailThreadIsRead (data, state, mailSender) {
+  const thread = findMatchingMailThread(data, state, mailSender)
   expect(thread.unread).toBe(false)
 }
 
-export function assertMatchingMailThreadIsUnread (data, state) {
-  const thread = findMatchingMailThread(data, state)
+export function assertMatchingMailThreadIsUnread (data, state, mailSender) {
+  const thread = findMatchingMailThread(data, state, mailSender)
   expect(thread.unread).toBe(true)
 }

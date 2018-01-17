@@ -1,6 +1,6 @@
 import { getServer } from './test.lib'
 import { loginToKnownAccount, getAccountData } from './account.lib'
-import { makeAuthdRequest, makeEditRequest } from './commonReqs'
+import { makeAuthdRequest, makeEditRequest, makeEditRequestForUser } from './commonReqs'
 import { postFix } from '../fixtures/post.fix'
 
 function makeRoute (state) {
@@ -32,6 +32,14 @@ export function getLastPostId (state) {
 export function arrayContainingLastPostId (state) {
   const lastPostId = getLastPostId(state)
   return expect.arrayContaining([lastPostId])
+}
+
+function createPostFromUser (state, postData, userLabel) {
+  recordTimestamp(state)
+  return getServer(state).post(
+    makeRoute(state),
+    makeEditRequestForUser(state, postData, userLabel))
+    .then(resp => recordLastPostId(resp, state))
 }
 
 function create (state, postData) {
@@ -81,8 +89,14 @@ function setupOne (state) {
   })
 }
 
+function ensurePostFromUser (state, userLabel) {
+  const postData = postFix.one()
+  return createPostFromUser(state, postData, userLabel)
+}
+
 export const postLib = {
   create,
+  ensurePostFromUser,
   edit,
   get,
   getCurrentUserPosts,

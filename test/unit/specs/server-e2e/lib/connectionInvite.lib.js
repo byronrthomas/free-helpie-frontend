@@ -1,70 +1,67 @@
 import { getServer } from './test.lib'
-import { makeAuthdRequest, makeOtherUserEditRequest, makeOtherUserAuthdRequest } from './commonReqs'
-import { userRoutePrefix, otherUserRoutePrefix } from './commonRoutes'
+import { makeAuthdRequestForUser, makeEditRequestForUser } from './commonReqs'
+import { userRoutePrefixForUser } from './commonRoutes'
 import { getLastPostId } from './post.lib'
 import { mailLib } from './mail.lib'
-import { getAccountData } from './account.lib'
+import { getLabelledAccountData } from './account.lib'
 
-function makeFromPosterRoute (state) {
-  return `${userRoutePrefix(state)}/connectionInvitesFromMe`
+export const firstInviter = 'FIRST_INVITER'
+export const secondInviter = 'SECOND_INVITER'
+const fromFirstToSecond = {
+  from: firstInviter,
+  to: secondInviter}
+
+function invitesFromMeRoute (state, user) {
+  return `${userRoutePrefixForUser(state, user)}/connectionInvitesFromMe`
 }
 
-function makeFromMailerRoute (state) {
-  return `${otherUserRoutePrefix(state)}/connectionInvitesFromMe`
+function invitesToMeRoute (state, user) {
+  return `${userRoutePrefixForUser(state, user)}/connectionInvitesToMe`
 }
 
-function makeToPosterRoute (state) {
-  return `${userRoutePrefix(state)}/connectionInvitesToMe`
-}
-
-function makeToMailerRoute (state) {
-  return `${otherUserRoutePrefix(state)}/connectionInvitesToMe`
-}
-
-/// invite from poster to mailer
-function sendInvite (state) {
+function sendInvite (state, betweenUsers) {
   const postId = getLastPostId(state)
-  const posterId = getAccountData(state).userId
-  const reqData = {invitedUserId: posterId, relatedToPostId: postId}
+  const invitedUserId = getLabelledAccountData(state, betweenUsers.to).userId
+  const reqData = {invitedUserId, relatedToPostId: postId}
   return getServer(state).post(
-    makeFromMailerRoute(state),
-    makeOtherUserEditRequest(state, reqData)
+    invitesFromMeRoute(state, betweenUsers.from),
+    makeEditRequestForUser(state, reqData, betweenUsers.from)
   )
 }
 
-function cancelInvite (state) {
-  const posterId = getAccountData(state).userId
-  const routePrefix = makeFromMailerRoute(state)
+function cancelInvite (state, betweenUsers) {
+  const posterId = getLabelledAccountData(state, betweenUsers.to).userId
+  const routePrefix = invitesFromMeRoute(state, betweenUsers.from)
   const fullRoute = `${routePrefix}/${posterId}`
   return getServer(state).delete(
     fullRoute,
-    makeOtherUserAuthdRequest(state)
+    makeAuthdRequestForUser(state, betweenUsers.from)
   )
 }
 
-function getInvitesToInvitee (state) {
+function getInvitesToUser (state, user) {
   return getServer(state).get(
-    makeToPosterRoute(state),
-    makeAuthdRequest(state))
+    invitesToMeRoute(state, user),
+    makeAuthdRequestForUser(state, user))
 }
 
-function getInvitesFromInviter (state) {
+function getInvitesFromUser (state, user) {
   return getServer(state).get(
-    makeFromMailerRoute(state),
-    makeOtherUserAuthdRequest(state))
+    invitesFromMeRoute(state, user),
+    makeAuthdRequestForUser(state, user))
 }
 
 function setupOne (state) {
   beforeEach(() => {
-    return mailLib.ensureMailSent(state)
-      .then(() => sendInvite(state))
+    return mailLib.ensureMailSent(state, fromFirstToSecond)
+      .then(() => sendInvite(state, fromFirstToSecond))
   })
 }
 
 export const connectionInviteLib = {
   sendInvite,
-  getInvitesToInvitee,
-  getInvitesFromInviter,
+  getInvitesToUser,
+  getInvitesFromUser,
   setupOne,
   cancelInvite
 }

@@ -1,30 +1,29 @@
 import { getServer } from './test.lib'
-import { makeAuthdRequest, makeOtherUserAuthdRequest } from './commonReqs'
+import { makeAuthdRequestForUser } from './commonReqs'
 import { getLastPostId, postLib } from './post.lib'
-import { accountLib, getOtherAccountData } from './account.lib'
+import { accountLib, getLabelledAccountData } from './account.lib'
 import { mailFix } from '../fixtures/mail.fix'
 
 const mailsRoute = `/mails`
 const activeThreadsRoute = '/activeMailThreads'
 const unreadThreadsRoute = '/unreadMailThreads'
 
-function getOtherUserId (state) {
-  return getOtherAccountData(state).userId
-}
+export const MAIL_RECEIVER = 'UserWhoPosted'
+export const MAIL_SENDER = 'UserWhoMails'
 
-export function getThreadInfo (state) {
+export function getThreadInfo (state, user) {
   return {
     relatedToPostId: getLastPostId(state),
-    threadAuthor: getOtherUserId(state)
+    threadAuthor: getLabelledAccountData(state, user).userId
   }
 }
 
-function makeMailCreateRequest (state, mailData) {
+function makeMailCreateRequest (state, mailData, user) {
   return {
-    ...makeOtherUserAuthdRequest(state),
+    ...makeAuthdRequestForUser(state, user),
     data: {
       ...mailData,
-      ...getThreadInfo(state)
+      ...getThreadInfo(state, user)
     }
   }
 }
@@ -42,85 +41,70 @@ export function getTimeBeforeMail (state) {
   return state.mailLib.beforeMail
 }
 
-function create (state, mailData) {
+function create (state, mailData, user) {
   recordTimestamp(state)
   return getServer(state).post(
     mailsRoute,
-    makeMailCreateRequest(state, mailData))
+    makeMailCreateRequest(state, mailData, user))
 }
 
-function makeMailThreadRequest (state) {
+function mailContentRequest (state, requestingUser) {
   return {
-    ...makeOtherUserAuthdRequest(state),
-    data: getThreadInfo(state)
+    ...makeAuthdRequestForUser(state, requestingUser),
+    data: getThreadInfo(state, MAIL_SENDER)
   }
 }
 
-function getThread (state) {
+function getMailContents (state, fromUser) {
   return getServer(state).get(
     mailsRoute,
-    makeMailThreadRequest(state))
+    mailContentRequest(state, fromUser))
 }
 
-function getActiveForPostingUser (state) {
+function getActiveThreadsForUser (state, user) {
   return getServer(state).get(
     activeThreadsRoute,
-    makeAuthdRequest(state)
+    makeAuthdRequestForUser(state, user)
   )
 }
 
-function getActiveForMailingUser (state) {
-  return getServer(state).get(
-    activeThreadsRoute,
-    makeOtherUserAuthdRequest(state)
-  )
-}
-
-function getUnreadForPostingUser (state) {
+function getUnreadThreadsForUser (state, user) {
   return getServer(state).get(
     unreadThreadsRoute,
-    makeAuthdRequest(state)
+    makeAuthdRequestForUser(state, user)
   )
 }
 
-function getUnreadForMailingUser (state) {
-  return getServer(state).get(
-    unreadThreadsRoute,
-    makeOtherUserAuthdRequest(state)
-  )
+function ensurePostAndUsersReadyToMail (state, betweenUsers) {
+  const bothUsers = [betweenUsers.from, betweenUsers.to]
+  return accountLib.ensureUsersCreated(state, bothUsers)
+    .then(() => postLib.ensurePostFromUser(state, betweenUsers.to))
 }
 
-function ensurePostAndUsersReadyToMail (state) {
-  return postLib.ensureAPostCreated(state)
-    .then(() => accountLib.ensureAnotherUserCreated(state))
-}
-
-function setupPostAndUsersToMail (state) {
+function setupPostAndUsersToMail (state, betweenUsers) {
   beforeEach(() => {
-    return ensurePostAndUsersReadyToMail(state)
+    return ensurePostAndUsersReadyToMail(state, betweenUsers)
   })
 }
 
-function ensureMailSent (state) {
+function ensureMailSent (state, betweenUsers) {
   const mailData = mailFix.one()
-  return ensurePostAndUsersReadyToMail(state)
-    .then(() => create(state, mailData))
+  return ensurePostAndUsersReadyToMail(state, betweenUsers)
+    .then(() => create(state, mailData, betweenUsers.from))
 }
 
-function setupOne (state) {
+function setupOne (state, betweenUsers) {
   beforeEach(() => {
-    return ensureMailSent(state)
+    return ensureMailSent(state, betweenUsers)
   })
 }
 
 export const mailLib = {
   create,
-  getThread,
+  getMailContents,
   setupOne,
   ensureMailSent,
   setupPostAndUsersToMail,
-  getActiveForPostingUser,
-  getActiveForMailingUser,
-  getUnreadForPostingUser,
-  getUnreadForMailingUser
+  getActiveThreadsForUser,
+  getUnreadThreadsForUser
 }

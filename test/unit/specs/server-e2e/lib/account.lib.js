@@ -11,6 +11,8 @@ const OTHER_LOGIN_DETAILS = {
   username: 'js@js.com'
 }
 
+const ALL_KNOWN_USERS = [LOGIN_DETAILS, OTHER_LOGIN_DETAILS]
+
 export function getAccountData (state) {
   if (!state.accountData) {
     console.log('state: ', state)
@@ -42,10 +44,25 @@ function saveOtherAuthToState (resp, state) {
   state.otherAccountData = makeAccountData(resp)
 }
 
+function saveLabelledAuthToState (resp, state, userLabel) {
+  if (!state.loggedInUsers) {
+    state.loggedInUsers = new Map()
+  }
+  state.loggedInUsers.set(userLabel, makeAccountData(resp))
+}
+
+export function getLabelledAccountData (state, userLabel) {
+  if (!state.loggedInUsers || !state.loggedInUsers.has(userLabel)) {
+    console.log('problem finding users, state is:', state)
+    throw new Error(`Can't find any logged in users with label ${userLabel}`)
+  }
+  return state.loggedInUsers.get(userLabel)
+}
+
 export function loginToKnownAccount (state) {
   const server = getServer(state)
   return server.get('/accounts', LOGIN_DETAILS)
-          .then(respData => saveAuthToState(respData, state))
+    .then(respData => saveAuthToState(respData, state))
 }
 
 function setupOneLoggedIn (state) {
@@ -57,10 +74,27 @@ function setupOneLoggedIn (state) {
 function ensureAnotherUserCreated (state) {
   const server = getServer(state)
   return server.get('/accounts', OTHER_LOGIN_DETAILS)
-          .then(respData => saveOtherAuthToState(respData, state))
+    .then(respData => saveOtherAuthToState(respData, state))
+}
+
+function handleLogin (state, userLabel, userDetails) {
+  const server = getServer(state)
+  return server.get('/accounts', userDetails)
+    .then(respData => saveLabelledAuthToState(respData, state, userLabel))
+}
+
+function ensureUsersCreated (state, userLabels) {
+  if (userLabels.length > ALL_KNOWN_USERS.length) {
+    throw new Error(`Don't currently know enough logins to satsify this, you requested ${userLabels.length} logins`)
+  }
+  const allLoginPromises =
+    userLabels.map(
+      (v, i) => { return handleLogin(state, v, ALL_KNOWN_USERS[i]) })
+  return Promise.all(allLoginPromises)
 }
 
 export const accountLib = {
   setupOneLoggedIn,
-  ensureAnotherUserCreated
+  ensureAnotherUserCreated,
+  ensureUsersCreated
 }
