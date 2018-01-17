@@ -1,4 +1,4 @@
-import { getOtherAccountData, getAccountData, getLabelledAccountData } from '../lib/account.lib'
+import { getUserId } from '../lib/account.lib'
 import { getTimeBeforeMail } from '../lib/mail.lib'
 import { getLastPostId } from '../lib/post.lib'
 
@@ -55,7 +55,7 @@ function expectNoInviteWithUserId (invites, userId) {
 
 export function assertInviteFromUserPresent (actuals, state, user) {
   checkAll(actuals, state)
-  const userId = getLabelledAccountData(state, user).userId
+  const userId = getUserId(state, user)
   const matching = expectInviteWithUserId(actuals, userId)
   checkCommonValues(matching, state)
 }
@@ -66,7 +66,7 @@ export function assertInviteToUserPresent (actuals, state, user) {
 
 export function assertInviteFromUserNotPresent (actuals, state, user) {
   checkAll(actuals, state)
-  const userId = getLabelledAccountData(state, user).userId
+  const userId = getUserId(state, user)
   expectNoInviteWithUserId(actuals, userId)
 }
 

@@ -2,7 +2,7 @@ import { initServer } from '../lib/test.lib'
 import { assertMailThreadContents } from '../asserts/mailAsserts'
 import { assertMatchingMailThread, assertMatchingMailThreadIsRead, assertMatchingMailThreadIsUnread } from '../asserts/mailThreadAsserts'
 import { mailFix } from '../fixtures/mail.fix'
-import { mailLib, MAIL_SENDER, MAIL_RECEIVER, usersForEmail } from '../lib/mail.lib'
+import { mailLib, MAIL_SENDER, MAIL_RECEIVER } from '../lib/mail.lib'
 
 describe('Create mail', () => {
   const state = {}

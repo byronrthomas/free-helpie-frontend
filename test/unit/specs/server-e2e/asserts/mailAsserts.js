@@ -1,5 +1,5 @@
 import { getTimeBeforeMail } from '../lib/mail.lib'
-import { getLabelledAccountData } from '../lib/account.lib';
+import { getUserId } from '../lib/account.lib'
 
 const expectedStructure = {
   sender: expect.any(Number),
@@ -13,10 +13,6 @@ function checkProperties (mail) {
 
 function expectTimeAfter (expectedAfter, actual) {
   expect(actual.getTime()).toBeGreaterThanOrEqual(expectedAfter.getTime())
-}
-
-function getUserId (state, user) {
-  return getLabelledAccountData(state, user).userId
 }
 
 function checkValues (mail, state, user) {

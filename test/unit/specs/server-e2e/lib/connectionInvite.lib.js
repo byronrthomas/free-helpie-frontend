@@ -3,7 +3,7 @@ import { makeAuthdRequestForUser, makeEditRequestForUser } from './commonReqs'
 import { userRoutePrefixForUser } from './commonRoutes'
 import { getLastPostId } from './post.lib'
 import { mailLib } from './mail.lib'
-import { getLabelledAccountData } from './account.lib'
+import { getUserId } from './account.lib'
 
 export const firstInviter = 'FIRST_INVITER'
 export const secondInviter = 'SECOND_INVITER'
@@ -21,7 +21,7 @@ function invitesToMeRoute (state, user) {
 
 function sendInvite (state, betweenUsers) {
   const postId = getLastPostId(state)
-  const invitedUserId = getLabelledAccountData(state, betweenUsers.to).userId
+  const invitedUserId = getUserId(state, betweenUsers.to)
   const reqData = {invitedUserId, relatedToPostId: postId}
   return getServer(state).post(
     invitesFromMeRoute(state, betweenUsers.from),
@@ -30,7 +30,7 @@ function sendInvite (state, betweenUsers) {
 }
 
 function cancelInvite (state, betweenUsers) {
-  const posterId = getLabelledAccountData(state, betweenUsers.to).userId
+  const posterId = getUserId(state, betweenUsers.to)
   const routePrefix = invitesFromMeRoute(state, betweenUsers.from)
   const fullRoute = `${routePrefix}/${posterId}`
   return getServer(state).delete(

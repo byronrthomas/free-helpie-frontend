@@ -59,6 +59,10 @@ export function getLabelledAccountData (state, userLabel) {
   return state.loggedInUsers.get(userLabel)
 }
 
+export function getUserId (state, userLabel) {
+  return getLabelledAccountData(state, userLabel).userId
+}
+
 export function loginToKnownAccount (state) {
   const server = getServer(state)
   return server.get('/accounts', LOGIN_DETAILS)

@@ -1,7 +1,7 @@
 import { getServer } from './test.lib'
 import { makeAuthdRequestForUser } from './commonReqs'
 import { getLastPostId, postLib } from './post.lib'
-import { accountLib, getLabelledAccountData } from './account.lib'
+import { accountLib, getUserId } from './account.lib'
 import { mailFix } from '../fixtures/mail.fix'
 
 const mailsRoute = `/mails`
@@ -14,7 +14,7 @@ export const MAIL_SENDER = 'UserWhoMails'
 export function getThreadInfo (state, user) {
   return {
     relatedToPostId: getLastPostId(state),
-    threadAuthor: getLabelledAccountData(state, user).userId
+    threadAuthor: getUserId(state, user)
   }
 }
 
