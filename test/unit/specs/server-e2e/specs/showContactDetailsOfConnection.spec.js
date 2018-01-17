@@ -8,24 +8,33 @@ function assertNoDetails (resp) {
   expect(resp.data).toBeFalsy()
 }
 
+const firstInviteUsers = {
+  from: firstInviter,
+  to: secondInviter
+}
+
+const secondInviteUsers = {
+  from: secondInviter,
+  to: firstInviter
+}
+
 describe('Showing contact details of connections', () => {
   const state = {}
   initServer(state)
 
-  it('dummy', () => {})
-  // describe('Without a connection made, only one invite', () => {
-  //   connectionInviteLib.setupOne(state)
+  describe('Without a connection made, only one invite', () => {
+    connectionInviteLib.setupOne(state, firstInviteUsers)
 
-  //   it(`should not return invitee's contact details when inviter asks`, () => {
-  //     contactDetailsLib.getOtherUser(state, {from: firstInviter, getDetailsOf: secondInviter})
-  //       .then(assertNoDetails)
-  //   })
+    it(`should not return invitee's contact details when inviter asks`, () => {
+      contactDetailsLib.getOtherUser(state, {from: firstInviteUsers.from, getDetailsOf: firstInviteUsers.to})
+        .then(assertNoDetails)
+    })
 
-  //   it(`should not return inviter's contact details when invitee asks`, () => {
-  //     contactDetailsLib.getOtherUser(state, {from: secondInviter, getDetailsOf: firstInviter})
-  //       .then(assertNoDetails)
-  //   })
-  // })
+    it(`should not return inviter's contact details when invitee asks`, () => {
+      contactDetailsLib.getOtherUser(state, {from: firstInviteUsers.to, getDetailsOf: firstInviteUsers.from})
+        .then(assertNoDetails)
+    })
+  })
 
   // describe('After the connection is made', () => {
   //   connectionInviteLib.setupOneConnection(state)

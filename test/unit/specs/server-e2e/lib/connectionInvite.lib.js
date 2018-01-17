@@ -51,10 +51,10 @@ function getInvitesFromUser (state, user) {
     makeAuthdRequestForUser(state, user))
 }
 
-function setupOne (state) {
+function setupOne (state, betweenUsers) {
   beforeEach(() => {
-    return mailLib.ensureMailSent(state, fromFirstToSecond)
-      .then(() => sendInvite(state, fromFirstToSecond))
+    return mailLib.ensureMailSent(state, betweenUsers)
+      .then(() => sendInvite(state, betweenUsers))
   })
 }
 

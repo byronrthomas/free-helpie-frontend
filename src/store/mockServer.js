@@ -160,25 +160,46 @@ function handlePost (postsServer) {
   }
 }
 
-export function makeServer () {
+const INITIAL_TEST_DATA = {
+  posts: INITIAL_POSTS,
+  mails: INITIAL_MAILS,
+  mailReadReceipts: INITIAL_READ_MAILS,
+  contactDetails: INITIAL_ACCOUNT_DETAILS,
+  profiles: INITIAL_USER_DATA,
+  connectionInvites: INITIAL_CONNECTION_INVITES
+}
+
+const EMPTY_INITIAL_DATA = {
+  posts: [],
+  mails: [],
+  mailReadReceipts: [],
+  contactDetails: {},
+  profiles: {},
+  connectionInvites: []
+}
+
+function makeServerWithInitialData (initialData) {
   const auther = new UserAuthServer()
   const postsServer = new PostsServer(auther)
-  runAll(handlePost(postsServer), INITIAL_POSTS)
+  runAll(handlePost(postsServer), initialData.posts)
   const mailsServer = new MailsServer(auther, postsServer)
-  INITIAL_MAILS.forEach(mail => mailsServer.directPost(mail.threadId, mail.mailData, mail.postAuthor))
-  runAll(mailsServer.syncPostMarkAsRead, INITIAL_READ_MAILS)
-  const accountDeatilsServer = new UserAccountServer(auther, INITIAL_ACCOUNT_DETAILS)
+  initialData.mails.forEach(mail => mailsServer.directPost(mail.threadId, mail.mailData, mail.postAuthor))
+  runAll(mailsServer.syncPostMarkAsRead, initialData.mailReadReceipts)
+  const accountDeatilsServer = new UserAccountServer(auther, initialData.contactDetails)
 
   const config = {
     authServer: auther,
-    profileServer: new UserDataServer(auther, INITIAL_USER_DATA),
+    profileServer: new UserDataServer(auther, initialData.profiles),
     postsServer,
     postFavouritesServer: new UserFavouritesServer(auther),
     mailsServer,
     accountDeatilsServer,
-    connectionRequestsServer: new ConnectedUserServer(auther, INITIAL_CONNECTION_INVITES)
+    connectionRequestsServer: new ConnectedUserServer(auther, initialData.connectionInvites)
   }
   return new Server(config)
 }
 
-export const mockServer = makeServer()
+export function makeServer () {
+  return makeServerWithInitialData(EMPTY_INITIAL_DATA)
+}
+export const mockServer = makeServerWithInitialData(INITIAL_TEST_DATA)

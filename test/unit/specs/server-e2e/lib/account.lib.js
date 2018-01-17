@@ -48,7 +48,9 @@ function saveLabelledAuthToState (resp, state, userLabel) {
   if (!state.loggedInUsers) {
     state.loggedInUsers = new Map()
   }
-  state.loggedInUsers.set(userLabel, makeAccountData(resp))
+  const acctData = makeAccountData(resp)
+  console.log(`Saving user ${userLabel}, account = `, acctData)
+  state.loggedInUsers.set(userLabel, acctData)
 }
 
 export function getLabelledAccountData (state, userLabel) {
