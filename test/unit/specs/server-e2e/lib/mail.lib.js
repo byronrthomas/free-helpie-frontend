@@ -101,11 +101,15 @@ function setupPostAndUsersToMail (state) {
   })
 }
 
+function ensureMailSent (state) {
+  const mailData = mailFix.one()
+  return ensurePostAndUsersReadyToMail(state)
+    .then(() => create(state, mailData))
+}
+
 function setupOne (state) {
   beforeEach(() => {
-    const mailData = mailFix.one()
-    return ensurePostAndUsersReadyToMail(state)
-      .then(() => create(state, mailData))
+    return ensureMailSent(state)
   })
 }
 
@@ -113,6 +117,7 @@ export const mailLib = {
   create,
   getThread,
   setupOne,
+  ensureMailSent,
   setupPostAndUsersToMail,
   getActiveForPostingUser,
   getActiveForMailingUser,

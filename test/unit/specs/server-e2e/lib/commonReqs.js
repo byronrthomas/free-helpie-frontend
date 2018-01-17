@@ -18,3 +18,10 @@ export function makeEditRequest (state, newData) {
     data: newData
   }
 }
+
+export function makeOtherUserEditRequest (state, newData) {
+  return {
+    ...makeOtherUserAuthdRequest(state),
+    data: newData
+  }
+}
