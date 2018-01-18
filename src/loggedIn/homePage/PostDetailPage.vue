@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-xs-12">
         <div class="floatable-bordered">
-          <p style="color:rgb(235, 113, 180); text-align: center" class="h2">Posted by:
+          <p style="color:rgb(235, 113, 180); text-align: center" class="h2">{{prettyType}}:
             <a href="#" style="color:rgb(235, 113, 180)" @click.prevent="gotoPostUser">
               {{postersName}}
             </a>
@@ -55,6 +55,7 @@ import {mapGetters} from 'vuex'
 import MailThreadContainer from './shared/MailThreadContainer.vue'
 import PostDetailDisplay from './PostDetailDisplay.vue'
 import FormSegment from '../../sharedComponents/FormSegment.vue'
+import { HELP_OFFERED } from './postTypes'
 
 // This probably exists, just can't find it right now
 function stringDotFormat (joiner, strings) {
@@ -144,6 +145,11 @@ export default {
     },
     postedByCurrentUser () {
       return this.post.postedBy === this.userId
+    },
+    prettyType () {
+      return this.post.postType === HELP_OFFERED
+        ? 'Offering to help'
+        : 'Asking for help'
     },
     ...mapGetters({
       'storedPost': 'loggedin/postdetails/post',

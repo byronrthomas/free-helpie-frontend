@@ -355,7 +355,7 @@ exports[`post edit form has the expected HTML when all checks are inactive (i.e.
           <h2
             style="text-align: center;"
           >
-            Time required
+            Timings
           </h2>
            
           <br />
@@ -876,7 +876,7 @@ exports[`post edit form has the expected HTML when all checks are triggered (i.e
           <h2
             style="text-align: center;"
           >
-            Time required
+            Timings
           </h2>
            
           <br />

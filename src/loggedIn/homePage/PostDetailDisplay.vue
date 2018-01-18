@@ -1,6 +1,6 @@
 <template>
   <div style="background-color: #fffafa">
-    <form-segment header-text="What do you need">
+    <form-segment :header-text="text.formTitle">
         <div class="form-group">
           <label for="title">Title</label>
           <input type="text" id="title" disabled="true" v-model="post.title" class="form-control">
@@ -13,14 +13,14 @@
         </div>
     </form-segment>
     <form-segment header-text="Location">
-      <label>Where do you need help?</label>
+      <label>{{text.locations.label}}</label>
       <div class="form-group">
         <label class="checkbox-inline">
             <input
                     type="checkbox"
                     id="remoteLocation"
                     value="true"
-                    disabled="true" v-model="post.remote">Can help be given remotely?
+                    disabled="true" v-model="post.remote">Remote (over the phone / internet)
         </label>
       </div>
       <div class="form-group">
@@ -30,16 +30,16 @@
     </form-segment>
     <form-segment header-text="Interests &amp; skills">
         <div class="form-group">
-          <label>People might want to help if they are interested in:</label>
+          <label>{{text.skillsAndInterests.interestsLabel}}</label>
           <multi-select-display :selected-items="post.interests"/>
         </div>
         <div class="form-group">
-          <label>Skills that your helpers will need:</label>
+          <label>{{text.skillsAndInterests.skillDetailLabel}}</label>
           <multi-select-display :selected-items="post.skills"/>
         </div>
     </form-segment>
-    <form-segment header-text="Time required">
-      <label>How much time is required?</label>
+    <form-segment header-text="Timings">
+      <label>{{text.timeAmount.label}}</label>
       <div class="form-group">
         <select
           id="timeAmount"
@@ -63,7 +63,9 @@
         </select>
       </div>
       <div class="form-group">
-        <label class="checkbox">What slots can people help with?</label>
+        <label class="checkbox">
+          {{text.timeslots.label}}
+        </label>
         <label class="checkbox-inline">
             <input
                     type="checkbox"
@@ -100,6 +102,7 @@
 <script>
 import MultiselectDisplay from '../../sharedComponents/MultiselectDisplay.vue'
 import FormSegment from '../../sharedComponents/FormSegment.vue'
+import { getDescriptionsForPostType } from './postFormDescriptions'
 
 export default {
   props: {
@@ -115,6 +118,11 @@ export default {
   components: {
     'multi-select-display': MultiselectDisplay,
     'form-segment': FormSegment
+  },
+  computed: {
+    text () {
+      return getDescriptionsForPostType(this.post.postType)
+    }
   }
 }
 </script>

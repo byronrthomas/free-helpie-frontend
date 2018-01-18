@@ -51,7 +51,7 @@
         </div>
       </alerting-slot>    
     </form-segment>
-    <form-segment header-text="Time required">
+    <form-segment header-text="Timings">
       <alerting-slot :alert-text="text.timeAmount.alert" :alerting="regularTimeMissing">
         <label>{{text.timeAmount.label}}</label>
         <div class="form-group">
