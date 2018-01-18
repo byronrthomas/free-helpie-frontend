@@ -1,6 +1,7 @@
-import {PostsServer} from '@/store/mockServer/postsServer'
-import {INITIAL_POSTS} from '@/store/mockServer/initialPosts'
-import {runAll} from '@/store/mockServer/callbackTools'
+import { PostsServer } from '@/store/mockServer/postsServer'
+import { INITIAL_POSTS } from '@/store/mockServer/initialPosts'
+import { runAll } from '@/store/mockServer/callbackTools'
+import { HELP_WANTED } from '@/store/mockServer/postTypes'
 
 const AUTH_TOKENS =
   [
@@ -174,6 +175,12 @@ describe('PostsServer', () => {
       shouldRunSuccessfully(onTest.get, makeReq(reqData), checkNoResults)
     })
 
+    it('should reject a request to filter by an invalid post-type', () => {
+      const reqData = {postTypeFilter: 'someUnknownPostType'}
+      const expectedMsg = `postTypeFilter contains invalid entries, only valid items are ['helpWanted', 'helpOffered']`
+      shouldFailWithMessage(onTest.get, makeReq(reqData), expectedMsg)
+    })
+
     describe('should be possible to filter to a non-empty result using', () => {
       const expectedResult = TEST_POST_DATA
       const filtersAndFields = {
@@ -181,7 +188,8 @@ describe('PostsServer', () => {
         'postedByFilter': [expectedResult.postedBy],
         'interestsFilter': [expectedResult.interests[0]],
         'skillsFilter': [expectedResult.skills[0]],
-        'locationsFilter': [expectedResult.locations[0]]
+        'locationsFilter': [expectedResult.locations[0]],
+        'postTypeFilter': [HELP_WANTED]
       }
       const containsExpectedResult =
         res => expect(extractPostData(res.data))

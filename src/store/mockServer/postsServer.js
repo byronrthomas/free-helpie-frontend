@@ -27,6 +27,10 @@ function makeFilter (reqData) {
     filter,
     (postedBys, post) => postedBys.includes(post.postedBy))
   filter = makeFilterComponent(
+    reqData.postTypeFilter,
+    filter,
+    (postTypes, post) => postTypes.includes(post.postType))
+  filter = makeFilterComponent(
     reqData.interestsFilter,
     filter,
     (interests, post) => intersectsWith(interests, post.interests))
@@ -67,6 +71,11 @@ function filterObjWithKeys (obj, valueFilter, keys) {
   return res
 }
 
+function isValidPostTypeFilter (postTypes) {
+  return Array.isArray(postTypes) &&
+    postTypes.every(isValidPostType)
+}
+
 export function PostsServer (userAuth) {
   const posts = {}
   let newPostId = 0
@@ -78,6 +87,10 @@ export function PostsServer (userAuth) {
       if (!reqData.authToken || !userAuth.syncGetUserCanSeeFullPosts(reqData.authToken)) {
         reject(new Error('Error: you must be authenticated to view posts'))
       } else {
+        if (reqData.postTypeFilter && !isValidPostTypeFilter(reqData.postTypeFilter)) {
+          reject(new Error(`postTypeFilter contains invalid entries, only valid items are ['${HELP_WANTED}', '${HELP_OFFERED}']`))
+          return
+        }
         const criteriaFilter = makeFilter(reqData)
         const result =
           reqData.postIdsFilter
