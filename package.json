@@ -1,9 +1,10 @@
 {
-  "name": "freehelpiedemo",
+  "name": "free-helpie-frontend",
   "version": "1.0.0",
-  "description": "Demo of the Free Helpie website",
+  "description": "Initial version of the Free Helpie website",
   "author": "Byron Thomas <byront@humane-it.com>",
   "private": true,
+  "license": "Apache-2.0",
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start": "npm run dev",

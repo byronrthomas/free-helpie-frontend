@@ -1,6 +1,7 @@
-# freehelpiedemo
+# free-helpie-frontend
 
-> Demo of the Free Helpie website
+> Initial version of the front-end of the Free Helpie website, written in Vue.js and plain Javascript,
+uses npm / node / webpack for local building / testing / packaging.
 
 ## Build Setup
 
