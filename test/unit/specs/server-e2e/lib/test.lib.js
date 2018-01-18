@@ -4,7 +4,7 @@ export function initServer (serverState) {
   beforeEach(() => {
     for (const key in serverState) {
       if (serverState.hasOwnProperty(key)) {
-        delete serverState.key;
+        delete serverState.key
       }
     }
     serverState.server = makeServer()

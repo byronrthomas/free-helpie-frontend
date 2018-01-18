@@ -4,12 +4,10 @@ import { userRoutePrefixForUser } from './commonRoutes'
 import { getLastPostId } from './post.lib'
 import { mailLib } from './mail.lib'
 import { getUserId } from './account.lib'
+import { contactDetailsLib } from './contactDetails.lib';
 
 export const firstInviter = 'FIRST_INVITER'
 export const secondInviter = 'SECOND_INVITER'
-const fromFirstToSecond = {
-  from: firstInviter,
-  to: secondInviter}
 
 function invitesFromMeRoute (state, user) {
   return `${userRoutePrefixForUser(state, user)}/connectionInvitesFromMe`
@@ -51,10 +49,40 @@ function getInvitesFromUser (state, user) {
     makeAuthdRequestForUser(state, user))
 }
 
-function setupOne (state, betweenUsers) {
+function postContactDetails(state, contactDetailsByUser) {
+  const allPromises = []
+  for (const userLabel in contactDetailsByUser) {
+    if (contactDetailsByUser.hasOwnProperty(userLabel)) {
+      const details = contactDetailsByUser[userLabel];
+      allPromises.push(
+        contactDetailsLib.createForUser(state, details, userLabel))
+    }
+  }
+  return Promise.all(allPromises)
+}
+
+function ensurePreconditionsSetup(state, users, contactDetails) {
+  return mailLib.ensureMailSent(state, users)
+    .then(() => postContactDetails(state, contactDetails))
+}
+
+function setupOne (state, betweenUsers, contactDetails) {
   beforeEach(() => {
-    return mailLib.ensureMailSent(state, betweenUsers)
+    return ensurePreconditionsSetup(state, betweenUsers, contactDetails)
       .then(() => sendInvite(state, betweenUsers))
+  })
+}
+
+function sendInvites (state, invites) {
+  return Promise.all(
+    invites.map(invite => sendInvite(state, invite))
+  )
+}
+
+function setupInvites (state, invites, contactDetails) {
+  beforeEach(() => {
+    return ensurePreconditionsSetup(state, invites[0], contactDetails)
+      .then(() => sendInvites(state, invites))
   })
 }
 
@@ -63,5 +91,6 @@ export const connectionInviteLib = {
   getInvitesToUser,
   getInvitesFromUser,
   setupOne,
+  setupInvites,
   cancelInvite
 }

@@ -1,6 +1,6 @@
 import { getServer } from './test.lib'
 import { loginToKnownAccount } from './account.lib'
-import { makeAuthdRequest, makeEditRequest, makeAuthdRequestForUser } from './commonReqs'
+import { makeAuthdRequest, makeEditRequest, makeAuthdRequestForUser, makeEditRequestForUser } from './commonReqs'
 import { userRoutePrefix, userRoutePrefixForUser } from './commonRoutes'
 import { contactDetailsFix } from '../fixtures/contactDetails.fix'
 
@@ -16,6 +16,12 @@ function create (state, contactData) {
   return getServer(state).post(
     makeRoute(state),
     makeEditRequest(state, contactData))
+}
+
+function createForUser (state, contactData, user) {
+  return getServer(state).post(
+    makeRouteForUser(state, user),
+    makeEditRequestForUser(state, contactData, user))
 }
 
 function edit (state, contactData) {
@@ -47,6 +53,7 @@ function setupOne (state) {
 
 export const contactDetailsLib = {
   create,
+  createForUser,
   edit,
   get,
   getOtherUser,
