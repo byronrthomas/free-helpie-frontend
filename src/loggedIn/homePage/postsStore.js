@@ -43,6 +43,9 @@ export function postsStore (server) {
       isFilteredByPostIds (state) {
         return Boolean(state.filter.postIdsFilter)
       },
+      isFilteredByPostType (state) {
+        return Boolean(state.filter.postTypeFilter)
+      },
       profileInfo (state) {
         return state.profileInfo
       }
@@ -62,6 +65,9 @@ export function postsStore (server) {
       },
       setPostIdsFilter (state, postIds) {
         updateFiltering(state, 'postIdsFilter', postIds)
+      },
+      setPostTypeFilter (state, postTypes) {
+        updateFiltering(state, 'postTypeFilter', postTypes)
       },
       setPosts (state, posts) {
         state.posts = posts
@@ -89,6 +95,10 @@ export function postsStore (server) {
       },
       setPostIdsFilter ({ commit, dispatch }, postIds) {
         commit('setPostIdsFilter', postIds)
+        dispatch('refresh')
+      },
+      setPostTypeFilter ({ commit, dispatch }, postTypes) {
+        commit('setPostTypeFilter', postTypes)
         dispatch('refresh')
       },
       refreshProfileInfo ({state, commit, rootGetters}) {

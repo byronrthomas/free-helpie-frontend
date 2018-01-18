@@ -27,12 +27,19 @@
           :class="{'btn-primary': filteringByLocations}">
           My location
         </button>
+        <button
+          class="btn"
+          @click="cyclePostTypeFilter"
+          :class="{'btn-primary': filteringByPostType}">
+          {{postTypeFilterText}}
+        </button>        
       </div>
     </div>
     <div class="row" v-if="isFiltered">
       <div class="col-xs-12">
         <div class="alert alert-info">
           <strong>Filtering by:</strong>
+          <p v-if="filteringByPostType"> {{postTypeFilterDescription}}</p>
           <p v-if="filteringBySkills"> {{skillsFilterDescription}} </p>
           <p v-if="filteringByInterests"> {{interestsFilterDescription}} </p>
           <p v-if="filteringByLocations"> {{locationsFilterDescription}} </p>
@@ -46,12 +53,15 @@
 <script>
 import { mapGetters } from 'vuex'
 import PostSummariesContainer from './shared/PostSummariesContainer.vue'
+import { HELP_OFFERED, HELP_WANTED } from './postTypes'
 
 function formatFilterList (filterType, list) {
   return list.length === 0
     ? `${filterType}: NONE - will return no results`
     : `${filterType}: ${list.join(' OR ')}`
 }
+
+const POST_TYPE_CYCLE = [null, HELP_WANTED, HELP_OFFERED]
 
 export default {
   computed: {
@@ -78,18 +88,37 @@ export default {
       }
       return formatFilterList('Locations', listOfLocations)
     },
+    postTypeFilterDescription () {
+      return 'ONLY ' + this.postTypeFilterText
+    },
     isFiltered () {
-      return this.filteringBySkills || this.filteringByLocations || this.filteringByInterests
+      return this.filteringBySkills || this.filteringByLocations || this.filteringByInterests || this.filteringByPostType
+    },
+    postTypeFilter () {
+      return POST_TYPE_CYCLE[this.postTypeFilterIndex]
+    },
+    postTypeFilterText () {
+      return this.postTypeFilter === null
+        ? 'All posts'
+        : this.postTypeFilter === HELP_OFFERED
+          ? 'Help offered posts'
+          : 'Help wanted posts'
     },
     ...mapGetters({
       filteringBySkills: 'loggedin/latestposts/isFilteredBySkills',
       filteringByLocations: 'loggedin/latestposts/isFilteredByLocations',
       filteringByInterests: 'loggedin/latestposts/isFilteredByInterests',
+      filteringByPostType: 'loggedin/latestposts/isFilteredByPostType',
       posts: 'loggedin/latestposts/getPosts',
       profileInfo: 'loggedin/latestposts/profileInfo',
       favouritePostIds: 'loggedin/favouritePostIds',
       userId: 'userId',
       userProfile: 'loggedin/userProfile'})
+  },
+  data () {
+    return {
+      postTypeFilterIndex: 0
+    }
   },
   methods: {
     toggleSkillsFilter () {
@@ -109,6 +138,13 @@ export default {
         ? null
         : this.userInterests
       this.$store.dispatch('loggedin/latestposts/setInterestsFilter', newInterestsFilter)
+    },
+    cyclePostTypeFilter () {
+      this.postTypeFilterIndex = (this.postTypeFilterIndex + 1) % POST_TYPE_CYCLE.length
+      const nextFilter = POST_TYPE_CYCLE[this.postTypeFilterIndex]
+      const newPostTypesFilter = nextFilter ? [nextFilter] : null
+
+      this.$store.dispatch('loggedin/latestposts/setPostTypeFilter', newPostTypesFilter)
     },
     updateFavouritePosts (post, shouldBeFavourited) {
       const storeAction = shouldBeFavourited ? 'favouritePost' : 'unfavouritePost'
