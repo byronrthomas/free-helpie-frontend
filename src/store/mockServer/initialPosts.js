@@ -1,3 +1,5 @@
+import { HELP_WANTED, HELP_OFFERED } from './postTypes'
+
 export const INITIAL_POSTS = [
   {
     postedBy: 0,
@@ -13,7 +15,8 @@ export const INITIAL_POSTS = [
         frequency: 'Week'
       },
       slots: ['Weekend']
-    }
+    },
+    postType: HELP_WANTED
   },
   {
     postedBy: 1,
@@ -31,7 +34,8 @@ A small amount of time once a week or once a month should be fine. We can do it 
         frequency: 'Month'
       },
       slots: ['Evening']
-    }
+    },
+    postType: HELP_WANTED
   },
   {
     postedBy: 2,
@@ -47,7 +51,8 @@ A small amount of time once a week or once a month should be fine. We can do it 
         frequency: 'Week'
       },
       slots: ['Daytime', 'Weekday']
-    }
+    },
+    postType: HELP_WANTED
   },
   {
     postedBy: 0,
@@ -63,7 +68,8 @@ A small amount of time once a week or once a month should be fine. We can do it 
         frequency: 'One-off'
       },
       slots: ['Weekend']
-    }
+    },
+    postType: HELP_WANTED
   },
   {
     postedBy: 3,
@@ -79,7 +85,8 @@ A small amount of time once a week or once a month should be fine. We can do it 
         frequency: 'Week'
       },
       slots: ['Weekend', 'Evening']
-    }
+    },
+    postType: HELP_WANTED
   },
   {
     postedBy: 5,
@@ -95,6 +102,7 @@ A small amount of time once a week or once a month should be fine. We can do it 
         frequency: 'Week'
       },
       slots: ['Weekend', 'Evening']
-    }
+    },
+    postType: HELP_OFFERED
   }
 ]

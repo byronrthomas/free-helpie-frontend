@@ -1,6 +1,6 @@
 import { mount } from 'vue-test-utils'
 import PostEditForm from '@/loggedIn/homePage/PostEditForm.vue'
-import { HELP_WANTED } from '../../../src/loggedIn/homePage/postTypes';
+import { HELP_WANTED } from '../../../src/loggedIn/homePage/postTypes'
 
 const CHECKED_DATA_ITEMS = [
   {

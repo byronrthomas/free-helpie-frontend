@@ -1,3 +1,6 @@
+import { isValidPostType, HELP_WANTED } from './postTypes'
+import { HELP_OFFERED } from '../../loggedIn/homePage/postTypes'
+
 function makeFilterComponent (filterList, prevFilter, filterApplication) {
   if (filterList) {
     return post => prevFilter(post) && filterApplication(filterList, post)
@@ -106,7 +109,12 @@ export function PostsServer (userAuth) {
         reject(new Error('Cannot post - empty data'))
         return
       }
-      let newPost = {...reqData.data, postedBy: posterId}
+      const data = reqData.data
+      if (!isValidPostType(data.postType)) {
+        reject(new Error(`The post data must contain a postType field containing one of ['${HELP_WANTED}', '${HELP_OFFERED}']`))
+        return
+      }
+      let newPost = {...data, postedBy: posterId}
       if (newPost.hasOwnProperty('id')) {
         reject(new Error('Error: cannot post something that already has an ID - this is server-assigned'))
         return

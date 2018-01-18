@@ -71,6 +71,15 @@ function shouldRunSuccessfully (method, data, checkResult) {
   expect(hasSucceeded).toBeTruthy()
 }
 
+function shouldFailWithMessage (method, data, msg) {
+  const resolve = jest.fn()
+  const reject = jest.fn()
+  method(data, resolve, reject)
+  expect(resolve).not.toHaveBeenCalled()
+  expect(reject.mock.calls).toHaveLength(1)
+  expect(reject.mock.calls[0][0].message).toEqual(msg)
+}
+
 function checkPostsEqualTo (expectedResults) {
   return res => expect(extractPostData(res.data)).toEqual(expectedResults)
 }
@@ -80,9 +89,16 @@ describe('PostsServer', () => {
 
   it('should accept post requests', () => {
     const onTest = new PostsServer(dummyAuther)
-    console.log(onTest)
 
     shouldRunSuccessfully(onTest.post, makePostReq({data: TEST_POST_DATA}))
+  })
+
+  it('should reject post requests that do not specify a post type', () => {
+    const onTest = new PostsServer(dummyAuther)
+    const BAD_POST_DATA = {...TEST_POST_DATA}
+    delete BAD_POST_DATA.postType
+
+    shouldFailWithMessage(onTest.post, makePostReq({data: BAD_POST_DATA}), `The post data must contain a postType field containing one of ['helpWanted', 'helpOffered']`)
   })
 
   describe('after a post', () => {

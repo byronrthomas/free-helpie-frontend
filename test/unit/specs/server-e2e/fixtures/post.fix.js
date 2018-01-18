@@ -1,6 +1,11 @@
 import faker from 'faker'
 import { generateLocations, generateInterests, generateSkills, generateDescription, generateTimings } from './sharedFixtures'
-import { randomlyOnceIn } from './randomUtils'
+import { randomlyOnceIn, randomInt } from './randomUtils'
+
+const allPostTypes = ['helpOffered', 'helpWanted']
+function generatePostType () {
+  return allPostTypes[randomInt(0, 2)]
+}
 
 function one () {
   return {
@@ -10,7 +15,8 @@ function one () {
     skills: generateSkills(),
     remote: randomlyOnceIn(2),
     description: generateDescription(),
-    timings: generateTimings()
+    timings: generateTimings(),
+    postType: generatePostType()
   }
 }
 
