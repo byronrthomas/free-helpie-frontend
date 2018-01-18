@@ -12,21 +12,28 @@
 import PostEditForm from './PostEditForm.vue'
 import {LOCATIONS, SKILLS, INTERESTS} from '../profileConstants'
 import {mapGetters} from 'vuex'
+import { isValidPostType } from './postTypes'
 
-function makeEmptyPost (postedBy) {
+function makeEmptyPost (postedBy, postType) {
   return {
-    postedBy: postedBy,
+    postedBy,
     title: '',
     interests: [],
     skills: [],
     locations: [],
     remote: false,
     description: '',
-    timings: {regularAmount: {unit: '', frequency: ''}, slots: []}
+    timings: {regularAmount: {unit: '', frequency: ''}, slots: []},
+    postType
   }
 }
 
 export default {
+  props: {
+    postType: {
+      validator: isValidPostType
+    }
+  },
   data () {
     return {
       possibleSkills: SKILLS,
@@ -36,7 +43,7 @@ export default {
   },
   computed: {
     post () {
-      return makeEmptyPost(this.userId)
+      return makeEmptyPost(this.userId, this.postType)
     },
     ...mapGetters({'userId': 'userId'})
   },

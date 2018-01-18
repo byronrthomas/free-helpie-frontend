@@ -150,7 +150,6 @@ function clonePost (input) {
   return result
 }
 
-
 export default {
   props: {
     'initialPostData': {

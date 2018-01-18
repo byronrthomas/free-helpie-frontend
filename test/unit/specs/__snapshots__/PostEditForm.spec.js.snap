@@ -31,7 +31,7 @@ exports[`post edit form has the expected HTML when all checks are inactive (i.e.
           <h2
             style="text-align: center;"
           >
-            What do you need
+            What would you like help with?
           </h2>
            
           <br />
@@ -48,44 +48,48 @@ exports[`post edit form has the expected HTML when all checks are inactive (i.e.
             <div
               class="col-xs-10 col-xs-offset-1"
             >
-              <!---->
-               
-              <div
-                class="form-group"
-              >
-                <label
-                  for="title"
-                >
-                  Title
-                </label>
+              <div>
+                <!---->
                  
-                <input
-                  class="form-control"
-                  id="title"
-                  type="text"
-                />
+                <div
+                  class="form-group"
+                >
+                  <label
+                    for="title"
+                  >
+                    Title
+                  </label>
+                   
+                  <input
+                    class="form-control"
+                    id="title"
+                    type="text"
+                  />
+                </div>
               </div>
                
-              <!---->
-               
-              <div
-                class="form-group"
-              >
-                <label>
-                  Give some more details
-                </label>
-                <br />
+              <div>
+                <!---->
                  
-                <textarea
-                  class="form-control"
-                  placeholder="Give the details about what you need, things to think about:
-- Telling us a bit about the background of why you need help
+                <div
+                  class="form-group"
+                >
+                  <label>
+                    Give some more details
+                  </label>
+                  <br />
+                   
+                  <textarea
+                    class="form-control"
+                    placeholder="Give details about what you need, things to think about:
+- Tell us a bit about the background of why you need help
 - Give plenty of detail about the activity
 - Dig down into details of any specialist skills / experience needed
 - Tell us what kind of person you would like to help out
 - Be nice!"
-                  rows="5"
-                />
+                    rows="5"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -126,71 +130,73 @@ exports[`post edit form has the expected HTML when all checks are inactive (i.e.
             <div
               class="col-xs-10 col-xs-offset-1"
             >
-              <!---->
-               
-              <label>
-                Where do you need help?
-              </label>
-               
-              <div
-                class="form-group"
-              >
-                <label
-                  class="checkbox-inline"
-                >
-                  <input
-                    id="remoteLocation"
-                    type="checkbox"
-                    value="true"
-                  />
-                  Can help be given remotely?
-      
-                </label>
-              </div>
-               
-              <div
-                class="form-group"
-              >
+              <div>
+                <!---->
+                 
                 <label>
-                  At specific locations:
+                  Where do you need help?
                 </label>
                  
-                <div>
-                  <div
-                    class="form-control list-item"
+                <div
+                  class="form-group"
+                >
+                  <label
+                    class="checkbox-inline"
                   >
-                    
+                    <input
+                      id="remoteLocation"
+                      type="checkbox"
+                      value="true"
+                    />
+                    Remote (over the phone / internet)
+        
+                  </label>
+                </div>
+                 
+                <div
+                  class="form-group"
+                >
+                  <label>
+                    At specific locations:
+                  </label>
+                   
+                  <div>
+                    <div
+                      class="form-control list-item"
+                    >
+                      
       Location
       
-                    <button
-                      aria-label="Close"
-                      class="close"
-                      type="button"
-                    >
-                      <span
-                        aria-hidden="true"
+                      <button
+                        aria-label="Close"
+                        class="close"
+                        type="button"
                       >
-                        ×
-                      </span>
+                        <span
+                          aria-hidden="true"
+                        >
+                          ×
+                        </span>
+                      </button>
+                    </div>
+                     
+                    <select
+                      class="form-control list-item"
+                    >
+                      <option
+                        disabled="disabled"
+                        value=""
+                      />
+                       
+                    </select>
+                     
+                    <button
+                      class="btn btn-primary"
+                      disabled="disabled"
+                    >
+                      Add another
                     </button>
                   </div>
-                   
-                  <select
-                    class="form-control list-item"
-                  >
-                    <option
-                      disabled="disabled"
-                      value=""
-                    />
-                     
-                  </select>
-                   
-                  <button
-                    class="btn btn-primary"
-                    disabled="disabled"
-                  >
-                    Add another
-                  </button>
                 </div>
               </div>
             </div>
@@ -232,97 +238,99 @@ exports[`post edit form has the expected HTML when all checks are inactive (i.e.
             <div
               class="col-xs-10 col-xs-offset-1"
             >
-              <!---->
-               
-              <div
-                class="form-group"
-              >
-                <label>
-                  People might want to help if they are interested in:
-                </label>
+              <div>
+                <!---->
                  
-                <div>
-                  <div
-                    class="form-control list-item"
-                  >
-                    
+                <div
+                  class="form-group"
+                >
+                  <label>
+                    People might want to help if they are interested in:
+                  </label>
+                   
+                  <div>
+                    <div
+                      class="form-control list-item"
+                    >
+                      
       Interest
       
-                    <button
-                      aria-label="Close"
-                      class="close"
-                      type="button"
-                    >
-                      <span
-                        aria-hidden="true"
+                      <button
+                        aria-label="Close"
+                        class="close"
+                        type="button"
                       >
-                        ×
-                      </span>
+                        <span
+                          aria-hidden="true"
+                        >
+                          ×
+                        </span>
+                      </button>
+                    </div>
+                     
+                    <select
+                      class="form-control list-item"
+                    >
+                      <option
+                        disabled="disabled"
+                        value=""
+                      />
+                       
+                    </select>
+                     
+                    <button
+                      class="btn btn-primary"
+                      disabled="disabled"
+                    >
+                      Add another
                     </button>
                   </div>
-                   
-                  <select
-                    class="form-control list-item"
-                  >
-                    <option
-                      disabled="disabled"
-                      value=""
-                    />
-                     
-                  </select>
-                   
-                  <button
-                    class="btn btn-primary"
-                    disabled="disabled"
-                  >
-                    Add another
-                  </button>
                 </div>
-              </div>
-               
-              <div
-                class="form-group"
-              >
-                <label>
-                  Skills that your helpers will need:
-                </label>
                  
-                <div>
-                  <div
-                    class="form-control list-item"
-                  >
-                    
+                <div
+                  class="form-group"
+                >
+                  <label>
+                    Skills that your helpers will need:
+                  </label>
+                   
+                  <div>
+                    <div
+                      class="form-control list-item"
+                    >
+                      
       Skill
       
-                    <button
-                      aria-label="Close"
-                      class="close"
-                      type="button"
-                    >
-                      <span
-                        aria-hidden="true"
+                      <button
+                        aria-label="Close"
+                        class="close"
+                        type="button"
                       >
-                        ×
-                      </span>
+                        <span
+                          aria-hidden="true"
+                        >
+                          ×
+                        </span>
+                      </button>
+                    </div>
+                     
+                    <select
+                      class="form-control list-item"
+                    >
+                      <option
+                        disabled="disabled"
+                        value=""
+                      />
+                       
+                    </select>
+                     
+                    <button
+                      class="btn btn-primary"
+                      disabled="disabled"
+                    >
+                      Add another
                     </button>
                   </div>
-                   
-                  <select
-                    class="form-control list-item"
-                  >
-                    <option
-                      disabled="disabled"
-                      value=""
-                    />
-                     
-                  </select>
-                   
-                  <button
-                    class="btn btn-primary"
-                    disabled="disabled"
-                  >
-                    Add another
-                  </button>
                 </div>
               </div>
             </div>
@@ -364,132 +372,136 @@ exports[`post edit form has the expected HTML when all checks are inactive (i.e.
             <div
               class="col-xs-10 col-xs-offset-1"
             >
-              <!---->
-               
-              <label>
-                How much time is required?
-              </label>
-               
-              <div
-                class="form-group"
-              >
-                <select
-                  id="timeAmount"
-                >
-                  <option
-                    disabled="disabled"
-                    value=""
-                  />
-                   
-                  <option>
-                    1hr
-                  </option>
-                   
-                  <option>
-                    2hr
-                  </option>
-                   
-                  <option>
-                    3hr
-                  </option>
-                   
-                  <option>
-                    4hr
-                  </option>
-                   
-                  <option>
-                    1day
-                  </option>
-                   
-                  <option>
-                    2days
-                  </option>
-                   
-                  <option>
-                    3days
-                  </option>
-                </select>
-                 
-                <span>
-                  per
-                </span>
-                 
-                <select
-                  id="timeFrequency"
-                >
-                  <option
-                    disabled="disabled"
-                    value=""
-                  />
-                   
-                  <option>
-                    Week
-                  </option>
-                   
-                  <option>
-                    Month
-                  </option>
-                </select>
-              </div>
-               
-              <div
-                class="form-group"
-              >
+              <div>
                 <!---->
                  
-                <label
-                  class="checkbox"
-                >
-                  What slots can people help with?
+                <label>
+                  How much time is required?
                 </label>
                  
-                <label
-                  class="checkbox-inline"
+                <div
+                  class="form-group"
                 >
-                  <input
-                    id="weekday"
-                    type="checkbox"
-                    value="Weekday"
-                  />
-                   Weekday
-      
-                </label>
+                  <select
+                    id="timeAmount"
+                  >
+                    <option
+                      disabled="disabled"
+                      value=""
+                    />
+                     
+                    <option>
+                      1hr
+                    </option>
+                     
+                    <option>
+                      2hr
+                    </option>
+                     
+                    <option>
+                      3hr
+                    </option>
+                     
+                    <option>
+                      4hr
+                    </option>
+                     
+                    <option>
+                      1day
+                    </option>
+                     
+                    <option>
+                      2days
+                    </option>
+                     
+                    <option>
+                      3days
+                    </option>
+                  </select>
+                   
+                  <span>
+                    per
+                  </span>
+                   
+                  <select
+                    id="timeFrequency"
+                  >
+                    <option
+                      disabled="disabled"
+                      value=""
+                    />
+                     
+                    <option>
+                      Week
+                    </option>
+                     
+                    <option>
+                      Month
+                    </option>
+                  </select>
+                </div>
+              </div>
+               
+              <div>
+                <!---->
                  
-                <label
-                  class="checkbox-inline"
+                <div
+                  class="form-group"
                 >
-                  <input
-                    id="weekend"
-                    type="checkbox"
-                    value="Weekend"
-                  />
-                   Weekend
-      
-                </label>
-                 
-                <label
-                  class="checkbox-inline"
-                >
-                  <input
-                    id="evening"
-                    type="checkbox"
-                    value="Evening"
-                  />
-                   Evening
-      
-                </label>
-                 
-                <label
-                  class="checkbox-inline"
-                >
-                  <input
-                    id="daytime"
-                    type="checkbox"
-                    value="Daytime"
-                  />
-                   Daytime
-      
-                </label>
+                  <label
+                    class="checkbox"
+                  >
+                    What times of day can people help?
+                  </label>
+                   
+                  <label
+                    class="checkbox-inline"
+                  >
+                    <input
+                      id="weekday"
+                      type="checkbox"
+                      value="Weekday"
+                    />
+                     Weekday
+        
+                  </label>
+                   
+                  <label
+                    class="checkbox-inline"
+                  >
+                    <input
+                      id="weekend"
+                      type="checkbox"
+                      value="Weekend"
+                    />
+                     Weekend
+        
+                  </label>
+                   
+                  <label
+                    class="checkbox-inline"
+                  >
+                    <input
+                      id="evening"
+                      type="checkbox"
+                      value="Evening"
+                    />
+                     Evening
+        
+                  </label>
+                   
+                  <label
+                    class="checkbox-inline"
+                  >
+                    <input
+                      id="daytime"
+                      type="checkbox"
+                      value="Daytime"
+                    />
+                     Daytime
+        
+                  </label>
+                </div>
               </div>
             </div>
           </div>
@@ -566,7 +578,7 @@ exports[`post edit form has the expected HTML when all checks are triggered (i.e
           <h2
             style="text-align: center;"
           >
-            What do you need
+            What would you like help with?
           </h2>
            
           <br />
@@ -583,58 +595,62 @@ exports[`post edit form has the expected HTML when all checks are triggered (i.e
             <div
               class="col-xs-10 col-xs-offset-1"
             >
-              <div
-                class="alert alert-danger strong"
-                role="alert"
-              >
-                <p>
-                  Give your post a title that will help them understand the outline of what you need
-                </p>
-              </div>
-               
-              <div
-                class="form-group"
-              >
-                <label
-                  for="title"
+              <div>
+                <div
+                  class="alert alert-danger strong"
+                  role="alert"
                 >
-                  Title
-                </label>
+                  <p>
+                    Give your post a title that will help people understand the outline of what you need
+                  </p>
+                </div>
                  
-                <input
-                  class="form-control"
-                  id="title"
-                  type="text"
-                />
+                <div
+                  class="form-group"
+                >
+                  <label
+                    for="title"
+                  >
+                    Title
+                  </label>
+                   
+                  <input
+                    class="form-control"
+                    id="title"
+                    type="text"
+                  />
+                </div>
               </div>
                
-              <div
-                class="alert alert-danger strong"
-                role="alert"
-              >
-                <p>
-                  Be descriptive about the details of what you need
-                </p>
-              </div>
-               
-              <div
-                class="form-group"
-              >
-                <label>
-                  Give some more details
-                </label>
-                <br />
+              <div>
+                <div
+                  class="alert alert-danger strong"
+                  role="alert"
+                >
+                  <p>
+                    Be descriptive about the details of what you need
+                  </p>
+                </div>
                  
-                <textarea
-                  class="form-control"
-                  placeholder="Give the details about what you need, things to think about:
-- Telling us a bit about the background of why you need help
+                <div
+                  class="form-group"
+                >
+                  <label>
+                    Give some more details
+                  </label>
+                  <br />
+                   
+                  <textarea
+                    class="form-control"
+                    placeholder="Give details about what you need, things to think about:
+- Tell us a bit about the background of why you need help
 - Give plenty of detail about the activity
 - Dig down into details of any specialist skills / experience needed
 - Tell us what kind of person you would like to help out
 - Be nice!"
-                  rows="5"
-                />
+                    rows="5"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -675,62 +691,62 @@ exports[`post edit form has the expected HTML when all checks are triggered (i.e
             <div
               class="col-xs-10 col-xs-offset-1"
             >
-              <div
-                class="alert alert-danger strong"
-                role="alert"
-              >
-                <p>
-                  Please let your helpers know where they need to be - either add specific locations,
-        or select remote, or both
-      
-                </p>
-              </div>
-               
-              <label>
-                Where do you need help?
-              </label>
-               
-              <div
-                class="form-group"
-              >
-                <label
-                  class="checkbox-inline"
+              <div>
+                <div
+                  class="alert alert-danger strong"
+                  role="alert"
                 >
-                  <input
-                    id="remoteLocation"
-                    type="checkbox"
-                    value="true"
-                  />
-                  Can help be given remotely?
-      
-                </label>
-              </div>
-               
-              <div
-                class="form-group"
-              >
+                  <p>
+                    Please let your helpers know the locations you need help at - either add specific locations, or select remote, or both
+                  </p>
+                </div>
+                 
                 <label>
-                  At specific locations:
+                  Where do you need help?
                 </label>
                  
-                <div>
-                   
-                  <select
-                    class="form-control list-item"
+                <div
+                  class="form-group"
+                >
+                  <label
+                    class="checkbox-inline"
                   >
-                    <option
-                      disabled="disabled"
-                      value=""
+                    <input
+                      id="remoteLocation"
+                      type="checkbox"
+                      value="true"
                     />
-                     
-                  </select>
+                    Remote (over the phone / internet)
+        
+                  </label>
+                </div>
+                 
+                <div
+                  class="form-group"
+                >
+                  <label>
+                    At specific locations:
+                  </label>
                    
-                  <button
-                    class="btn btn-primary"
-                    disabled="disabled"
-                  >
-                    Add another
-                  </button>
+                  <div>
+                     
+                    <select
+                      class="form-control list-item"
+                    >
+                      <option
+                        disabled="disabled"
+                        value=""
+                      />
+                       
+                    </select>
+                     
+                    <button
+                      class="btn btn-primary"
+                      disabled="disabled"
+                    >
+                      Add another
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -772,68 +788,70 @@ exports[`post edit form has the expected HTML when all checks are triggered (i.e
             <div
               class="col-xs-10 col-xs-offset-1"
             >
-              <div
-                class="alert alert-danger strong"
-                role="alert"
-              >
-                <p>
-                  Please add some interests or skills - the more you add, the easier it will be hard for helpers to match you
-                </p>
-              </div>
-               
-              <div
-                class="form-group"
-              >
-                <label>
-                  People might want to help if they are interested in:
-                </label>
-                 
-                <div>
-                   
-                  <select
-                    class="form-control list-item"
-                  >
-                    <option
-                      disabled="disabled"
-                      value=""
-                    />
-                     
-                  </select>
-                   
-                  <button
-                    class="btn btn-primary"
-                    disabled="disabled"
-                  >
-                    Add another
-                  </button>
+              <div>
+                <div
+                  class="alert alert-danger strong"
+                  role="alert"
+                >
+                  <p>
+                    Please add some interests or skills - these allow helpers to be matched with you
+                  </p>
                 </div>
-              </div>
-               
-              <div
-                class="form-group"
-              >
-                <label>
-                  Skills that your helpers will need:
-                </label>
                  
-                <div>
+                <div
+                  class="form-group"
+                >
+                  <label>
+                    People might want to help if they are interested in:
+                  </label>
                    
-                  <select
-                    class="form-control list-item"
-                  >
-                    <option
-                      disabled="disabled"
-                      value=""
-                    />
+                  <div>
                      
-                  </select>
+                    <select
+                      class="form-control list-item"
+                    >
+                      <option
+                        disabled="disabled"
+                        value=""
+                      />
+                       
+                    </select>
+                     
+                    <button
+                      class="btn btn-primary"
+                      disabled="disabled"
+                    >
+                      Add another
+                    </button>
+                  </div>
+                </div>
+                 
+                <div
+                  class="form-group"
+                >
+                  <label>
+                    Skills that your helpers will need:
+                  </label>
                    
-                  <button
-                    class="btn btn-primary"
-                    disabled="disabled"
-                  >
-                    Add another
-                  </button>
+                  <div>
+                     
+                    <select
+                      class="form-control list-item"
+                    >
+                      <option
+                        disabled="disabled"
+                        value=""
+                      />
+                       
+                    </select>
+                     
+                    <button
+                      class="btn btn-primary"
+                      disabled="disabled"
+                    >
+                      Add another
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -875,85 +893,84 @@ exports[`post edit form has the expected HTML when all checks are triggered (i.e
             <div
               class="col-xs-10 col-xs-offset-1"
             >
-              <div
-                class="alert alert-danger strong"
-                role="alert"
-              >
-                <p>
-                  Please fill this out - it's important for your helpers to be able to match with you
-        and plan their time
-                </p>
+              <div>
+                <div
+                  class="alert alert-danger strong"
+                  role="alert"
+                >
+                  <p>
+                    Please fill this out - it's important for your helpers to be able to match with you and plan their time
+                  </p>
+                </div>
+                 
+                <label>
+                  How much time is required?
+                </label>
+                 
+                <div
+                  class="form-group"
+                >
+                  <select
+                    id="timeAmount"
+                  >
+                    <option
+                      disabled="disabled"
+                      value=""
+                    />
+                     
+                    <option>
+                      1hr
+                    </option>
+                     
+                    <option>
+                      2hr
+                    </option>
+                     
+                    <option>
+                      3hr
+                    </option>
+                     
+                    <option>
+                      4hr
+                    </option>
+                     
+                    <option>
+                      1day
+                    </option>
+                     
+                    <option>
+                      2days
+                    </option>
+                     
+                    <option>
+                      3days
+                    </option>
+                  </select>
+                   
+                  <span>
+                    per
+                  </span>
+                   
+                  <select
+                    id="timeFrequency"
+                  >
+                    <option
+                      disabled="disabled"
+                      value=""
+                    />
+                     
+                    <option>
+                      Week
+                    </option>
+                     
+                    <option>
+                      Month
+                    </option>
+                  </select>
+                </div>
               </div>
                
-              <label>
-                How much time is required?
-              </label>
-               
-              <div
-                class="form-group"
-              >
-                <select
-                  id="timeAmount"
-                >
-                  <option
-                    disabled="disabled"
-                    value=""
-                  />
-                   
-                  <option>
-                    1hr
-                  </option>
-                   
-                  <option>
-                    2hr
-                  </option>
-                   
-                  <option>
-                    3hr
-                  </option>
-                   
-                  <option>
-                    4hr
-                  </option>
-                   
-                  <option>
-                    1day
-                  </option>
-                   
-                  <option>
-                    2days
-                  </option>
-                   
-                  <option>
-                    3days
-                  </option>
-                </select>
-                 
-                <span>
-                  per
-                </span>
-                 
-                <select
-                  id="timeFrequency"
-                >
-                  <option
-                    disabled="disabled"
-                    value=""
-                  />
-                   
-                  <option>
-                    Week
-                  </option>
-                   
-                  <option>
-                    Month
-                  </option>
-                </select>
-              </div>
-               
-              <div
-                class="form-group"
-              >
+              <div>
                 <div
                   class="alert alert-danger strong"
                   role="alert"
@@ -963,59 +980,63 @@ exports[`post edit form has the expected HTML when all checks are triggered (i.e
                   </p>
                 </div>
                  
-                <label
-                  class="checkbox"
+                <div
+                  class="form-group"
                 >
-                  What slots can people help with?
-                </label>
-                 
-                <label
-                  class="checkbox-inline"
-                >
-                  <input
-                    id="weekday"
-                    type="checkbox"
-                    value="Weekday"
-                  />
-                   Weekday
-      
-                </label>
-                 
-                <label
-                  class="checkbox-inline"
-                >
-                  <input
-                    id="weekend"
-                    type="checkbox"
-                    value="Weekend"
-                  />
-                   Weekend
-      
-                </label>
-                 
-                <label
-                  class="checkbox-inline"
-                >
-                  <input
-                    id="evening"
-                    type="checkbox"
-                    value="Evening"
-                  />
-                   Evening
-      
-                </label>
-                 
-                <label
-                  class="checkbox-inline"
-                >
-                  <input
-                    id="daytime"
-                    type="checkbox"
-                    value="Daytime"
-                  />
-                   Daytime
-      
-                </label>
+                  <label
+                    class="checkbox"
+                  >
+                    What times of day can people help?
+                  </label>
+                   
+                  <label
+                    class="checkbox-inline"
+                  >
+                    <input
+                      id="weekday"
+                      type="checkbox"
+                      value="Weekday"
+                    />
+                     Weekday
+        
+                  </label>
+                   
+                  <label
+                    class="checkbox-inline"
+                  >
+                    <input
+                      id="weekend"
+                      type="checkbox"
+                      value="Weekend"
+                    />
+                     Weekend
+        
+                  </label>
+                   
+                  <label
+                    class="checkbox-inline"
+                  >
+                    <input
+                      id="evening"
+                      type="checkbox"
+                      value="Evening"
+                    />
+                     Evening
+        
+                  </label>
+                   
+                  <label
+                    class="checkbox-inline"
+                  >
+                    <input
+                      id="daytime"
+                      type="checkbox"
+                      value="Daytime"
+                    />
+                     Daytime
+        
+                  </label>
+                </div>
               </div>
             </div>
           </div>

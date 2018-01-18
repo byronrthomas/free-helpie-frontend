@@ -75,7 +75,7 @@ const OFFERING_HELP_TEXT = {
   }
 }
 
-export function getDescriptionsForPostType(postType) {
+export function getDescriptionsForPostType (postType) {
   if (postType === HELP_WANTED) {
     return SEEKING_HELP_TEXT
   }

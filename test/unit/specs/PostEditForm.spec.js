@@ -1,5 +1,6 @@
 import { mount } from 'vue-test-utils'
 import PostEditForm from '@/loggedIn/homePage/PostEditForm.vue'
+import { HELP_WANTED } from '../../../src/loggedIn/homePage/postTypes';
 
 const CHECKED_DATA_ITEMS = [
   {
@@ -64,7 +65,8 @@ const EMPTY_POST =
     locations: [],
     remote: false,
     description: '',
-    timings: {regularAmount: {unit: '', frequency: ''}, slots: []}
+    timings: {regularAmount: {unit: '', frequency: ''}, slots: []},
+    postType: HELP_WANTED
   }
 
 const VALID_POST =
@@ -76,7 +78,8 @@ const VALID_POST =
     locations: ['Location'],
     remote: false,
     description: 'Help me',
-    timings: {regularAmount: {unit: '1h', frequency: 'Week'}, slots: ['Evenings']}
+    timings: {regularAmount: {unit: '1h', frequency: 'Week'}, slots: ['Evenings']},
+    postType: HELP_WANTED
   }
 function makeMountArg (post) {
   const props = {
