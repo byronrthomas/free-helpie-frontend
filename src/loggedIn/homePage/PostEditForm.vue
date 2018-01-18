@@ -5,120 +5,111 @@
         <h4 style="color:rgb(235, 113, 180); text-align: center">{{ createOrUpdate }} post</h4>
       </div>
     </div>
-    <form-segment header-text="What do you need">
-        <div :class="alertClass" role="alert" v-if="titleMissing">
-          <p>Give your post a title that will help them understand the outline of what you need</p>
-        </div>
+    <form-segment :header-text="text.formTitle">
+      <alerting-slot :alert-text="text.title.alert" :alerting="titleMissing">
         <div class="form-group">
-          <label for="title">Title</label>
+          <label for="title">{{text.title.label}}</label>
           <input type="text" id="title" v-model="post.title" class="form-control">
         </div>
-        <div :class="alertClass" role="alert" v-if="descriptionMissing">
-          <p>Be descriptive about the details of what you need</p>
-        </div>
+      </alerting-slot>
+      <alerting-slot :alert-text="text.description.alert" :alerting="descriptionMissing">
         <div class="form-group">
-          <label>Give some more details</label><br>
-          <textarea v-model="post.description" :placeholder="descriptionSuggestion"
+          <label>{{text.description.label}}</label><br>
+          <textarea v-model="post.description" :placeholder="text.description.placeholder"
           rows="5"
           class="form-control"/>
         </div>      
+      </alerting-slot>
     </form-segment>
     <form-segment header-text="Location">
-      <div :class="alertClass" role="alert" v-if="locationsMissing">
-        <p>Please let your helpers know where they need to be - either add specific locations,
-          or select remote, or both
-        </p>
-      </div>
-      <label>Where do you need help?</label>
-      <div class="form-group">
-        <label class="checkbox-inline">
-            <input
-                    type="checkbox"
-                    id="remoteLocation"
-                    value="true"
-                    v-model="post.remote">Can help be given remotely?
-        </label>
-      </div>
-      <div class="form-group">
-        <label>At specific locations:</label>
-        <multi-select-fixed-options v-model="post.locations" :possibleOptions="possibleLocations"/>
-      </div>
+      <alerting-slot :alert-text="text.locations.alert" :alerting="locationsMissing">
+        <label>{{text.locations.label}}</label>
+        <div class="form-group">
+          <label class="checkbox-inline">
+              <input
+                      type="checkbox"
+                      id="remoteLocation"
+                      value="true"
+                      v-model="post.remote">Remote (over the phone / internet)
+          </label>
+        </div>
+        <div class="form-group">
+          <label>At specific locations:</label>
+          <multi-select-fixed-options v-model="post.locations" :possibleOptions="possibleLocations"/>
+        </div>
+      </alerting-slot>
     </form-segment>
     <form-segment header-text="Interests &amp; skills">
-        <div :class="alertClass" role="alert" v-if="skillsAndInterestsMissing">
-          <p>Please add some interests or skills - the more you add, the easier it will be hard for helpers to match you</p>
-        </div>      
+      <alerting-slot :alert-text="text.skillsAndInterests.alert" :alerting="skillsAndInterestsMissing">
         <div class="form-group">
-          <label>People might want to help if they are interested in:</label>
+          <label>{{text.skillsAndInterests.interestsLabel}}</label>
           <multi-select-fixed-options v-model="post.interests" :possibleOptions="possibleInterests"/>
         </div>
         <div class="form-group">
-          <label>Skills that your helpers will need:</label>
+          <label>{{text.skillsAndInterests.skillDetailLabel}}</label>
           <multi-select-fixed-options v-model="post.skills" :possibleOptions="possibleSkills"/>
         </div>
+      </alerting-slot>    
     </form-segment>
     <form-segment header-text="Time required">
-      <div :class="alertClass" role="alert" v-if="regularTimeMissing">
-        <p>Please fill this out - it's important for your helpers to be able to match with you
-          and plan their time</p>
-      </div>
-      <label>How much time is required?</label>
-      <div class="form-group">
-        <select 
-          id="timeAmount" 
-          v-model="post.timings.regularAmount.unit">
-            <option disabled value=""></option>
-            <option>1hr</option>
-            <option>2hr</option>
-            <option>3hr</option>
-            <option>4hr</option>
-            <option>1day</option>
-            <option>2days</option>
-            <option>3days</option>
-        </select>
-        <span>per</span>
-        <select 
-          id="timeFrequency" 
-          v-model="post.timings.regularAmount.frequency">
-            <option disabled value=""></option>
-            <option>Week</option>
-            <option>Month</option>
-        </select>          
-      </div>
-      <div class="form-group">
-        <div :class="alertClass" role="alert" v-if="timeslotsMissing">
-          <p>Please fill this out - helpers need to know what slots you need them</p>
+      <alerting-slot :alert-text="text.timeAmount.alert" :alerting="regularTimeMissing">
+        <label>{{text.timeAmount.label}}</label>
+        <div class="form-group">
+          <select 
+            id="timeAmount" 
+            v-model="post.timings.regularAmount.unit">
+              <option disabled value=""></option>
+              <option>1hr</option>
+              <option>2hr</option>
+              <option>3hr</option>
+              <option>4hr</option>
+              <option>1day</option>
+              <option>2days</option>
+              <option>3days</option>
+          </select>
+          <span>per</span>
+          <select 
+            id="timeFrequency" 
+            v-model="post.timings.regularAmount.frequency">
+              <option disabled value=""></option>
+              <option>Week</option>
+              <option>Month</option>
+          </select>          
         </div>
-        <label class="checkbox">What slots can people help with?</label>
-        <label class="checkbox-inline">
-            <input
-                    type="checkbox"
-                    id="weekday"
-                    value="Weekday"
-                    v-model="post.timings.slots"> Weekday
-        </label>
-        <label  class="checkbox-inline">
-            <input
-                    type="checkbox"
-                    id="weekend"
-                    value="Weekend"
-                    v-model="post.timings.slots"> Weekend
-        </label>
-        <label  class="checkbox-inline">
-            <input
-                    type="checkbox"
-                    id="evening"
-                    value="Evening"
-                    v-model="post.timings.slots"> Evening
-        </label>
-        <label class="checkbox-inline">
-            <input
-                    type="checkbox"
-                    id="daytime"
-                    value="Daytime"
-                    v-model="post.timings.slots"> Daytime
-        </label>
-      </div>       
+      </alerting-slot>
+      <alerting-slot :alert-text="text.timeslots.alert" :alerting="timeslotsMissing">
+        <div class="form-group">
+          <label class="checkbox">{{text.timeslots.label}}</label>
+          <label class="checkbox-inline">
+              <input
+                      type="checkbox"
+                      id="weekday"
+                      value="Weekday"
+                      v-model="post.timings.slots"> Weekday
+          </label>
+          <label  class="checkbox-inline">
+              <input
+                      type="checkbox"
+                      id="weekend"
+                      value="Weekend"
+                      v-model="post.timings.slots"> Weekend
+          </label>
+          <label  class="checkbox-inline">
+              <input
+                      type="checkbox"
+                      id="evening"
+                      value="Evening"
+                      v-model="post.timings.slots"> Evening
+          </label>
+          <label class="checkbox-inline">
+              <input
+                      type="checkbox"
+                      id="daytime"
+                      value="Daytime"
+                      v-model="post.timings.slots"> Daytime
+          </label>
+        </div>             
+      </alerting-slot>
     </form-segment>
     <div class="row">
       <div class="col-xs-12 col-sm-8 col-sm-offset-2">
@@ -147,13 +138,9 @@
 <script>
 import MultiselectFixedOptions from '../../sharedComponents/MultiSelectFixedOptions.vue'
 import FormSegment from '../../sharedComponents/FormSegment.vue'
-
-const POST_DESCRIPTION_OUTLINE = `Give the details about what you need, things to think about:
-- Telling us a bit about the background of why you need help
-- Give plenty of detail about the activity
-- Dig down into details of any specialist skills / experience needed
-- Tell us what kind of person you would like to help out
-- Be nice!`
+import SlotWithReactiveAlert from '../../sharedComponents/SlotWithReactiveAlert.vue'
+import { isValidPostType } from './postTypes'
+import { getDescriptionsForPostType } from './postFormDescriptions'
 
 function clonePost (input) {
   const result = {...input}
@@ -162,6 +149,7 @@ function clonePost (input) {
   result.interests = [...input.interests]
   return result
 }
+
 
 export default {
   props: {
@@ -178,7 +166,8 @@ export default {
           value.timings.regularAmount &&
           (typeof value.timings.regularAmount.unit === 'string') &&
           (typeof value.timings.regularAmount.frequency === 'string') &&
-          Array.isArray(value.timings.slots)
+          Array.isArray(value.timings.slots) &&
+          isValidPostType(value.postType)
       },
       required: true
     },
@@ -213,7 +202,7 @@ export default {
         'alert-danger': true,
         'strong': true
       },
-      descriptionSuggestion: POST_DESCRIPTION_OUTLINE,
+      text: getDescriptionsForPostType(this.initialPostData.postType),
       post: clonePost(this.initialPostData)
     }
   },
@@ -250,7 +239,8 @@ export default {
   },
   components: {
     'multi-select-fixed-options': MultiselectFixedOptions,
-    'form-segment': FormSegment
+    'form-segment': FormSegment,
+    'alerting-slot': SlotWithReactiveAlert
   },
   methods: {
     submitForm () {

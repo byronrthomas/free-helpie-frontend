@@ -1,23 +1,36 @@
 <template>
-  <post-detail-display
-    :post="post",
-    :posters-name="postersName"
-  />  
+  <div class="container">
+    <post-edit-form 
+      :initial-post-data="post"
+      :create-or-update="'Create'"
+      :possible-interests="['Cats']"
+      :possible-locations="['Brum']"
+      :possible-skills="['Gardening']"/>
+  </div>
+  
 </template>
 
-<script>
-import PostDetailDisplay from './loggedIn/homePage/PostDetailDisplay.vue'
-import {INITIAL_POSTS} from './store/mockServer/initialPosts'
 
+<script>
+import PostEditForm from './loggedIn/homePage/PostEditForm.vue'
 export default {
   data () {
     return {
-      post: INITIAL_POSTS[0],
-      postersName: 'John Doe'
+      post: {
+        postedBy: 1,
+        title: '',
+        interests: [],
+        skills: [],
+        locations: [],
+        remote: false,
+        description: '',
+        timings: {regularAmount: {unit: '', frequency: ''}, slots: []},
+        postType: 'helpWanted'
+      }
     }
   },
   components: {
-    'post-detail-display': PostDetailDisplay
+    'post-edit-form': PostEditForm
   }
 }
 </script>
