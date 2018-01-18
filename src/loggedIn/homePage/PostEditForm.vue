@@ -201,7 +201,6 @@ export default {
         'alert-danger': true,
         'strong': true
       },
-      text: getDescriptionsForPostType(this.initialPostData.postType),
       post: clonePost(this.initialPostData)
     }
   },
@@ -234,6 +233,9 @@ export default {
     },
     buttonText () {
       return this.createOrUpdate === 'Create' ? 'Post' : 'Save changes'
+    },
+    text () {
+      return getDescriptionsForPostType(this.initialPostData.postType)
     }
   },
   components: {
@@ -243,7 +245,8 @@ export default {
   },
   methods: {
     submitForm () {
-      console.log(this.post)
+      const toSubmit = {...this.post, postType: this.initialPostData.postType}
+      console.log(toSubmit)
       this.$emit('submitForm', this.post)
     }
   }

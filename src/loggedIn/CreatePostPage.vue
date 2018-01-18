@@ -9,10 +9,10 @@
 </template>
 
 <script>
-import PostEditForm from './PostEditForm.vue'
-import {LOCATIONS, SKILLS, INTERESTS} from '../profileConstants'
+import PostEditForm from './homePage/PostEditForm.vue'
+import {LOCATIONS, SKILLS, INTERESTS} from './profileConstants'
 import {mapGetters} from 'vuex'
-import { isValidPostType } from './postTypes'
+import { isValidPostType } from './homePage/postTypes'
 
 function makeEmptyPost (postedBy, postType) {
   return {

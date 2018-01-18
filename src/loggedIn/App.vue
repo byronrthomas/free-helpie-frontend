@@ -5,6 +5,8 @@
         <img src="../assets/FreeHelp2.png" alt="FreeHelp" height=100px>
         <div class="pull-right" style="margin-top: 45px">
           <router-link class="topbar-link lead" :to="{name: 'home'}">Home</router-link>
+          <router-link class="topbar-link lead" :to="{name: 'seekHelp'}">Get help</router-link>
+          <router-link class="topbar-link lead" :to="{name: 'offerHelp'}">Offer help</router-link>
           <router-link class="topbar-link lead" :to="{name: 'profile'}">Profile</router-link>
           <router-link class="topbar-link lead" :to="{name: 'account'}">Account</router-link>
           <a class="topbar-link lead" @click="alertNotImplemented">Invite</a>
