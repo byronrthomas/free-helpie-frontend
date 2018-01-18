@@ -1,15 +1,18 @@
 <template>
   <div class="post-summary-container">
     <div class="row" style="margin-right: 0px">
-      <div class="col-xs-3">
-        <a href="unknown" @click.prevent="$emit('viewUser')">{{ userDisplay }}</a>
+      <div class="col-xs-2">
+        <a @click.prevent="$emit('viewUser')">{{ userDisplay }}</a>
       </div>
-      <div class="col-xs-3">
-        <a href="unknown" @click.prevent="$emit('viewPost')">
+      <div class="col-xs-1">
+        <span class="badge">{{ formattedPostType }}</span>
+      </div>
+      <div class="col-xs-4">
+        <a @click.prevent="$emit('viewPost')">
           {{ post.title }}
         </a>
       </div>
-      <div class="col-xs-3">{{ formattedSkills }}</div>
+      <div class="col-xs-2">{{ formattedSkills }}</div>
       <div class="col-xs-2">{{ post.location }}</div>
       <div class="col-xs-1">
         <button class="btn btn-lg btn-default save-button" @click="$emit('savePost')">
@@ -22,6 +25,8 @@
 </template>
 
 <script>
+import { HELP_OFFERED } from '../postTypes'
+
 export default {
   props: ['post', 'isSaved', 'userDisplay'],
   computed: {
@@ -35,6 +40,11 @@ export default {
     },
     starImagePath () {
       return '../../assets/' + (this.isSaved ? 'starActive.png' : 'starInactive.png')
+    },
+    formattedPostType () {
+      return this.post.postType === HELP_OFFERED
+        ? 'Offered'
+        : 'Wanted'
     }
   },
   methods: {
