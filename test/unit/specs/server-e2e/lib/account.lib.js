@@ -21,14 +21,6 @@ export function getAccountData (state) {
   return state.accountData
 }
 
-export function getOtherAccountData (state) {
-  if (!state.otherAccountData) {
-    console.log('state: ', state)
-    throw new Error(`No account data for other user in state`)
-  }
-  return state.otherAccountData
-}
-
 function makeAccountData (resp) {
   return {
     authToken: resp.authData,
@@ -38,10 +30,6 @@ function makeAccountData (resp) {
 
 function saveAuthToState (resp, state) {
   state.accountData = makeAccountData(resp)
-}
-
-function saveOtherAuthToState (resp, state) {
-  state.otherAccountData = makeAccountData(resp)
 }
 
 function saveLabelledAuthToState (resp, state, userLabel) {
@@ -77,12 +65,6 @@ function setupOneLoggedIn (state) {
   })
 }
 
-function ensureAnotherUserCreated (state) {
-  const server = getServer(state)
-  return server.get('/accounts', OTHER_LOGIN_DETAILS)
-    .then(respData => saveOtherAuthToState(respData, state))
-}
-
 function handleLogin (state, userLabel, userDetails) {
   const server = getServer(state)
   return server.get('/accounts', userDetails)
@@ -101,6 +83,5 @@ function ensureUsersCreated (state, userLabels) {
 
 export const accountLib = {
   setupOneLoggedIn,
-  ensureAnotherUserCreated,
   ensureUsersCreated
 }

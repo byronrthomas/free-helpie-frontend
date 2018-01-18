@@ -4,7 +4,7 @@ import { userRoutePrefixForUser } from './commonRoutes'
 import { getLastPostId } from './post.lib'
 import { mailLib } from './mail.lib'
 import { getUserId } from './account.lib'
-import { contactDetailsLib } from './contactDetails.lib';
+import { contactDetailsLib } from './contactDetails.lib'
 
 export const firstInviter = 'FIRST_INVITER'
 export const secondInviter = 'SECOND_INVITER'
@@ -49,11 +49,11 @@ function getInvitesFromUser (state, user) {
     makeAuthdRequestForUser(state, user))
 }
 
-function postContactDetails(state, contactDetailsByUser) {
+function postContactDetails (state, contactDetailsByUser) {
   const allPromises = []
   for (const userLabel in contactDetailsByUser) {
     if (contactDetailsByUser.hasOwnProperty(userLabel)) {
-      const details = contactDetailsByUser[userLabel];
+      const details = contactDetailsByUser[userLabel]
       allPromises.push(
         contactDetailsLib.createForUser(state, details, userLabel))
     }
@@ -61,7 +61,7 @@ function postContactDetails(state, contactDetailsByUser) {
   return Promise.all(allPromises)
 }
 
-function ensurePreconditionsSetup(state, users, contactDetails) {
+function ensurePreconditionsSetup (state, users, contactDetails) {
   return mailLib.ensureMailSent(state, users)
     .then(() => postContactDetails(state, contactDetails))
 }
